@@ -1,0 +1,8 @@
+<!-- OpenAI's mark was withdrawn from Simple Icons at their request, so this is
+     a neutral monogram in the site's own style, not the OpenAI mark. -->
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ChatGPT">
+  <title>ChatGPT</title>
+  <rect x="1" y="1" width="22" height="22" rx="11" fill="#10A37F"/>
+  <text x="12" y="16" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
+        font-size="8.5" font-weight="700" fill="#fff">GPT</text>
+</svg>

@@ -8,26 +8,133 @@ const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
 
 /* ---------- Content you edit ---------- */
 const CLIENTS = [
-  "Acme", "Northwind", "Contoso", "Globex", "Initech",
-  "Umbrella", "Soylent", "Hooli", "Stark", "Wayne",
+  "Product Design", "User Research", "UX Strategy", "Information Architecture",
+  "Wireframing", "Prototyping", "Design Systems", "Usability Testing",
+  "Accessibility",
 ];
 
 const SERVICES = [
-  { num: "001", title: "UX Design", lede: "Understand before designing.",
-    desc: "I turn user needs into flows that reduce friction and guesswork, so your product just makes sense." },
-  { num: "002", title: "UI Design", lede: "Clarity, hierarchy, and detail.",
-    desc: "Interfaces that look sharp and drive action, balancing usability with a personality that fits your brand." },
-  { num: "003", title: "Design System", lede: "Consistency that scales.",
-    desc: "Systems that let your team ship faster and stay aligned as the product grows." },
-  { num: "004", title: "Accessibility", lede: "Design for everyone.",
-    desc: "Inclusive, WCAG-compliant experiences that widen your reach, so no one gets left out." },
+  { num: "001", title: "UX Design", lede: "Research-led flows.",
+    desc: "Research-led user flows and information architecture that reduce friction and help people complete tasks with confidence." },
+  { num: "002", title: "UI Design", lede: "Clarity and hierarchy.",
+    desc: "Clear, high-fidelity interfaces with strong hierarchy, practical interaction patterns, and visual polish." },
+  { num: "003", title: "Prototyping", lede: "Test ideas early.",
+    desc: "Clickable prototypes that help teams test ideas early, communicate behaviour, and make decisions faster." },
+  { num: "004", title: "Design Systems", lede: "Consistency that scales.",
+    desc: "Reusable components and design foundations that create consistency across product teams and platforms." },
+  { num: "005", title: "Accessibility", lede: "Design for everyone.",
+    desc: "Inclusive design choices that make digital experiences easier to understand and use for more people." },
 ];
 
 const WORK = [
-  { title: "Project One",   tags: "Web app",        tone: "",     href: "#" },
-  { title: "Project Two",   tags: "App, Web app",   tone: "alt",  href: "#" },
-  { title: "Project Three", tags: "Design system",  tone: "cool", href: "#" },
-  { title: "Project Four",  tags: "Brand, Web",     tone: "warm", href: "#" },
+  {
+    title: "Insure-Tech",
+    tags: "B2B InsurTech, AI Workflow, Enterprise UX",
+    tone: "",
+    thumb: "media/insure-tech.webp",
+    href: "https://eicore.vercel.app/",
+    live: "https://eicore.vercel.app/",   // the product itself, not a portfolio page
+    blurb: "Redesigning an AI-powered insurance Product Plan Builder \u2014 compressing " +
+           "3\u20135 days of manual configuration into hours of intelligent, trustworthy review.",
+    // The case study is told here rather than embedded: the source site is a
+    // single-page app whose window chrome and tab bar would come with it.
+    study: {
+      hero: "media/insure-tech-devices.webp",
+      outcomes: [
+        { before: "3\u20135 days", after: "Hours of review", label: "Time to configure a product" },
+        { before: "4 error surfaces", after: "1 unified Auditor", label: "Where validation lives" },
+        { before: "37 flat items", after: "8 semantic groups", label: "Coverage navigation" },
+        { before: "No source link", after: "Click-to-source", label: "From a value back to the BRD" },
+      ],
+      principles: [
+        { title: "Confidence-Coded Fields",
+          body: "Low-confidence values carry amber borders and a 75% badge \u2014 risk is visible inline during editing, not at final review." },
+        { title: "Inspect \u2192 Live Source Split",
+          body: "Confidence badges open a Document Inspector pinned to canvas, scrolled to the exact BRD passage with the figure highlighted." },
+        { title: "One Multi-Tab Workspace",
+          body: "Tree, Extraction, Issues and Docs live in a single right-hand panel \u2014 structure, audit, issues and source one click apart." },
+        { title: "Staged Navigation with Sub-Steps",
+          body: "The left rail maps the five stages; the active stage expands to show its own sub-step progress." },
+      ],
+      personas: [
+        { role: "Product Manager / Head of Product", motive: "Speed-to-market & compliance",
+          pain: "Blockers surface only at final pre-publish \u2014 hours of rework." },
+        { role: "Senior Actuarial Analyst", motive: "Precision & underwriting safety",
+          pain: "Source attribution is passive \u2014 no live link from a field back to its page." },
+      ],
+      // The audit that set the brief: eight frictions found in the existing
+      // builder, each with the change that retired it.
+      frictions: [
+        { flaw: "Attention Fragmentation",
+          impact: "Errors and confidence scores live in 4 places \u2014 panic and skipped steps.",
+          fix: "A dedicated Issues tab with one-click Resolve; the stepper carries a live \u2018Needs Attention\u2019 count." },
+        { flaw: "Passive Source Attribution",
+          impact: "\u2018From: BRD\u2019 is a text tag \u2014 users hunt through 5 PDFs manually.",
+          fix: "Every value cites its origin (BRD Pg 2, Sec 4.1); the Document Inspector opens that passage highlighted." },
+        { flaw: "Flat Coverage Scroll",
+          impact: "37 coverages in one flat list means endless vertical scrolling.",
+          fix: "Coverages live under collapsible plan accordions \u2014 Mini, Medi, Max." },
+        { flaw: "Post-Hoc Shock",
+          impact: "Critical errors surface only at the final pre-publish step.",
+          fix: "Field-level amber and red borders surface weak values inline while editing." },
+      ],
+      designs: [
+        { img: "media/insure-tech/06-heor.webp", label: "Unified Workspace",
+          title: "The product builder\u2019s home screen.",
+          summary: "Every signal needed to start verifying \u2014 extraction health, source documents, plan structure and open issues \u2014 consolidated into one view without hunting across tabs.",
+          features: [
+            "89% extraction-health donut: 124 High \u00b7 40 Medium \u00b7 15 Low",
+            "Field Map heatmap colours all 234 extracted fields by AI confidence",
+            "Source pills jump straight to the active document",
+            "Right rail unifies Tree \u00b7 Issues \u00b7 Data \u00b7 Document in one panel",
+          ] },
+        { img: "media/insure-tech/05-tree-drawer.webp", label: "Tree + Parameter Drawer",
+          title: "Inspect any card without losing the map.",
+          summary: "Clicking a card on the Tree opens the Parameter Drawer on the right edge \u2014 the full canvas stays visible, so dependencies and sibling values remain legible.",
+          features: [
+            "Extracted value and your value side by side, with a confidence label",
+            "Source passage shows the highlighted BRD quote, linked both ways",
+            "Dependencies panel lists the upstream rules",
+            "\u2190 / \u2192 walks sibling parameters; Esc closes",
+          ] },
+        { img: "media/insure-tech/03-parameter.webp", label: "Parameter Editor",
+          title: "The trust loop, expanded.",
+          summary: "A single parameter opens into a focused editor, with the drawer pinning the AI\u2019s source passage right next to the form.",
+          features: [
+            "Structured form: name, type, description, range, limit, applicability",
+            "One click to accept the extracted value or override it",
+            "Confidence inline \u2014 high in green, low in amber",
+            "AI assist: @-mention a colleague, ask, or leave a comment",
+          ] },
+        { img: "media/insure-tech/01-workspace.webp", label: "Tree Mode",
+          title: "The whole plan as a single canvas.",
+          summary: "A full-screen anatomy view \u2014 every parameter a card, grouped by category, connected by dependency edges. Switch tier with one click; the issue count follows you.",
+          features: [
+            "Mini Plan root branches into four category columns",
+            "Each card carries a status: verified, missing, low confidence, blocker",
+            "Per-card AI confidence, dependency count and source page",
+            "\u2318K jumps to any field; the legend explains the four states",
+          ] },
+        { img: "media/insure-tech/02-drilldown.webp", label: "Coverage Drill-Down",
+          title: "From workspace to category in one click.",
+          summary: "Selecting a category morphs the left rail into a categories list with progress per group, while the workspace shows each parameter three-up across Mini, Medi and Max.",
+          features: [
+            "33 categories with status dots and progress bars",
+            "Plan variants stay pinned, so tier context never drops",
+            "Values inline across tiers, with a confidence dot for each",
+            "A \u2018needs review\u2019 chip flags what to attend to first",
+          ] },
+      ],
+      reflections: [
+        { label: "What\u2019s next", body: "Empirical confidence calibration \u2014 wire the amber thresholds to real AI accuracy data from production." },
+        { label: "Would change", body: "The eight-section accordion could collapse to a sticky jump-to chip row on long pages." },
+        { label: "Open question", body: "How should the system handle a value the user accepts that AI later refines \u2014 versioning or override?" },
+      ],
+    },
+  },
+  { title: "Project 02", tags: "Product design",    tone: "alt",  href: "#" },
+  { title: "Project 03", tags: "Prototyping",       tone: "cool", href: "#" },
+  { title: "Project 04", tags: "Interface systems", tone: "warm", href: "#" },
 ];
 
 /* ============================================================
@@ -53,19 +160,225 @@ if (servicesEl) {
   `).join("");
 }
 
-const workGrid = document.getElementById("work-grid");
-if (workGrid) {
-  workGrid.innerHTML = WORK.map((w, i) => `
-    <a class="work-card" href="${w.href}" data-cursor="View">
-      <figure class="frame ratio-107" data-parallax="${i % 2 ? 22 : -22}">
-        <div class="ph ${w.tone}">${w.title}</div>
+// A project card, used both by the featured pair in the hero and by the work
+// grid. Cards with a live project carry data-project, which the portal picks
+// up; the rest stay inert until they have somewhere to go.
+function projectCard(w, i, { ratio = "ratio-107", parallax = 0 } = {}) {
+  return `
+    <a class="work-card" href="${w.href}" data-cursor="View"
+       ${w.thumb ? `data-project="${i}"` : ""}>
+      <figure class="frame ${ratio}" data-parallax="${parallax}">
+        ${w.thumb
+          ? `<img class="work-thumb" src="${w.thumb}" alt="${w.title}" loading="lazy" />`
+          : `<div class="ph ${w.tone}">${w.title}</div>`}
       </figure>
       <div class="work-meta reveal" style="--d:${i * 60}ms">
         <span class="work-title">${w.title}</span>
         <span class="work-tags">${w.tags}</span>
       </div>
-    </a>
-  `).join("");
+    </a>`;
+}
+
+const heroProjects = document.getElementById("hero-projects");
+if (heroProjects) {
+  heroProjects.innerHTML = WORK.slice(0, 2)
+    .map((w, i) => projectCard(w, i, { ratio: "ratio-43", parallax: i ? 40 : -40 }))
+    .join("");
+}
+
+const workGrid = document.getElementById("work-grid");
+if (workGrid) {
+  workGrid.innerHTML = WORK
+    .map((w, i) => projectCard(w, i, { parallax: i % 2 ? 22 : -22 }))
+    .join("");
+}
+
+/* ============================================================
+   PROJECT PORTAL
+   A project with a live URL opens in a modal rather than
+   navigating away: the case study runs in place, in an iframe,
+   and the visitor keeps their position on the page.
+   ============================================================ */
+function initProjectPortal() {
+  const portal = document.getElementById("portal");
+  if (!portal) return;
+
+  const frameBox = portal.querySelector(".portal-frame");
+  const studyBox = portal.querySelector(".portal-study");
+  const body = portal.querySelector(".portal-body");
+  const titleEl = portal.querySelector(".portal-title");
+  const tagsEl = portal.querySelector(".portal-tags");
+  const blurbEl = portal.querySelector(".portal-blurb");
+  const openEl = portal.querySelector(".portal-open");
+  let lastFocus = null;
+
+  // The case study, in this site's own type and spacing.
+  function caseStudyHTML(p) {
+    const st = p.study;
+    const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+    const outcomes = st.outcomes.map(o => `
+      <li class="cs-outcome">
+        <span class="cs-before">${esc(o.before)}</span>
+        <span class="cs-arrow" aria-hidden="true">\u2192</span>
+        <span class="cs-after">${esc(o.after)}</span>
+        <span class="cs-label">${esc(o.label)}</span>
+      </li>`).join("");
+
+    const principles = st.principles.map((x, i) => `
+      <li class="cs-card">
+        <span class="cs-num">0${i + 1}</span>
+        <h4>${esc(x.title)}</h4>
+        <p>${esc(x.body)}</p>
+      </li>`).join("");
+
+    const personas = st.personas.map(x => `
+      <li class="cs-card">
+        <h4>${esc(x.role)}</h4>
+        <p class="cs-motive">${esc(x.motive)}</p>
+        <p>${esc(x.pain)}</p>
+      </li>`).join("");
+
+    const frictions = st.frictions.map((f, i) => `
+      <li class="cs-friction">
+        <span class="cs-num">0${i + 1}</span>
+        <div>
+          <h4>${esc(f.flaw)}</h4>
+          <p class="cs-impact">${esc(f.impact)}</p>
+          <p class="cs-fix">${esc(f.fix)}</p>
+        </div>
+      </li>`).join("");
+
+    // Each screen gets its image at full width, then what it does beside the
+    // features it introduced — the reason the screen exists, not just a shot.
+    const designs = st.designs.map((d, i) => `
+      <figure class="cs-design">
+        <img src="${d.img}" alt="${esc(d.title)}" loading="lazy" decoding="async" />
+        <figcaption>
+          <div>
+            <p class="cs-kicker">0${i + 1} \u2014 ${esc(d.label)}</p>
+            <h4>${esc(d.title)}</h4>
+            <p>${esc(d.summary)}</p>
+          </div>
+          <ul class="cs-features">
+            ${d.features.map(f => `<li>${esc(f)}</li>`).join("")}
+          </ul>
+        </figcaption>
+      </figure>`).join("");
+
+    const reflections = st.reflections.map(r => `
+      <li class="cs-card">
+        <p class="cs-motive">${esc(r.label)}</p>
+        <p>${esc(r.body)}</p>
+      </li>`).join("");
+
+    return `
+      <article class="cs">
+        ${st.hero ? `<img class="cs-hero" src="${st.hero}" alt="${esc(p.title)} across devices" loading="lazy" />` : ""}
+
+        <section class="cs-section">
+          <h3 class="cs-h">What changed</h3>
+          <ul class="cs-outcomes">${outcomes}</ul>
+        </section>
+
+        <section class="cs-section">
+          <h3 class="cs-h">Design principles</h3>
+          <ul class="cs-grid">${principles}</ul>
+        </section>
+
+        <section class="cs-section">
+          <h3 class="cs-h">Who it is for</h3>
+          <ul class="cs-grid">${personas}</ul>
+        </section>
+
+        <section class="cs-section">
+          <h3 class="cs-h">What the audit found</h3>
+          <ol class="cs-frictions">${frictions}</ol>
+        </section>
+
+        <section class="cs-section">
+          <h3 class="cs-h">The high-fidelity designs</h3>
+          <p class="cs-lede">Five core surfaces across the unified workspace. Each one traces
+            back to a specific friction retired by the audit \u2014 extraction trust, source
+            attribution, drill-down navigation and dependency visibility.</p>
+          ${designs}
+        </section>
+
+        <section class="cs-section">
+          <h3 class="cs-h">Reflections</h3>
+          <ul class="cs-grid cs-grid-3">${reflections}</ul>
+        </section>
+      </article>`;
+  }
+
+  function open(project) {
+    lastFocus = document.activeElement;
+    titleEl.textContent = project.title;
+    tagsEl.textContent = project.tags;
+    blurbEl.textContent = project.blurb || "";
+    openEl.href = project.href;
+
+    // The product runs here, live. Built on open rather than at page load:
+    // it is a whole second application, and nobody should pay to download it
+    // until they ask to see it. Closing tears it down again.
+    frameBox.innerHTML = project.live
+      ? `<img class="portal-poster" src="${project.thumb}" alt="" />` +
+        `<iframe class="portal-iframe" src="${project.live}" title="${project.title}"` +
+        ` loading="lazy" referrerpolicy="no-referrer"` +
+        ` sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>` +
+        `<button class="portal-activate" type="button">Click to try it</button>`
+      : "";
+    frameBox.classList.remove("is-live");
+    frameBox.querySelector("iframe")
+      ?.addEventListener("load", () => frameBox.classList.add("is-loaded"));
+
+    studyBox.innerHTML = project.study ? caseStudyHTML(project) : "";
+    body.scrollTop = 0;
+
+    // A live URL is optional; the link only shows when there is one
+    openEl.hidden = !project.href;
+
+    portal.hidden = false;
+    requestAnimationFrame(() => portal.classList.add("is-on"));
+    document.body.style.overflow = "hidden";
+    portal.querySelector(".portal-close").focus();
+  }
+
+  function close() {
+    portal.classList.remove("is-on");
+    document.body.style.overflow = "";
+    setTimeout(() => {
+      portal.hidden = true;
+      frameBox.innerHTML = "";          // stop the embedded product running
+      frameBox.classList.remove("is-loaded");
+      studyBox.innerHTML = "";
+    }, 260);
+    lastFocus?.focus();
+  }
+
+  document.addEventListener("click", e => {
+    const card = e.target.closest("[data-project]");
+    if (!card) return;
+    e.preventDefault();
+    open(WORK[+card.dataset.project]);
+  });
+
+  portal.addEventListener("click", e => {
+    if (e.target.closest(".portal-close") || e.target === portal ||
+        e.target.classList.contains("portal-backdrop")) return close();
+
+    // The embed ignores the pointer until asked for. Otherwise a scroll that
+    // happens to cross it drives the embedded product instead of this panel,
+    // and the case study underneath feels unreachable.
+    if (e.target.closest(".portal-activate")) frameBox.classList.add("is-live");
+  });
+
+  // Scrolling the panel hands the embed back: the reader has moved on
+  body.addEventListener("scroll", () => frameBox.classList.remove("is-live"), { passive: true });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !portal.hidden) close();
+  });
 }
 
 /* ============================================================
@@ -253,30 +566,41 @@ function initKinetic(el) {
   if (!chars.length) return;
 
   let raf = null, mx = -9999, my = -9999;
-  const RADIUS = 180, MIN_W = 250, MAX_W = 800;
+  const RADIUS = 220, MIN_W = 250, MAX_W = 800;
+
+  // Cache each char's centre: measuring 60 boxes on every frame of a pointer
+  // move is the expensive part, and they only shift when the text rewraps.
+  let centres = [];
+  const measure = () => {
+    centres = chars.map(c => {
+      const r = c.getBoundingClientRect();
+      return [r.left + r.width / 2 + scrollX, r.top + r.height / 2 + scrollY];
+    });
+  };
+  measure();
+  addEventListener("resize", measure, { passive: true });
 
   function update() {
     raf = null;
-    chars.forEach(c => {
-      const r = c.getBoundingClientRect();
-      const dx = mx - (r.left + r.width / 2);
-      const dy = my - (r.top + r.height / 2);
-      const dist = Math.hypot(dx, dy);
-      const t = Math.max(0, 1 - dist / RADIUS);
-      const eased = t * t;                         // falloff
-      c.style.setProperty("--w", Math.round(MIN_W + eased * (MAX_W - MIN_W)));
-    });
+    for (let i = 0; i < chars.length; i++) {
+      const [cx, cy] = centres[i];
+      const t = Math.max(0, 1 - Math.hypot(mx - cx, my - cy) / RADIUS);
+      chars[i].style.setProperty("--w", Math.round(MIN_W + t * t * (MAX_W - MIN_W)));
+    }
   }
 
-  el.addEventListener("mousemove", e => {
-    mx = e.clientX; my = e.clientY;
+  // Tracked on the window, not the heading: bound to the element the weight
+  // only answers once the pointer is already on a glyph, and snaps back the
+  // moment it leaves. Following the pointer everywhere lets the letters
+  // thicken as it approaches and thin out as it goes.
+  addEventListener("pointermove", e => {
+    mx = e.pageX; my = e.pageY;
     if (!raf) raf = requestAnimationFrame(update);
   }, { passive: true });
 
-  el.addEventListener("mouseleave", () => {
-    mx = my = -9999;
+  addEventListener("scroll", () => {
     if (!raf) raf = requestAnimationFrame(update);
-  });
+  }, { passive: true });
 }
 
 /* ============================================================
@@ -358,11 +682,11 @@ function initMarquee() {
    while the text moves.
    ============================================================ */
 const SCROLLY_CAPTIONS = [
-  "Research, stakeholder interviews and an audit of what already exists — so decisions are grounded in evidence rather than taste.",
-  "Flows, information architecture and scope. We agree what matters most before a single screen gets designed.",
-  "Interface design and prototypes, iterated against real content and real edge cases.",
-  "Tokens, components and documentation, so the team can build consistently without asking me first.",
-  "Handoff, QA and support through build — design is not done until it is live and working.",
+  "Where the design work happens \u2014 interfaces, components, variants and prototypes, and the file the team actually builds from.",
+  "Writing and refactoring code alongside the design, so a prototype can become something real without a handoff gap.",
+  "Image work \u2014 retouching, composites and the texture and treatment behind the visuals, before they go back into the design file.",
+  "Thinking partner and pair \u2014 auditing flows, pressure-testing copy, and building working prototypes to try an idea before committing to it.",
+  "Quick synthesis \u2014 turning research notes and messy input into structure I can design against.",
 ];
 
 function initScrolly() {
@@ -384,7 +708,16 @@ function initScrolly() {
     if (i === active) return;
     active = i;
     items.forEach((el, n) => el.classList.toggle("is-active", n === i));
-    medias.forEach((el, n) => el.classList.toggle("is-active", n === i));
+    medias.forEach((el, n) => {
+      const on = n === i;
+      el.classList.toggle("is-active", on);
+      // A clip behind a faded-out plate is just work the browser does for
+      // nobody: rewind it and stop until its row comes round again.
+      const clip = el.querySelector("video");
+      if (!clip) return;
+      if (on) { clip.currentTime = 0; clip.play?.().catch(() => {}); }
+      else clip.pause?.();
+    });
     if (caption) {
       caption.classList.add("is-swapping");
       setTimeout(() => {
@@ -396,6 +729,30 @@ function initScrolly() {
 
   const isPinned = () => matchMedia("(min-width: 900px)").matches;
 
+  // The column eases toward where the scroll says it should be instead of
+  // being pinned to it. Two frames of lag is enough to take the step out of a
+  // trackpad flick without the list feeling detached from the wheel.
+  let shown = null;            // px currently rendered
+  let wanted = 0;              // px the scroll position asks for
+  let glide = null;            // rAF id for the easing loop
+
+  function ease(now) {
+    glide = null;
+    const dt = Math.min(64, now - (ease.last || now));   // ms, capped after a tab switch
+    ease.last = now;
+
+    // Frame-rate independent: the same fraction of the remaining distance per
+    // millisecond, whatever the display is doing.
+    const k = 1 - Math.pow(0.0022, dt / 1000);
+    shown += (wanted - shown) * k;
+
+    if (Math.abs(wanted - shown) < 0.1) shown = wanted;
+    list.style.transform = `translateY(${-shown}px)`;
+
+    if (shown !== wanted) glide = requestAnimationFrame(ease);
+    else ease.last = 0;
+  }
+
   function update() {
     raf = null;
 
@@ -405,6 +762,7 @@ function initScrolly() {
       // Reset so a resize back to desktop re-applies a single active step —
       // otherwise setActive() early-returns and every item stays lit.
       active = -1;
+      shown = null;
       return;
     }
 
@@ -415,7 +773,21 @@ function initScrolly() {
     // Continuous position so the list tracks the scroll 1:1
     const exact = p * (items.length - 1);
     const itemH = items[0].offsetHeight;
-    list.style.transform = `translateY(${-(exact * itemH) + itemH}px)`;  // centre row
+
+    // The list carries an empty row at each end, so step i simply moves the
+    // column by i rows and the current name always lands mid-window. The range
+    // works out to exactly the scroll available, so there is no stretch of
+    // scrolling where the column has nothing left to do.
+    const maxShift = Math.max(0, list.offsetHeight - list.parentElement.clientHeight);
+    wanted = Math.min(maxShift, Math.max(0, exact * itemH));
+
+    if (shown === null || REDUCED) {        // first paint, or motion turned off
+      shown = wanted;
+      list.style.transform = `translateY(${-shown}px)`;
+    } else if (shown !== wanted && !glide) {
+      ease.last = 0;
+      glide = requestAnimationFrame(ease);
+    }
 
     setActive(Math.round(exact));
     if (bar) bar.style.width = `${p * 100}%`;
@@ -450,7 +822,90 @@ function initHeroMode() {
 
   const navLinks = [...document.querySelectorAll(".nav a")];
 
+  // The label moves on its own; the link keeps the hit area and the underline
+  navLinks.forEach(a => {
+    if (a.querySelector(".nav-label")) return;
+    const span = document.createElement("span");
+    span.className = "nav-label";
+    span.textContent = a.textContent.trim();
+    a.textContent = "";
+    a.appendChild(span);
+  });
+
+  // Each link crosses over on its own. Both wordings are on screen at the same
+  // time — the old one rolls up and out while the new one rises into its place —
+  // so the link never sits empty mid-swap. The box eases between the two widths
+  // underneath them, and a small per-index delay runs the row left to right.
+  function swapNav(showText, pinned) {
+    const ready = document.body.classList.contains("is-ready");
+
+    navLinks.forEach((a, i) => {
+      const next = showText ? a.dataset.full : a.dataset.hand;
+      const cur = a.querySelector(".nav-label:not(.is-out)");
+      if (!next || !cur || cur.textContent === next) return;
+
+      if (REDUCED || !ready) {
+        a.querySelectorAll(".nav-label.is-out").forEach(n => n.remove());
+        cur.textContent = next;
+        a.style.width = "";
+        a.style.transition = "";
+        return;
+      }
+
+      // A second press mid-flight would leave orphans stacked in the link
+      a.querySelectorAll(".nav-label.is-out").forEach(n => n.remove());
+
+      // The mode class has already swapped the typeface, so start from the
+      // width captured before that — otherwise the link snaps wider first.
+      const from = pinned ? pinned[i] : a.getBoundingClientRect().width;
+
+      // Take the outgoing wording out of flow so the incoming one can occupy
+      // the same spot; it keeps its rest position until the frame after.
+      cur.classList.add("is-out");
+
+      const incoming = document.createElement("span");
+      incoming.className = "nav-label is-in";
+      incoming.textContent = next;
+      a.appendChild(incoming);
+
+      // offsetWidth, not a bounding rect: the incoming label starts scaled up,
+      // and the link is a flex item, so "width: auto" on it measures a shrunk
+      // box rather than the wording it now holds.
+      const to = incoming.offsetWidth;
+
+      // Expo, not a spring: the row gliding to its new width reads as smooth,
+      // while an overshoot makes the whole header jiggle.
+      a.style.transition = "width .55s cubic-bezier(.16, 1, .3, 1)";
+      a.style.width = from + "px";
+      void a.offsetWidth;                             // commit the start width
+
+      const delay = i * 55;
+      a.style.transitionDelay = delay + "ms";
+      cur.style.transitionDelay = delay + "ms";
+      incoming.style.transitionDelay = delay + "ms";
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          a.style.width = to + "px";
+          cur.classList.add("is-gone");               // rolls up and fades
+          incoming.classList.remove("is-in");         // springs up into place
+        });
+      });
+
+      setTimeout(() => {
+        cur.remove();
+        incoming.style.transitionDelay = "";
+        a.style.width = "";
+        a.style.transition = "";
+        a.style.transitionDelay = "";
+      }, delay + 620);
+    });
+  }
+
   function setMode(showText) {
+    // Widths as they read now, before the mode class changes the nav typeface
+    const pinned = navLinks.map(a => a.getBoundingClientRect().width);
+
     hero.classList.toggle("hero--text", showText);
     hero.classList.toggle("hero--video", !showText);
 
@@ -463,10 +918,7 @@ function initHeroMode() {
     if (label) label.textContent = showText ? "Show video" : "Show headline";
 
     // Nav speaks in Adi's voice alongside the drawing, plain wording otherwise
-    navLinks.forEach(a => {
-      const next = showText ? a.dataset.full : a.dataset.hand;
-      if (next) a.textContent = next;
-    });
+    swapNav(showText, pinned);
 
     if (showText) {
       resetTypewriter(title);        // rewind, then replay the typing
@@ -486,8 +938,31 @@ function initHeroMode() {
 
   setMode(true);                     // start on the headline
 
-  btn.addEventListener("click", () =>
-    setMode(btn.getAttribute("aria-pressed") !== "true"));
+  // Crossfade between the two screens instead of cutting. The nav runs its
+  // own per-link crossover at the same time, so the header keeps moving
+  // while the hero is dark.
+  let switching = false;
+  btn.addEventListener("click", () => {
+    if (switching) return;                       // ignore a double tap mid-fade
+    const next = btn.getAttribute("aria-pressed") !== "true";
+
+    if (REDUCED || !document.body.classList.contains("is-ready")) {
+      setMode(next);
+      return;
+    }
+
+    switching = true;
+
+    // The knob answers the press straight away — it is the thing that was
+    // clicked — while the hero dissolves behind it. setMode then sets the same
+    // aria-pressed value, so the flight is not restarted.
+    hero.classList.add("is-switching");
+    setTimeout(() => {
+      setMode(next);
+      requestAnimationFrame(() => hero.classList.remove("is-switching"));
+      setTimeout(() => { switching = false; }, 220);
+    }, 220);
+  });
 
   // Expose so the preloader can start the right mode
   initHeroMode.setMode = setMode;
@@ -629,9 +1104,14 @@ function initSmoothScroll() {
     requestAnimationFrame(loop);
   }
 
+  // While a modal is open the page behind it is locked, so hijacking the
+  // wheel would swallow the scroll entirely — the modal must keep it.
+  const overlayOpen = () => !!document.querySelector(".portal:not([hidden])");
+
   addEventListener("wheel", e => {
     // Leave trackpad pinch-zoom and opted-out panes alone
     if (e.ctrlKey || e.defaultPrevented) return;
+    if (overlayOpen()) return;
     if (e.target.closest?.("[data-native-scroll]")) return;
 
     e.preventDefault();
@@ -644,6 +1124,7 @@ function initSmoothScroll() {
     const el = document.activeElement;
     const tag = el?.tagName;
     if (tag === "INPUT" || tag === "TEXTAREA" || el?.isContentEditable) return;
+    if (overlayOpen()) return;              // the modal scrolls, not the page
 
     const step = {
       ArrowDown: KEY_STEP,
@@ -769,7 +1250,8 @@ function boot() {
   initHeroMode();
   initHeader();
   initSmoothScroll();
-  window.Handwriting?.load("fonts/mynerve-strokes.json").catch(() => {});
+  initProjectPortal();
+  window.Handwriting?.load("fonts/hand-strokes.json").catch(() => {});
   initBoard();
 
   tick();
@@ -827,7 +1309,7 @@ const NOTE_COLOURS = [
   "#bfe3c6", "#b9e5e0", "#bcd8f5", "#ded0f7", "#f3c6dd",
 ];
 
-const NOTE_AUTHOR = "Navanta Design Team";
+const NOTE_AUTHOR = "Aditya Joseph";
 
 const NOTE_FONTS = [
   { label: "Sans",      css: "" },
@@ -844,42 +1326,143 @@ const NOTE_SIZES = [
 ];
 
 /* ------------------------------------------------------------
-   Canned responder.
+   Replies.
 
-   There is no backend here, and a browser-side API key would be
-   readable by anyone viewing source — so replies are matched
-   locally. To hand this to a real model later, replace the body
-   of answerFor() with a fetch to your own endpoint (it may
-   return a promise; the caller awaits it).
+   answerFor() asks a model and falls back to the local matcher
+   below if the call fails, times out, or the answer comes back
+   empty — the board keeps working offline either way.
+
+   No API key lives in this file, and none should: this is a
+   static site, so anything here is readable by anyone viewing
+   source. Two routes instead:
+
+     1. AI_ENDPOINT — your own proxy, holding the key server-side.
+        api/chat.js in this repo is one, ready for Vercel. Set
+        window.ADY_AI_ENDPOINT = "/api/chat" (or just deploy it —
+        the path is tried automatically).
+     2. The keyless public endpoint, used when no proxy answers.
+        It needs no account, but questions typed on the board do
+        travel to a third party.
    ------------------------------------------------------------ */
+const AI_ENDPOINTS = [
+  { url: () => window.ADY_AI_ENDPOINT || "/api/chat", kind: "proxy" },
+  { url: () => "https://text.pollinations.ai/openai", kind: "public" },
+];
+
+const AI_SYSTEM = [
+  "You are the portfolio of Aditya Joseph, a product designer in Delhi, India.",
+  "Answer as him, in first person, warmly and plainly.",
+  "He designs digital experiences that bring clarity to complex information,",
+  "workflows and decisions: UX design, UI design, prototyping, design systems",
+  "and accessibility. His process runs Discover, Define, Design, Systemise, Ship.",
+  "He can be reached at adijosantony@gmail.com.",
+  "Answer in at most two short sentences, under 240 characters total.",
+  "Wrap two or three key words in **double asterisks**. No lists, no headings,",
+  "no markdown other than that. If asked something unrelated to his work,",
+  "say briefly that it is outside what this board covers.",
+].join(" ");
+
+/* A service can answer 200 OK with its own notice — "out of credits", "sign
+   in", a link to top up — and that is not an answer to the question. The
+   system prompt forbids links and markdown, so anything link-shaped or
+   billing-shaped is the provider talking, not the model. */
+function looksLikeServiceNotice(text) {
+  return /\]\(https?:|https?:\/\/\S+/i.test(text)
+      || /\b(api key|credits?|top.?up|quota|rate.?limit|billing|balance|upgrade your plan|sign in to continue|unauthori[sz]ed)\b/i.test(text);
+}
+
+/* The model's words are untrusted text, not markup: escape everything, then
+   allow back exactly one thing — **bold** — which is what the handwriting
+   renderer understands. */
+function aiToSafeHtml(text) {
+  const esc = String(text)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+  return esc.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").trim();
+}
+
+async function askModel(question) {
+  const body = JSON.stringify({
+    model: "openai",
+    messages: [
+      { role: "system", content: AI_SYSTEM },
+      { role: "user", content: question },
+    ],
+  });
+
+  for (const ep of AI_ENDPOINTS) {
+    const stop = new AbortController();
+    const timer = setTimeout(() => stop.abort(), 12000);
+    try {
+      const res = await fetch(ep.url(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        signal: stop.signal,
+      });
+      clearTimeout(timer);
+      if (!res.ok) continue;
+
+      const raw = await res.text();
+      let text = raw;
+      try {                                  // OpenAI-shaped, or plain text
+        const j = JSON.parse(raw);
+        text = j.choices?.[0]?.message?.content ?? j.reply ?? j.text ?? raw;
+      } catch { /* plain text is fine */ }
+
+      text = String(text).trim();
+      if (!text || text.length > 1200) continue;
+      if (looksLikeServiceNotice(text)) continue;   // the provider, not the model
+      return aiToSafeHtml(text);
+    } catch {
+      clearTimeout(timer);                   // try the next one
+    }
+  }
+  return null;
+}
+
+async function answerFor(question) {
+  const live = await askModel(question);
+  return live || cannedAnswer(question);
+}
+
 const ANSWERS = [
   {
-    match: /warehouse|wearhouse|outlet|store/i,
-    reply: "No. A <strong>Fossil Outlet Store</strong> is a retail store located in an outlet shopping center, not a warehouse.",
+    match: /who|about (you|adi|aditya)|tell me about|yourself/i,
+    reply: "I'm <strong>Aditya Joseph</strong>, a product designer based in Delhi. I design digital experiences that bring clarity to complex information, workflows and decisions.",
   },
   {
-    match: /design skill|skills|what can|capab/i,
-    reply: "End-to-end product design: <strong>UX research, UI systems, prototyping and motion</strong> — plus enough front-end to ship it.",
+    match: /design skill|skills|what can|capab|do you do|services/i,
+    reply: "<strong>UX design, UI design, prototyping, design systems and accessibility</strong> — research, information architecture, interaction design and visual systems.",
   },
   {
-    match: /who is|tell me about|about (joseph|adi)/i,
-    reply: "A product designer with <strong>10 years</strong> designing digital products end-to-end, working from user needs through to shipped interfaces.",
+    match: /process|how do you work|method|approach/i,
+    reply: "Five stages: <strong>Discover, Define, Design, Systemise, Ship</strong> — from insight to interface, every project follows a clear path.",
   },
   {
-    match: /process|how do you work|method/i,
-    reply: "Five stages: <strong>Discover, Define, Design, Systemise, Ship</strong> — each one grounded in evidence rather than taste.",
+    match: /accessib|inclusive|wcag/i,
+    reply: "Inclusive design choices that make digital experiences <strong>easier to understand and use for more people</strong>.",
   },
   {
-    match: /contact|hire|available|work together/i,
-    reply: "Say hi at <strong>hello@example.com</strong> — always happy to talk about new work.",
+    match: /system|component|scale|consistent/i,
+    reply: "Reusable components and design foundations that create <strong>consistency across product teams and platforms</strong>.",
+  },
+  {
+    match: /where|based|located|delhi|india/i,
+    reply: "Based in <strong>Delhi, India</strong>, working with teams that care about solving real user problems.",
+  },
+  {
+    match: /contact|hire|available|work together|email|reach/i,
+    reply: "Say hello at <strong>adijosantony@gmail.com</strong> — let's create something clear, useful and memorable.",
   },
 ];
 
-function answerFor(question) {
+function cannedAnswer(question) {
   const hit = ANSWERS.find(a => a.match.test(question));
   if (hit) return hit.reply;
   return `I don't have a note on that yet — try asking about the ` +
-         `<strong>process</strong>, <strong>design skills</strong> or <strong>getting in touch</strong>.`;
+         `<strong>process</strong>, <strong>design skills</strong>, ` +
+         `<strong>design systems</strong> or <strong>getting in touch</strong>.`;
 }
 
 /* Three words that say what a turn was about — the rail is too small for
@@ -1019,11 +1602,7 @@ function initBoard() {
     by.className = "note-by";
     by.textContent = NOTE_AUTHOR;
 
-    const tip = document.createElement("div");
-    tip.className = "note-tip";
-    tip.hidden = true;
-
-    note.append(body, by, tip);
+    note.append(body, by);
     canvas.appendChild(note);
 
     // Every question typed into this box, newest last
@@ -1031,25 +1610,14 @@ function initBoard() {
     return note;
   }
 
-  /* ---------- Ask / answer ---------- */
-  function renderTip(note) {
-    const turns = history.get(note) || [];
-    const tip = note.querySelector(".note-tip");
-
-    if (!turns.length) { tip.hidden = true; return; }
-    tip.hidden = false;
-    tip.innerHTML = [...turns].reverse().map(t =>
-      `<div class="tip-turn"><div class="tip-q">${t.q}</div>` +
-      `<div class="tip-a">${t.a}</div></div>`).join("");
-  }
-
   /* ---------- Live handwritten reply ---------- */
-  // Writes the newest answer over the showreel in Adi Hand. When a real
-  // agent is connected, this is already the surface its replies land on —
-  // only answerFor() changes.
+  // The hero shows the intro when nothing is selected, and the selected
+  // card's answer when there is one. When a real agent is connected this is
+  // already the surface its replies land on — only answerFor() changes.
   const reply = document.getElementById("hero-reply");
   const replyQ = document.getElementById("hero-reply-q");
   const replyA = document.getElementById("hero-reply-a");
+  const intro = document.getElementById("hero-intro");
   let writeToken = 0;
 
   // Flatten the answer's markup into characters that remember their own
@@ -1075,19 +1643,17 @@ function initBoard() {
     return out;
   }
 
-  // One writer, used for the intro and for every reply: it lays characters
-  // down one at a time under a crosshair that travels with the pen.
-  function writeHand(host, html, token) {
-    // Real pen strokes when the centreline data has loaded; otherwise the
-    // per-glyph wipe below, so a slow or failed fetch never blanks the text.
+  // One writer, used for the intro and for every reply: real pen strokes once
+  // the centreline data has loaded, otherwise a per-glyph wipe, so a slow or
+  // failed fetch never blanks the text.
+  function writeHand(host, html, token, opts = {}) {
     if (window.Handwriting?.ready) {
-      return window.Handwriting.write(host, charsOf(html), { live: token })
+      return window.Handwriting.write(host, charsOf(html), { live: token, ...opts })
         .catch(() => { host.innerHTML = html; });
     }
 
     return new Promise(resolve => {
       host.innerHTML = "";
-
       if (REDUCED) { host.innerHTML = html; resolve(); return; }
 
       const chars = charsOf(html);
@@ -1096,16 +1662,6 @@ function initBoard() {
       pen.setAttribute("aria-hidden", "true");
       host.appendChild(pen);
 
-      const movePen = el => {
-        const box = el.getBoundingClientRect();
-        const base = host.getBoundingClientRect();
-        const x = box.right - base.left;
-        const y = box.top - base.top + box.height * 0.62;
-        pen.style.setProperty("--x", `${x}px`);
-        pen.style.setProperty("--y", `${y}px`);
-        pen.style.transform = `translate(${x}px, ${y}px)`;
-      };
-
       let i = 0;
       let word = null;          // characters are grouped so words never split
 
@@ -1113,7 +1669,6 @@ function initBoard() {
         if (!token()) return resolve();
 
         if (i >= chars.length) {
-          pen.classList.add("is-done");
           setTimeout(() => { pen.remove(); resolve(); }, 700);
           return;
         }
@@ -1121,7 +1676,7 @@ function initBoard() {
         const { ch, bold } = chars[i++];
 
         if (ch === " ") {
-          word = null;          // a line may break here, but not inside a word
+          word = null;
           host.insertBefore(document.createTextNode(" "), pen);
         } else {
           if (!word) {
@@ -1133,14 +1688,11 @@ function initBoard() {
           span.className = "hw-char" + (bold ? " hw-b" : "");
           span.textContent = ch;
           word.appendChild(span);
-          movePen(span);
         }
 
-        // A hand slows at the end of a word and lifts at punctuation
         let wait = 42 + Math.random() * 30;
         if (ch === " ") wait += 70;
         if (/[.,;:!?]/.test(ch)) wait += 210;
-
         setTimeout(stroke, wait);
       })();
     });
@@ -1151,13 +1703,41 @@ function initBoard() {
     const mine = ++writeToken;
 
     reply.classList.add("is-on");
+    document.querySelector(".hero")?.classList.add("has-reply");
     replyQ.textContent = q;
-    writeHand(replyA, a, () => mine === writeToken);
+
+    // The reply pane clips: give the writer the room left under the question
+    // so a long answer is shrunk to fit rather than written off the bottom.
+    // Leave a descender's worth of slack below the last line, or the figure's
+    // overflow clips the tails even when the block technically fits.
+    const room = reply.clientHeight - replyQ.offsetHeight - 40;
+    writeHand(replyA, a, () => mine === writeToken, { maxHeight: Math.max(60, room) });
   }
+
+  // Closing a reply uncovers the intro again — the hero's resting state.
+  function closeReply() {
+    writeToken++;                      // stop a run still in progress
+    reply?.classList.remove("is-on");
+    document.querySelector(".hero")?.classList.remove("has-reply");
+    if (replyA) replyA.innerHTML = "";
+    if (replyQ) replyQ.textContent = "";
+  }
+
+  // Back leaves the board altogether and returns to the headline — the reply
+  // is the deepest state, so "back" means all the way home.
+  function goHome() {
+    closeReply();
+    select(null);
+    initHeroMode.setMode?.(true);
+  }
+  document.getElementById("hero-back")?.addEventListener("click", goHome);
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && reply?.classList.contains("is-on")) goHome();
+  });
 
   /* ---------- Intro ---------- */
   // The two lines the showreel used to play, written rather than filmed.
-  const INTRO = ["Hi, I'm Adi", "I like to draw"];
+  const INTRO = ["Hi, I'm Adi", "I design for clarity"];
   let introRun = false;
 
   async function writeIntro() {
@@ -1168,6 +1748,11 @@ function initBoard() {
 
     const mine = ++writeToken;
     const live = () => mine === writeToken;
+
+    // Wait for the pen strokes, or the intro is written once in the fallback
+    // style and never redrawn
+    await window.Handwriting?.whenReady?.();
+    if (!live()) return;
 
     await writeHand(l1, INTRO[0], live);
     if (live()) await writeHand(l2, INTRO[1], live);
@@ -1233,30 +1818,6 @@ function initBoard() {
     turn.note.classList.add("is-flash");
   });
 
-  function placeTip(note) {
-    const tip = note.querySelector(".note-tip");
-    if (tip.hidden) return;
-
-    // The tip is absolutely positioned inside the note, so its offsets are
-    // note-relative — but it has to be clamped against the canvas. Work the
-    // position out in canvas space, then subtract the note's own offset.
-    const cv = canvas.getBoundingClientRect();
-    const noteW = note.offsetWidth;
-    const noteH = note.offsetHeight;
-    const tipW = tip.offsetWidth;
-    const tipH = tip.offsetHeight;
-
-    let x = note.offsetLeft + noteW / 2 - tipW / 2;
-    x = Math.max(8, Math.min(x, cv.width - tipW - 8));
-
-    // Prefer above the note; drop below when it would be clipped
-    const above = note.offsetTop - tipH - 10;
-    const y = above >= canvas.scrollTop ? above : note.offsetTop + noteH + 10;
-
-    tip.style.left = `${x - note.offsetLeft}px`;
-    tip.style.top = `${y - note.offsetTop}px`;
-  }
-
   async function ask(note) {
     const body = bodyOf(note);
     const q = body.innerText.trim();
@@ -1274,7 +1835,6 @@ function initBoard() {
     history.set(note, turns);
     writeReply(q, a);
     log.push({ q, a, note, label: threeWordLabel(q) });
-    renderTip(note);
     renderRail();
   }
 
@@ -1476,6 +2036,17 @@ function initBoard() {
   canvas.addEventListener("pointerdown", e => {
     const note = e.target.closest(".note");
     select(note || null);
+
+    // The hero shows the selected card's answer, in handwriting; with nothing
+    // selected it falls back to the intro. The board is the index, the hero
+    // is where an answer is actually read.
+    const turns = note && history.get(note);
+    if (turns?.length) {
+      const last = turns[turns.length - 1];
+      writeReply(last.q, last.a);
+    } else if (!note) {
+      closeReply();
+    }
     if (!note || e.target.closest(".note-text")) return;
 
     const box = note.getBoundingClientRect();
@@ -1508,11 +2079,12 @@ function initBoard() {
   canvas.addEventListener("pointercancel", endDrag);
 
   /* ---------- Asking ---------- */
-  // Cmd/Ctrl+Enter asks without leaving the note; blurring asks too, so a
-  // question is never lost just because the user clicked away.
+  // Enter sends the question; Shift+Enter is still a line break, so a note can
+  // hold more than one line. Blurring asks too, so a question typed and then
+  // clicked away from is never lost.
   canvas.addEventListener("keydown", e => {
     if (!e.target.closest(".note-text")) return;
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       ask(e.target.closest(".note"));
     }
@@ -1524,25 +2096,10 @@ function initBoard() {
   }, true);
 
   /* ---------- Hover bubble ---------- */
-  canvas.addEventListener("pointerover", e => {
-    const note = e.target.closest(".note");
-    if (!note || drag) return;
-    const tip = note.querySelector(".note-tip");
-    if (tip.hidden) return;
-    placeTip(note);
-    tip.classList.add("is-on");
-  });
-
-  canvas.addEventListener("pointerout", e => {
-    const note = e.target.closest(".note");
-    if (!note || note.contains(e.relatedTarget)) return;
-    note.querySelector(".note-tip").classList.remove("is-on");
-  });
-
   /* ---------- Dismissal ---------- */
   document.addEventListener("pointerdown", e => {
     if (!e.target.closest(".bb-pop") && !e.target.closest("[data-menu]")) closePop();
-    if (!board.contains(e.target)) select(null);
+    if (!board.contains(e.target)) { select(null); closeReply(); }
   });
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") closePop();
@@ -1558,11 +2115,12 @@ function initBoard() {
   // so its own clientWidth is 0 at this point.
   const roomy = window.matchMedia("(min-width: 1024px)").matches;
 
+  // The seeded notes show their local answer at once, so the board is never
+  // blank while a first request is in flight.
   const seed = (note, q) => {
-    const a = answerFor(q);
+    const a = cannedAnswer(q);
     history.set(note, [{ q, a }]);
     log.push({ q, a, note, label: threeWordLabel(q) });
-    renderTip(note);
     renderRail();
   };
 

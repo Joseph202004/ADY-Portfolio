@@ -5,3 +5,8 @@ Thumbs.db
 
 # local scratch
 *.backup.html
+
+# Never commit credentials — the API key belongs in the host's environment
+.env
+.env.*
+!.env.example

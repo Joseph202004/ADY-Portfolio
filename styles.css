@@ -36,6 +36,8 @@
   --gutter: 24px;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: cubic-bezier(.34, 1.56, .64, 1);   /* overshoots, then settles */
+  --soft-spring: cubic-bezier(.22, 1.08, .36, 1);  /* the same, barely */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid; }
@@ -117,21 +119,33 @@ figure { margin: 0; }
   * , *::before, *::after { cursor: none !important; }
   .cursor {
     position: fixed; top: 0; left: 0;
-    width: 12px; height: 12px; border-radius: 999px;
+    width: 11px; height: 11px; border-radius: 999px;
     background: var(--foreground);
+    /* The halo, so the dot reads against ink as well as paper */
+    box-shadow: 0 0 0 5px rgba(17, 17, 17, .13);
     pointer-events: none; z-index: 9999;
     display: grid; place-items: center;
     transition: width .3s var(--ease-out-expo), height .3s var(--ease-out-expo),
-                background .3s var(--ease), opacity .3s var(--ease);
-    mix-blend-mode: difference;
+                background .3s var(--ease), box-shadow .3s var(--ease),
+                opacity .3s var(--ease);
+    /* No difference blend: it inverts a dark dot to near-white on a white
+       page, which is why the cursor vanished everywhere except over ink. */
   }
   .cursor-label {
     font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
     color: #111; opacity: 0; transition: opacity .2s var(--ease);
     white-space: nowrap;
   }
-  .cursor.is-hover { width: 56px; height: 56px; background: #fff; }
-  .cursor.has-label { width: 76px; height: 76px; background: #fff; }
+  .cursor.is-hover {
+    width: 44px; height: 44px;
+    background: rgba(17, 17, 17, .08);
+    box-shadow: 0 0 0 1px rgba(17, 17, 17, .18);
+  }
+  .cursor.has-label {
+    width: 76px; height: 76px;
+    background: var(--background);
+    box-shadow: 0 0 0 1px rgba(17, 17, 17, .18), 0 6px 20px rgba(0, 0, 0, .12);
+  }
   .cursor.has-label .cursor-label { opacity: 1; }
 }
 @media (pointer: coarse) { .cursor { display: none; } }
@@ -207,10 +221,11 @@ body.mode-video .hero-sub,
 body.mode-video .hero-media,
 body.mode-video main > section:not(#top),
 body.mode-video .site-footer,
-body.mode-video .site-header .brand,
+/* The wordmark stays in video mode: it is the only thing on screen naming
+   whose portfolio this is. Only the clock and location step back. */
 body.mode-video .site-header .meta { display: none; }
 
-body.mode-video .site-header .wrap { justify-content: flex-end; }
+body.mode-video .site-header .wrap { justify-content: space-between; }
 body.mode-video .site-header { border-bottom-color: transparent !important; }
 /* The hero keeps its headline-mode top padding in video mode too: the mode
    switch sits in that band, and a different padding made it jump 108px up
@@ -293,8 +308,20 @@ body.mode-full .hero-video { display: none; }
 /* ============================================================
    HERO
    ============================================================ */
-.hero { position: relative; padding-top: 140px; padding-bottom: 56px; }
-@media (min-width: 768px) { .hero { padding-top: 180px; padding-bottom: 80px; } }
+/* Vertical rhythm. Sections breathe at --space-section; blocks inside a
+   section at --space-block. The hero used to end 56px above the images
+   while every section around it used 112 — half the page's spacing, which
+   read as the images crowding the hero. */
+:root {
+  --space-section: 72px;
+  --space-block: 48px;
+}
+@media (min-width: 768px) {
+  :root { --space-section: 112px; --space-block: 96px; }
+}
+
+.hero { position: relative; padding-top: 140px; padding-bottom: var(--space-section); }
+@media (min-width: 768px) { .hero { padding-top: 180px; } }
 
 .display {
   font-size: var(--font-size-2xl);
@@ -310,9 +337,18 @@ body.mode-full .hero-video { display: none; }
   font-style: italic;
   font-weight: 400;
   letter-spacing: -0.01em;
+  /* Grey, so the serif words read as an aside inside the sentence rather
+     than competing with it. The chars inherit it. */
+  color: var(--muted-2);
 }
+.display em .char, .contact-title em .char, .section-title em .char { color: inherit; }
 /* Kinetic weight: chars thicken near the cursor */
-[data-kinetic] .char { font-variation-settings: "wght" var(--w, 300); }
+[data-kinetic] .char {
+  font-variation-settings: "wght" var(--w, 300);
+  /* Short, so the weight tracks the pointer. The .char default is 350ms,
+     which is right for the reveal but leaves this effect lagging behind. */
+  transition: font-variation-settings .12s linear;
+}
 [data-kinetic] em .char { font-variation-settings: normal; }
 
 .hero-sub {
@@ -324,7 +360,7 @@ body.mode-full .hero-video { display: none; }
 }
 
 .hero-media {
-  margin-top: 56px;
+  margin-top: var(--space-block);
   display: grid; gap: 16px;
   grid-template-columns: 1fr;
 }
@@ -374,15 +410,23 @@ body.mode-full .hero-video { display: none; }
    aside placeholder; the headline keeps the left column and its own wrapping.
    The headline spans both rows so it is not pushed down by the switch. */
 @media (min-width: 1024px) {
+  /* Single column now the aside image is gone: the headline and paragraph
+     stack, and the control row still spans the width above them. */
   .hero-head {
     display: grid;
-    grid-template-columns: 1fr auto;
-    column-gap: 48px;
+    grid-template-columns: 1fr;
     align-items: start;
   }
-  .hero-head .display { grid-column: 1; grid-row: 1 / span 2; }
-  .hero-switch { grid-column: 2; grid-row: 1; margin: 0 0 16px; }
-  .hero-aside { grid-column: 2; grid-row: 2; width: 420px; margin-top: 0; }
+  /* The control row spans the width, so Back sits at the far left and the
+     mode toggle at the far right. Headline and aside then share row two and
+     their tops line up. */
+  .hero-switch { grid-column: 1 / -1; grid-row: 1; margin: 0 0 24px; }
+  .hero-head .display { grid-column: 1; grid-row: 2; align-self: start; }
+  .hero-head .hero-sub { max-width: 60ch; }
+  /* The aside is taller than the headline, and a grid row takes the height of
+     its tallest item — which left a hole under the headline. Letting the
+     aside span the headline and the paragraph closes it. */
+  .hero-head .hero-sub { grid-column: 1; grid-row: 3; align-self: start; }
 }
 
 /* ---------- Hero mode switch: video <-> headline ---------- */
@@ -475,7 +519,7 @@ body.mode-video .hero-aside { display: none; }
    ============================================================ */
 .scrolly {
   --steps: 5;
-  --item-h: 92px;
+  --item-h: 72px;
   position: relative;
   height: calc(100vh + var(--steps) * 72vh);
 }
@@ -502,19 +546,25 @@ body.mode-video .hero-aside { display: none; }
 }
 
 /* Window showing 3 rows, with the active row centred */
+/* Three rows at a time, fading out at both edges, so the list arrives a row
+   at a time instead of standing there complete. */
 .scrolly-viewport {
   height: calc(var(--item-h) * 3);
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 26%, #000 74%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 26%, #000 74%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
 }
-.scrolly-list { will-change: transform; }
+/* One empty row above and below, so the first and last names can sit in the
+   middle of the window like every other one instead of against a faded edge. */
+.scrolly-list { will-change: transform; padding-block: var(--item-h); }
+/* Each row comes up out of the haze as it becomes current and settles back
+   as it leaves, so they reveal one at a time rather than all at once. */
 .scrolly-item {
   height: var(--item-h);
   display: flex; align-items: center; gap: 20px;
-  opacity: .22;
-  transition: opacity .45s var(--ease), filter .45s var(--ease);
-  filter: blur(1px);
+  opacity: .2;
+  filter: blur(1.5px);
+  transition: opacity .5s var(--ease), filter .5s var(--ease);
 }
 .scrolly-item.is-active { opacity: 1; filter: none; }
 .scrolly-num {
@@ -524,10 +574,20 @@ body.mode-video .hero-aside { display: none; }
 .scrolly-word {
   font-size: clamp(32px, 4.4vw, 56px);
   font-weight: 300; letter-spacing: -0.04em; line-height: 1;
-  font-variation-settings: "wght" 300;
-  transition: font-variation-settings .45s var(--ease);
+  /* The name and its logo are one unit: as a flex item the span is width-
+     constrained, and without this the logo wraps onto its own line. */
+  white-space: nowrap;
+  /* Flex, so the mark centres on the word instead of sitting on its baseline
+     — at 1.24em a baseline-aligned logo towers over the cap height. */
+  display: inline-flex; align-items: center; gap: .3em;
 }
-.scrolly-item.is-active .scrolly-word { font-variation-settings: "wght" 500; }
+/* The names run to different lengths, so the marks landed at five different
+   x positions. A shared minimum width parks them all on one axis. */
+.scrolly-name {
+  display: inline-block;
+  min-width: 4.7em;                  /* just past the longest name */
+  font-variation-settings: "wght" 300;
+}
 
 .scrolly-caption {
   margin-top: 24px; min-height: 3.4em; max-width: 42ch;
@@ -595,8 +655,7 @@ body.mode-video .hero-aside { display: none; }
 /* ============================================================
    SECTIONS
    ============================================================ */
-.section { padding-block: 72px; }
-@media (min-width: 768px) { .section { padding-block: 112px; } }
+.section { padding-block: var(--space-section); }
 
 .section-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; }
 @media (min-width: 768px) {
@@ -684,7 +743,7 @@ body.mode-video .hero-aside { display: none; }
 @media (min-width: 768px) { .explore-grid { grid-template-columns: repeat(4, 1fr); } }
 
 /* ---------- Contact ---------- */
-.contact { border-top: 1px solid var(--line); padding-block: 96px 64px; }
+.contact { border-top: 1px solid var(--line); padding-block: var(--space-section) 64px; }
 .contact-title {
   font-size: var(--font-size-2xl);
   font-weight: 300; line-height: 1.1;
@@ -896,17 +955,22 @@ body.mode-full .hero-stage { display: none; }
   /* Mynerve is the handwriting the replies are written in. "Adi Hand" — the
      face traced from Adi's own specimen — stays in fonts/ as the fallback
      and can be promoted by swapping these two names. */
-  font-family: "Mynerve", "Adi Hand", "Caveat", cursive;
+  font-family: "Mynerve", "Caveat", "Adi Hand", cursive;
   line-height: 1.5;
   letter-spacing: .01em;
+  /* Graphite, not ink: a soft dark grey reads as pencil on the page */
+  color: #3f3f43;
 }
 
 .hero-reply {
-  /* Above the <video>, which follows it in the DOM and would otherwise
-     paint over it */
+  /* Above the intro, which shares this box */
   position: absolute; inset: 0; z-index: 2;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 8px 12px;
+  /* Top-aligned, not centred: a long answer is shrunk to fit, but if it
+     still overruns, the first line must be the one that stays visible */
+  display: flex; flex-direction: column; justify-content: flex-start;
+  /* Bottom room for descenders: the figure clips its overflow, so a "g" or
+     "y" on the last line would lose its tail. */
+  padding: 14px 12px 22px;
   background: var(--background);
   opacity: 0; visibility: hidden;
   transition: opacity .3s var(--ease), visibility .3s var(--ease);
@@ -919,8 +983,10 @@ body.mode-full .hero-stage { display: none; }
 }
 .hero-reply-a {
   margin-top: 10px;
-  font-size: clamp(22px, 3.4vw, 40px);
-  color: var(--foreground);
+  /* Smaller than the intro: an answer is a paragraph, not a greeting, and at
+     the intro's size a long one overran the pane and clipped. */
+  font-size: clamp(17px, 2.5vw, 30px);
+  /* colour comes from .hand (pencil grey) */
 }
 .hero-reply-a strong { font-weight: 400; }
 
@@ -950,52 +1016,6 @@ body.mode-full .hero-stage { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .board-bar { transition: none; }
-}
-
-/* ---------- Note Q&A bubble ---------- */
-/* Each note keeps the questions typed into it and the replies; hovering
-   the note shows that exchange, most recent first. */
-.note-tip {
-  position: absolute; z-index: 6;
-  width: 300px; max-height: 210px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: rgba(40, 40, 42, .97);
-  color: #f5f5f7;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
-  overflow-y: auto;
-  opacity: 0; visibility: hidden;
-  transition: opacity .16s var(--ease), visibility .16s var(--ease);
-  pointer-events: none;
-}
-.note-tip.is-on { opacity: 1; visibility: visible; }
-.note-tip[hidden] { display: none; }
-
-.tip-turn + .tip-turn {
-  margin-top: 10px; padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, .12);
-}
-.tip-q {
-  font-size: 13.5px; line-height: 1.35; color: #fff;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.tip-a {
-  margin-top: 3px;
-  font-size: 13.5px; line-height: 1.4;
-  color: rgba(245, 245, 247, .62);
-}
-.tip-a strong { color: rgba(245, 245, 247, .92); font-weight: 600; }
-
-.note-thinking {
-  position: absolute; right: 8px; top: 8px;
-  width: 6px; height: 6px; border-radius: 999px;
-  background: rgba(0, 0, 0, .35);
-  animation: caret-blink 1s steps(1) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .note-tip { transition: none; }
-  .note-thinking { animation: none; }
 }
 
 /* ---------- History rail ---------- */
@@ -1124,7 +1144,7 @@ body.mode-full .hero-stage { display: none; }
 .hero-intro-line {
   position: relative;                /* the pen is positioned against this */
   font-size: clamp(26px, 4.4vw, 52px);
-  color: var(--foreground);
+  /* colour comes from .hand (pencil grey) */
   min-height: 1.2em;
 }
 
@@ -1148,4 +1168,433 @@ body.mode-full .hero-stage { display: none; }
   position: absolute !important;
   width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* The written line settles into the real typeface once the pen lifts —
+   the strokes are a tracing and read lighter than the font itself. */
+.hw-settled { display: block; }
+.hw-settled strong { font-weight: 700; }
+
+/* ---------- Back, from a reply to the intro ---------- */
+/* The same pill as the mode toggle, on the same line, at the other end of
+   the row — so the hero reads as one control bar rather than two. */
+.hero-back {
+  display: none;                       /* only while a reply is open */
+  align-items: center; justify-content: center; gap: 8px;
+  min-width: 118px; height: 34px;
+  padding: 8px 16px 8px 13px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--background);
+  font: inherit; font-size: var(--font-size-xs); color: var(--muted);
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease),
+              box-shadow .25s var(--ease), transform .25s var(--ease-out-expo);
+}
+.hero--video.has-reply .hero-back { display: inline-flex; }
+
+.hero-back:hover {
+  color: var(--foreground); border-color: var(--foreground);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .07);
+  transform: translateY(-1px);
+}
+.hero-back:active { transform: translateY(0); }
+.hero-back:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+
+/* Chevron drawn, not typed, so its weight matches the pill's border */
+.hero-back-arrow {
+  width: 9px; height: 9px;
+  border-left: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform .25s var(--ease-out-expo);
+}
+.hero-back:hover .hero-back-arrow { transform: rotate(45deg) translate(-2px, 2px); }
+
+/* Back sits opposite the toggle on the switch row. The toggle pushes itself
+   right rather than relying on space-between, which would park it on the
+   left whenever Back is hidden — which is most of the time. */
+.hero-switch { justify-content: flex-start; }
+.hero-switch .mode-toggle { margin-left: auto; }
+
+
+
+/* The dot that pulses on a note while its answer is being worked out */
+.note-thinking {
+  position: absolute; right: 8px; top: 8px;
+  width: 6px; height: 6px; border-radius: 999px;
+  background: rgba(0, 0, 0, .35);
+  animation: caret-blink 1s steps(1) infinite;
+}
+@media (prefers-reduced-motion: reduce) { .note-thinking { animation: none; } }
+
+/* ---------- Hero portrait ---------- */
+/* Sits over the placeholder, so a missing file degrades to the placeholder
+   rather than a broken image. */
+.hero-portrait {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- Work thumbnails ---------- */
+.work-thumb {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+
+/* ============================================================
+   PROJECT PORTAL
+   A project opens here instead of navigating away.
+   ============================================================ */
+.portal {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity .26s var(--ease);
+}
+.portal.is-on { opacity: 1; }
+.portal[hidden] { display: none; }
+
+.portal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(17, 17, 17, .58);
+  backdrop-filter: blur(3px);
+}
+
+.portal-panel {
+  position: relative;
+  display: flex; flex-direction: column;
+  /* A real height, not just a cap: the frame below is flex:1, and with only
+     max-height it has nothing to fill and collapses to nothing. */
+  width: min(1180px, 100%);
+  height: min(860px, calc(100vh - 48px));
+  padding: 24px;
+  border-radius: 18px;
+  background: var(--background);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .3);
+  transform: translateY(10px) scale(.99);
+  transition: transform .3s var(--ease-out-expo);
+  overflow: hidden;
+}
+.portal.is-on .portal-panel { transform: none; }
+
+.portal-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 24px; margin-bottom: 6px;
+}
+.portal-title {
+  margin: 0;
+  font-size: var(--font-size-xl); font-weight: 500; letter-spacing: -.02em;
+}
+.portal-tags {
+  margin: 4px 0 0;
+  font-size: var(--font-size-xs); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted-2);
+}
+.portal-blurb {
+  margin: 0 0 16px; max-width: 70ch;
+  font-size: var(--font-size-sm); color: var(--muted);
+}
+
+.portal-actions { display: flex; align-items: center; gap: 10px; flex: none; }
+
+.portal-open {
+  display: inline-flex; align-items: center; height: 34px;
+  padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: var(--font-size-xs); color: var(--muted); text-decoration: none;
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.portal-open:hover { color: var(--foreground); border-color: var(--foreground); }
+
+.portal-close {
+  position: relative;
+  width: 34px; height: 34px; padding: 0;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--background); cursor: pointer;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+}
+.portal-close:hover { border-color: var(--foreground); transform: rotate(90deg); }
+.portal-close span, .portal-close span::before {
+  position: absolute; left: 50%; top: 50%;
+  width: 12px; height: 1.5px; margin: -.75px 0 0 -6px;
+  background: currentColor; content: "";
+}
+.portal-close span { transform: rotate(45deg); }
+.portal-close span::before { margin: 0 0 0 -6px; transform: rotate(90deg); }
+.portal-close:focus-visible, .portal-open:focus-visible {
+  outline: 2px solid var(--foreground); outline-offset: 2px;
+}
+
+/* The panel scrolls as one: the live product first, the case study under it */
+.portal-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+
+/* The live product runs here. The poster covers it until it has loaded, so
+   the panel never shows a white rectangle. */
+.portal-frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px; overflow: hidden;
+  background: #f4f5f7;
+}
+.portal-iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; border: 0;
+}
+.portal-poster {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  transition: opacity .4s var(--ease);
+}
+.portal-frame.is-loaded .portal-poster { opacity: 0; }
+
+@media (max-width: 767px) {
+  .portal { padding: 12px; }
+  .portal-panel { padding: 16px; height: calc(100vh - 24px); }
+  .portal-head { flex-direction: column; gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal, .portal-panel, .portal-poster, .portal-close { transition: none; }
+}
+
+/* ---------- Case study, told in this site's own voice ---------- */
+.cs { padding: 40px 0 8px; }
+.cs-hero {
+  width: 100%; display: block;
+  border-radius: 12px; margin-bottom: 8px;
+}
+.cs-section { padding-top: 44px; }
+.cs-h {
+  margin: 0 0 20px;
+  font-size: var(--font-size-xs); letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted-2); font-weight: 600;
+}
+
+/* Before → after, the clearest thing a case study can say */
+.cs-outcomes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); }
+@media (min-width: 768px) { .cs-outcomes { grid-template-columns: 1fr 1fr; } }
+.cs-outcome {
+  display: grid; grid-template-columns: auto auto 1fr; align-items: baseline; gap: 10px;
+  padding: 18px 20px; background: var(--background);
+}
+.cs-before { color: var(--muted-2); text-decoration: line-through; font-size: var(--font-size-sm); }
+.cs-arrow { color: var(--muted-2); }
+.cs-after { font-size: var(--font-size-md); }
+.cs-label {
+  grid-column: 1 / -1;
+  font-size: var(--font-size-xs); color: var(--muted-2);
+}
+
+.cs-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+@media (min-width: 768px) { .cs-grid { grid-template-columns: 1fr 1fr; } }
+.cs-card {
+  padding: 22px; border: 1px solid var(--line); border-radius: 12px;
+}
+.cs-card h4 { margin: 0 0 8px; font-size: var(--font-size-md); font-weight: 500; }
+.cs-card p { margin: 0; font-size: var(--font-size-sm); color: var(--muted); line-height: 1.6; }
+.cs-motive {
+  margin-bottom: 8px !important;
+  font-size: var(--font-size-xs) !important; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted-2) !important;
+}
+.cs-num {
+  display: inline-block; margin-right: 10px;
+  font-size: var(--font-size-xs); color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+.cs-card .cs-num { display: block; margin-bottom: 10px; }
+
+.cs-list { list-style: none; margin: 0; padding: 0; }
+.cs-list li {
+  padding: 14px 0; border-top: 1px solid var(--line);
+  font-size: var(--font-size-sm); color: var(--muted);
+}
+
+/* ---------- Case study: audit, designs, reflections ---------- */
+.cs-lede {
+  margin: -8px 0 28px; max-width: 68ch;
+  font-size: var(--font-size-sm); color: var(--muted); line-height: 1.65;
+}
+
+.cs-frictions { list-style: none; margin: 0; padding: 0; }
+.cs-friction {
+  display: grid; grid-template-columns: auto 1fr; gap: 16px;
+  padding: 20px 0; border-top: 1px solid var(--line);
+}
+.cs-friction h4 { margin: 0 0 6px; font-size: var(--font-size-md); font-weight: 500; }
+.cs-friction p { margin: 0; font-size: var(--font-size-sm); line-height: 1.6; }
+.cs-impact { color: var(--muted-2); }
+.cs-fix { margin-top: 6px !important; color: var(--foreground); }
+/* A rule marks the fix as the answer to the problem above it */
+.cs-fix { padding-left: 14px; border-left: 2px solid var(--foreground); }
+
+.cs-design { margin: 0 0 56px; }
+.cs-design img {
+  width: 100%; display: block;
+  border: 1px solid var(--line); border-radius: 12px;
+  background: var(--background);
+}
+.cs-design figcaption {
+  display: grid; gap: 24px; margin-top: 20px;
+}
+@media (min-width: 768px) {
+  .cs-design figcaption { grid-template-columns: 1fr 1.2fr; }
+}
+.cs-kicker {
+  margin: 0 0 8px;
+  font-size: var(--font-size-xs); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted-2);
+}
+.cs-design h4 { margin: 0 0 8px; font-size: var(--font-size-lg); font-weight: 500; letter-spacing: -.01em; }
+.cs-design figcaption p:last-child { margin: 0; font-size: var(--font-size-sm); color: var(--muted); line-height: 1.6; }
+
+.cs-features { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.cs-features li {
+  position: relative; padding-left: 20px;
+  font-size: var(--font-size-sm); color: var(--muted); line-height: 1.55;
+}
+.cs-features li::before {
+  content: ""; position: absolute; left: 2px; top: .55em;
+  width: 6px; height: 6px; border-radius: 999px; background: var(--muted-2);
+}
+
+@media (min-width: 768px) { .cs-grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+/* The embed is inert until asked for, so a scroll crossing it reaches the
+   panel rather than driving the embedded product. */
+.portal-iframe { pointer-events: none; }
+.portal-frame.is-live .portal-iframe { pointer-events: auto; }
+
+.portal-activate {
+  position: absolute; left: 50%; bottom: 14px;
+  transform: translateX(-50%);
+  display: inline-flex; align-items: center; height: 32px;
+  padding: 0 16px; border: 0; border-radius: 999px;
+  background: rgba(17, 17, 17, .82); color: #fff;
+  font: inherit; font-size: var(--font-size-xs); cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+.portal-activate:hover { transform: translateX(-50%) translateY(-1px); }
+.portal-frame.is-live .portal-activate { opacity: 0; pointer-events: none; }
+
+/* ---------- Toolkit list ---------- */
+.scrolly-item .scrolly-logo {
+  /* Sized in the word's own em, not the list item's — nested inside the
+     word so it scales with the type rather than sitting at 12px beside it. */
+  flex: 0 0 auto;
+  width: .84em; height: .84em;
+  /* Optical nudge: the flex box centres on the em box, but the word's visual
+     weight sits a touch above it, between baseline and cap height. */
+  transform: translateY(-.045em);
+  /* The inactive rows are dimmed by the list itself; the logo follows,
+     so a bright brand colour doesn't shout from a row that is not current. */
+  opacity: .5;
+  transition: opacity .4s var(--ease);
+}
+.scrolly-item.is-active .scrolly-logo { opacity: 1; }
+
+/* The big plate on the right shows the mark on its own */
+.ph.tool-plate { padding: 12%; }
+.ph.tool-plate img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  /* Keeps a square logo square inside a 4:3 plate */
+  max-width: 220px; max-height: 220px; margin: auto;
+}
+
+/* ---------- Nav label crossover ---------- */
+/* Each link swaps wording and typeface when the mode changes. The label
+   moves inside the link; the link's width eases separately, so the row
+   slides instead of snapping to the new lengths. */
+/* No overflow clipping here: the script face's swashes paint past their
+   advance width, so a clip box cuts the tail off "home" and "about me".
+   The crossover keeps its travel short and fades fast instead. */
+.nav a { display: inline-block; }
+/* The width transition is set inline while a swap runs: the header's own
+   entrance rule already owns .nav a's transition (with a stagger delay),
+   and a delayed width would lag the text. */
+/* Two wordings share the link while it swaps: the outgoing one is taken out
+   of flow and rolls up, the incoming one rises from below and springs into
+   place. Both move at once, so the link is never empty mid-crossover. */
+.nav-label {
+  display: inline-block;
+  white-space: nowrap;               /* the box narrows around it mid-swap */
+  transform-origin: left center;
+  transition: transform .55s var(--soft-spring), opacity .34s var(--ease);
+}
+.nav-label.is-out { position: absolute; left: 0; top: 0; }
+/* Short travel, quick fade: by the time it has moved half a line it is
+   already gone, so the two wordings never read as two separate rows. */
+.nav-label.is-out.is-gone { opacity: 0; transform: translateY(-.5em) scaleX(.97); }
+.nav-label.is-in {
+  opacity: 0; transform: translateY(.5em) scaleX(1.04);
+  transition: none;                  /* start below, then ease up */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a, .nav-label { transition: none; }
+}
+
+/* ---------- Mode crossover ---------- */
+/* The two screens dissolve into each other rather than cutting. */
+.hero { transition: opacity .22s var(--ease); }
+.hero.is-switching { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .hero { transition: none; }
+  .hero.is-switching { opacity: 1; }
+}
+
+/* ---------- Toolkit on a dark panel ---------- */
+/* The section sits in its own black box; everything inside inverts with it.
+   The panel is the grid itself, so it hugs the content instead of bleeding
+   across the whole pinned viewport. */
+.scrolly-grid {
+  background: #0d0d0d;
+  color: #ffffff;
+  border-radius: 40px;
+  padding-block: 56px;
+  padding-inline: 48px;
+  /* The panel keeps the page gutter clear on both sides instead of running
+     to the window edge, so it reads as a card sitting on the page. */
+  width: calc(100% - var(--gutter) * 2);
+}
+/* A definite height, so the panel does not breathe as the captions change
+   length from one tool to the next. The rows centre inside it instead. */
+@media (min-width: 900px) {
+  .scrolly-grid {
+    height: min(600px, calc(100vh - 72px));
+    align-content: center;
+  }
+}
+/* Two- and three-line captions reserve the same space, so nothing below them
+   shifts as the list steps. */
+.scrolly-grid .scrolly-caption { min-height: 4.8em; }
+.scrolly-grid .scrolly-head { color: #ffffff; }
+.scrolly-grid .eyebrow,
+.scrolly-grid .scrolly-num { color: rgba(255, 255, 255, .45); }
+.scrolly-grid .scrolly-caption { color: rgba(255, 255, 255, .62); }
+.scrolly-grid .scrolly-progress { background: rgba(255, 255, 255, .16); }
+.scrolly-grid .scrolly-progress span { background: #ffffff; }
+
+/* The inactive rows dim against black, so they need more left in them than
+   the .2 that read correctly on white. */
+.scrolly-grid .scrolly-item { opacity: .3; }
+.scrolly-grid .scrolly-item.is-active { opacity: 1; }
+
+@media (max-width: 899px) {
+  .scrolly-grid { border-radius: 28px; padding-block: 40px; padding-inline: 24px; }
+}
+
+/* A plate that holds a clip rather than a mark: it runs to the plate's own
+   edges instead of sitting inside the logo padding. */
+.ph.tool-plate.is-clip { padding: 0; overflow: hidden; }
+.tool-clip {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Name — Product Designer</title>
-  <meta name="description" content="Product designer crafting digital experiences from UX to UI systems." />
+  <title>Aditya Joseph — Product Designer</title>
+  <meta name="description" content="Aditya Joseph — product designer in Delhi, designing clear, accessible digital experiences for complex products." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=62" />
+  <link rel="stylesheet" href="styles.css?v=143" />
 </head>
 <body class="is-loading mode-full">
 
@@ -18,7 +18,7 @@
       <span></span><span></span><span></span><span></span><span></span>
     </div>
     <div class="pre-inner">
-      <span class="pre-label">Your Studio.</span>
+      <span class="pre-label">Aditya Joseph.</span>
       <span class="pre-count" id="pre-count">0</span>
     </div>
     <div class="pre-bar" id="pre-bar" aria-hidden="true"></div>
@@ -30,10 +30,10 @@
   <!-- ===== Header ===== -->
   <header class="site-header" id="header">
     <div class="wrap">
-      <a class="brand magnetic" href="#top">Your Studio.</a>
+      <a class="brand magnetic" href="#top">Aditya Joseph.</a>
       <div class="meta">
         <span id="date"></span>
-        <span><span id="clock"></span> &nbsp;Your City, XX</span>
+        <span><span id="clock"></span> &nbsp;Delhi, India</span>
       </div>
       <nav class="nav">
         <a class="magnetic" href="#top"     data-full="Home"    data-hand="home">Home</a>
@@ -52,6 +52,10 @@
              away for screen readers only, and a toggle inside it would become
              unreachable. positionHeroSwitch() anchors it to the last line. -->
         <div class="hero-switch">
+          <button class="hero-back" id="hero-back" type="button">
+            <span class="hero-back-arrow" aria-hidden="true"></span>
+            Back
+          </button>
           <button class="mode-toggle" id="hero-mode" type="button" aria-pressed="true">
             <span class="mode-dot" aria-hidden="true"></span>
             <span id="hero-mode-label">Show video</span>
@@ -61,11 +65,12 @@
         <!-- One h1 for both modes: in video mode it is visually hidden but still
              readable by search engines and screen readers, since the video
              cannot convey the text. -->
-        <h1 class="display" data-split data-kinetic data-typewriter>Designer <em>crafting</em> digital <em>experiences</em> from UX to UI systems.</h1>
+        <h1 class="display" data-split data-kinetic data-typewriter>Designing <em>clear</em>, accessible digital <em>experiences</em> for complex products.</h1>
 
-        <figure class="frame hero-aside ratio-43" data-parallax="-24">
-          <div class="ph cool">Hero image 3</div>
-        </figure>
+        <p class="hero-sub" data-split-lines>
+          I’m a product designer who turns complex workflows into intuitive user
+          flows, thoughtful interfaces, and scalable design systems.
+        </p>
       </div>
 
       <!-- Video mode splits into two panes: the showreel, and a small sticky
@@ -144,35 +149,29 @@
         </section>
       </div>
 
-      <p class="hero-sub" data-split-lines>
-        Product designer with 10 years of experience designing digital products
-        end-to-end, helping teams build experiences that work for both users
-        and business goals.
-      </p>
 
-      <div class="hero-media">
-        <figure class="frame ratio-43" data-parallax="-40"><div class="ph">Hero image 1</div></figure>
-        <figure class="frame ratio-43" data-parallax="40"><div class="ph alt">Hero image 2</div></figure>
-      </div>
+      <!-- Featured projects. Rendered from the same WORK data as the grid
+           below, so a project is described in one place only. -->
+      <div class="hero-media" id="hero-projects"></div>
 
     </section>
 
     <!-- ===== Pinned scroll section ===== -->
-    <section class="scrolly" id="scrolly" aria-label="How I work">
+    <section class="scrolly" id="scrolly" aria-label="Tools I use">
       <div class="scrolly-sticky">
         <div class="scrolly-grid">
 
           <div class="scrolly-text">
-            <span class="eyebrow">Process</span>
-            <h2 class="scrolly-head">Every project runs<br />through five stages.</h2>
+            <span class="eyebrow">Toolkit</span>
+            <h2 class="scrolly-head">The tools I design,<br />think and build with.</h2>
 
             <div class="scrolly-viewport">
               <ol class="scrolly-list" id="scrolly-list">
-                <li class="scrolly-item"><span class="scrolly-num">01</span><span class="scrolly-word">Discover</span></li>
-                <li class="scrolly-item"><span class="scrolly-num">02</span><span class="scrolly-word">Define</span></li>
-                <li class="scrolly-item"><span class="scrolly-num">03</span><span class="scrolly-word">Design</span></li>
-                <li class="scrolly-item"><span class="scrolly-num">04</span><span class="scrolly-word">Systemise</span></li>
-                <li class="scrolly-item"><span class="scrolly-num">05</span><span class="scrolly-word">Ship</span></li>
+                <li class="scrolly-item"><span class="scrolly-num">01</span><span class="scrolly-word"><span class="scrolly-name">Figma</span><img class="scrolly-logo" src="media/logos/figma.svg" alt="" aria-hidden="true" /></span></li>
+                <li class="scrolly-item"><span class="scrolly-num">02</span><span class="scrolly-word"><span class="scrolly-name">Cursor</span><img class="scrolly-logo" src="media/logos/cursor.svg" alt="" aria-hidden="true" /></span></li>
+                <li class="scrolly-item"><span class="scrolly-num">03</span><span class="scrolly-word"><span class="scrolly-name">Photoshop</span><img class="scrolly-logo" src="media/logos/photoshop.svg" alt="" aria-hidden="true" /></span></li>
+                <li class="scrolly-item"><span class="scrolly-num">04</span><span class="scrolly-word"><span class="scrolly-name">Claude</span><img class="scrolly-logo" src="media/logos/claude.svg" alt="" aria-hidden="true" /></span></li>
+                <li class="scrolly-item"><span class="scrolly-num">05</span><span class="scrolly-word"><span class="scrolly-name">ChatGPT</span><img class="scrolly-logo" src="media/logos/chatgpt.svg" alt="" aria-hidden="true" /></span></li>
               </ol>
             </div>
 
@@ -181,11 +180,11 @@
           </div>
 
           <div class="scrolly-visual" id="scrolly-visual">
-            <figure class="scrolly-media is-active"><div class="ph">Discover</div></figure>
-            <figure class="scrolly-media"><div class="ph cool">Define</div></figure>
-            <figure class="scrolly-media"><div class="ph alt">Design</div></figure>
-            <figure class="scrolly-media"><div class="ph warm">Systemise</div></figure>
-            <figure class="scrolly-media"><div class="ph">Ship</div></figure>
+            <figure class="scrolly-media is-active"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/figma-tools.mp4" poster="media/figma-tools.webp" autoplay muted loop playsinline preload="metadata" aria-label="Figma: a prompt into Make, then the file it built"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/cursor-tools.mp4" poster="media/cursor-tools.webp" muted loop playsinline preload="metadata" aria-label="Cursor: writing code alongside the design"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/photoshop-tools.mp4" poster="media/photoshop-tools.webp" muted loop playsinline preload="metadata" aria-label="Photoshop: a generative fill, from selection to finished layer"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/claude-tools.mp4" poster="media/claude-tools.webp" muted loop playsinline preload="metadata" aria-label="Claude: a prompt, then the list it built"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/chatgpt-tools.mp4" poster="media/chatgpt-tools.webp" muted loop playsinline preload="metadata" aria-label="ChatGPT: notes summarised into themes"></video></div></figure>
           </div>
 
         </div>
@@ -206,14 +205,16 @@
       </div>
       <div class="info-grid">
         <p class="info-body" data-split-lines>
-          I'm <strong>Your Name</strong>, a digital product designer based in
-          Your City with over 10 years of experience designing digital products
-          across startups, agencies and consulting environments.
+          I’m <strong>Aditya Joseph</strong>, a product designer based in Delhi.
+          I design digital experiences that bring clarity to complex
+          information, workflows, and decisions.
         </p>
         <div>
           <p class="info-aside" data-split-lines>
-            Add a second paragraph here — how you work, what you care about,
-            the kinds of teams and problems you like.
+            My work combines research, information architecture, interaction
+            design, and visual systems. I enjoy working with teams that care
+            about solving real user problems and building products that are
+            both useful and considered.
           </p>
           <a class="link-more magnetic" href="#work">Discover more</a>
         </div>
@@ -234,8 +235,8 @@
         <div>
           <span class="eyebrow">Work</span>
           <h2 class="section-title" data-split>
-            A selection of projects across product design, interfaces and design
-            systems — built with teams that <em>care</em> about how things look.
+            A selection of <em>product-design</em> work spanning research, UX,
+            prototyping, and interface systems.
           </h2>
         </div>
         <a class="link-more magnetic" href="#">View all</a>
@@ -249,37 +250,64 @@
       <div class="section-head">
         <div>
           <span class="eyebrow">Explorations</span>
-          <h2 class="section-title" data-split>Design passions &amp; <em>experiments</em></h2>
+          <h2 class="section-title" data-split>Ideas, interface <em>studies</em>, and visual experiments.</h2>
         </div>
       </div>
       <div class="explore-grid">
-        <figure class="frame ratio-11" data-parallax="-12"><div class="ph">01</div></figure>
-        <figure class="frame ratio-11" data-parallax="12"><div class="ph cool">02</div></figure>
-        <figure class="frame ratio-11" data-parallax="-12"><div class="ph warm">03</div></figure>
-        <figure class="frame ratio-11" data-parallax="12"><div class="ph alt">04</div></figure>
+        <figure class="frame ratio-11" data-parallax="-12"><div class="ph">Interaction patterns</div></figure>
+        <figure class="frame ratio-11" data-parallax="12"><div class="ph cool">Mobile product flows</div></figure>
+        <figure class="frame ratio-11" data-parallax="-12"><div class="ph warm">Component systems</div></figure>
+        <figure class="frame ratio-11" data-parallax="12"><div class="ph alt">Visual identity studies</div></figure>
       </div>
     </section>
 
     <!-- ===== Contact ===== -->
     <section class="contact wrap" id="contact">
-      <h2 class="contact-title" data-split data-kinetic>Connect, <em>collaborate</em>, or just say hello</h2>
-      <a class="contact-mail magnetic" href="mailto:hello@example.com">hello@example.com</a>
+      <h2 class="contact-title" data-split data-kinetic>Let’s create something <em>clear</em>, useful, and memorable.</h2>
+      <a class="contact-mail magnetic" href="mailto:adijosantony@gmail.com">adijosantony@gmail.com</a>
       <div class="socials">
-        <a class="magnetic" href="mailto:hello@example.com">Email</a>
+        <a class="magnetic" href="mailto:adijosantony@gmail.com">Email</a>
         <a class="magnetic" href="#" target="_blank" rel="noopener">LinkedIn</a>
         <a class="magnetic" href="#" target="_blank" rel="noopener">Instagram</a>
       </div>
     </section>
   </main>
 
+  <!-- ===== Project portal ===== -->
+  <div class="portal" id="portal" role="dialog" aria-modal="true"
+       aria-labelledby="portal-title" hidden>
+    <div class="portal-backdrop"></div>
+    <div class="portal-panel">
+      <header class="portal-head">
+        <div>
+          <h2 class="portal-title" id="portal-title"></h2>
+          <p class="portal-tags"></p>
+        </div>
+        <div class="portal-actions">
+          <a class="portal-open magnetic" href="#" target="_blank" rel="noopener">
+            Open live
+          </a>
+          <button class="portal-close" type="button" aria-label="Close project">
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+      </header>
+      <p class="portal-blurb"></p>
+      <div class="portal-body" data-native-scroll>
+        <div class="portal-frame"></div>
+        <div class="portal-study"></div>
+      </div>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="wrap">
-      <span>© <span id="year"></span> Your Name</span>
+      <span>© <span id="year"></span> Aditya Joseph · Product Designer</span>
       <span>Built with HTML, CSS &amp; JS</span>
     </div>
   </footer>
 
-  <script src="hand.js?v=62"></script>
-  <script src="script.js?v=62"></script>
+  <script src="hand.js?v=143"></script>
+  <script src="script.js?v=143"></script>
 </body>
 </html>
