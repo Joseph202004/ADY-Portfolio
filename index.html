@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Product Designer</title>
+  <meta name="description" content="Product designer crafting digital experiences from UX to UI systems." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=24" />
+</head>
+<body class="is-loading">
+
+  <!-- ===== Preloader ===== -->
+  <div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Loading">
+    <div class="pre-panels" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="pre-inner">
+      <span class="pre-label">Your Studio.</span>
+      <span class="pre-count" id="pre-count">0</span>
+    </div>
+    <div class="pre-bar" id="pre-bar" aria-hidden="true"></div>
+  </div>
+
+  <div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ===== Header ===== -->
+  <header class="site-header" id="header">
+    <div class="wrap">
+      <a class="brand magnetic" href="#top">Your Studio.</a>
+      <div class="meta">
+        <span id="date"></span>
+        <span><span id="clock"></span> &nbsp;Your City, XX</span>
+      </div>
+      <nav class="nav">
+        <a class="magnetic" href="#top"     data-full="Home"    data-hand="home">Home</a>
+        <a class="magnetic" href="#about"   data-full="About"   data-hand="about me">About</a>
+        <a class="magnetic" href="#work"    data-full="Work"    data-hand="my drawings">Work</a>
+        <a class="magnetic" href="#contact" data-full="Contact" data-hand="say hi!">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ===== Hero ===== -->
+    <section class="hero wrap hero--video" id="top">
+      <div class="hero-switch">
+        <button class="mode-toggle" id="hero-mode" type="button" aria-pressed="false">
+          <span class="mode-dot" aria-hidden="true"></span>
+          <span id="hero-mode-label">Show headline</span>
+        </button>
+      </div>
+
+      <!-- One h1 for both modes: in video mode it is visually hidden but still
+           readable by search engines and screen readers, since the video
+           cannot convey the text. -->
+      <h1 class="display" data-split data-kinetic data-typewriter>Designer <em>crafting</em> digital <em>experiences</em> from UX to UI systems.</h1>
+
+      <figure class="frame hero-video ratio-hero">
+        <video id="hero-video" class="hero-video-el"
+               muted loop playsinline preload="metadata"
+               aria-label="Showreel">
+          <source src="media/hero.mp4" type="video/mp4" />
+        </video>
+      </figure>
+
+      <p class="hero-sub" data-split-lines>
+        Product designer with 10 years of experience designing digital products
+        end-to-end, helping teams build experiences that work for both users
+        and business goals.
+      </p>
+
+      <div class="hero-media">
+        <figure class="frame ratio-43" data-parallax="-40"><div class="ph">Hero image 1</div></figure>
+        <figure class="frame ratio-43" data-parallax="40"><div class="ph alt">Hero image 2</div></figure>
+      </div>
+
+    </section>
+
+    <!-- ===== Pinned scroll section ===== -->
+    <section class="scrolly" id="scrolly" aria-label="How I work">
+      <div class="scrolly-sticky">
+        <div class="scrolly-grid">
+
+          <div class="scrolly-text">
+            <span class="eyebrow">Process</span>
+            <h2 class="scrolly-head">Every project runs<br />through five stages.</h2>
+
+            <div class="scrolly-viewport">
+              <ol class="scrolly-list" id="scrolly-list">
+                <li class="scrolly-item"><span class="scrolly-num">01</span><span class="scrolly-word">Discover</span></li>
+                <li class="scrolly-item"><span class="scrolly-num">02</span><span class="scrolly-word">Define</span></li>
+                <li class="scrolly-item"><span class="scrolly-num">03</span><span class="scrolly-word">Design</span></li>
+                <li class="scrolly-item"><span class="scrolly-num">04</span><span class="scrolly-word">Systemise</span></li>
+                <li class="scrolly-item"><span class="scrolly-num">05</span><span class="scrolly-word">Ship</span></li>
+              </ol>
+            </div>
+
+            <p class="scrolly-caption" id="scrolly-caption"></p>
+            <div class="scrolly-progress"><span id="scrolly-bar"></span></div>
+          </div>
+
+          <div class="scrolly-visual" id="scrolly-visual">
+            <figure class="scrolly-media is-active"><div class="ph">Discover</div></figure>
+            <figure class="scrolly-media"><div class="ph cool">Define</div></figure>
+            <figure class="scrolly-media"><div class="ph alt">Design</div></figure>
+            <figure class="scrolly-media"><div class="ph warm">Systemise</div></figure>
+            <figure class="scrolly-media"><div class="ph">Ship</div></figure>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Client marquee ===== -->
+    <section class="marquee-section" aria-label="Selected clients">
+      <div class="marquee">
+        <div class="marquee-track" id="marquee"></div>
+      </div>
+    </section>
+
+    <!-- ===== Info / About ===== -->
+    <section class="section wrap" id="about">
+      <div class="section-head">
+        <span class="eyebrow">Info</span>
+      </div>
+      <div class="info-grid">
+        <p class="info-body" data-split-lines>
+          I'm <strong>Your Name</strong>, a digital product designer based in
+          Your City with over 10 years of experience designing digital products
+          across startups, agencies and consulting environments.
+        </p>
+        <div>
+          <p class="info-aside" data-split-lines>
+            Add a second paragraph here — how you work, what you care about,
+            the kinds of teams and problems you like.
+          </p>
+          <a class="link-more magnetic" href="#work">Discover more</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Services ===== -->
+    <section class="section wrap">
+      <div class="section-head">
+        <span class="eyebrow">Services</span>
+      </div>
+      <div class="services" id="services"></div>
+    </section>
+
+    <!-- ===== Work ===== -->
+    <section class="section wrap" id="work">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Work</span>
+          <h2 class="section-title" data-split>
+            A selection of projects across product design, interfaces and design
+            systems — built with teams that <em>care</em> about how things look.
+          </h2>
+        </div>
+        <a class="link-more magnetic" href="#">View all</a>
+      </div>
+
+      <div class="work-grid" id="work-grid"></div>
+    </section>
+
+    <!-- ===== Explorations ===== -->
+    <section class="section wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Explorations</span>
+          <h2 class="section-title" data-split>Design passions &amp; <em>experiments</em></h2>
+        </div>
+      </div>
+      <div class="explore-grid">
+        <figure class="frame ratio-11" data-parallax="-12"><div class="ph">01</div></figure>
+        <figure class="frame ratio-11" data-parallax="12"><div class="ph cool">02</div></figure>
+        <figure class="frame ratio-11" data-parallax="-12"><div class="ph warm">03</div></figure>
+        <figure class="frame ratio-11" data-parallax="12"><div class="ph alt">04</div></figure>
+      </div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section class="contact wrap" id="contact">
+      <h2 class="contact-title" data-split data-kinetic>Connect, <em>collaborate</em>, or just say hello</h2>
+      <a class="contact-mail magnetic" href="mailto:hello@example.com">hello@example.com</a>
+      <div class="socials">
+        <a class="magnetic" href="mailto:hello@example.com">Email</a>
+        <a class="magnetic" href="#" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="magnetic" href="#" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© <span id="year"></span> Your Name</span>
+      <span>Built with HTML, CSS &amp; JS</span>
+    </div>
+  </footer>
+
+  <script src="script.js?v=24"></script>
+</body>
+</html>
