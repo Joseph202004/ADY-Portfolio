@@ -435,28 +435,6 @@ function initScrolly() {
    control was removed by request; prefers-reduced-motion is kept as the
    remaining way for a user to stop playback.
    ============================================================ */
-function initHeroVideo() {
-  const video = document.getElementById("hero-video");
-  if (!video) return;
-
-  if (REDUCED) {
-    // The visible pause control was removed by request, so this is the only
-    // remaining way to stop playback: honour the OS "reduce motion" setting
-    // by not autoplaying and exposing the browser's own controls instead.
-    video.controls = true;
-    return;
-  }
-
-  video.play().catch(() => { /* autoplay blocked by the browser */ });
-
-  // Stop decoding frames nobody is looking at
-  new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) video.play().catch(() => {});
-      else if (!video.paused) video.pause();
-    });
-  }, { threshold: 0.15 }).observe(video);
-}
 
 /* ============================================================
    6d. HERO MODE — video <-> original headline
@@ -468,7 +446,6 @@ function initHeroMode() {
   const btn = document.getElementById("hero-mode");
   const label = document.getElementById("hero-mode-label");
   const title = document.querySelector(".hero .display");
-  const video = document.getElementById("hero-video");
   if (!hero || !btn || !title) return;
 
   const navLinks = [...document.querySelectorAll(".nav a")];
@@ -492,14 +469,14 @@ function initHeroMode() {
     });
 
     if (showText) {
-      if (video) video.pause();
       resetTypewriter(title);        // rewind, then replay the typing
       // While the preloader is still up, the curtain callback starts the
       // run instead — two overlapping runs fight over the same chars.
       if (document.body.classList.contains("is-ready")) typewrite(title);
     } else {
       resetTypewriter(title);        // stop typing into the hidden heading
-      if (video && !REDUCED) video.play().catch(() => {});
+      // The showreel is a typeface now: write the intro instead of playing it
+      if (document.body.classList.contains("is-ready")) initBoard.writeIntro?.();
     }
 
     // Layout changed height, so parallax offsets need recomputing
@@ -789,10 +766,10 @@ function boot() {
   initMagnetic();
   initMarquee();
   initScrolly();
-  initHeroVideo();
   initHeroMode();
   initHeader();
   initSmoothScroll();
+  window.Handwriting?.load("fonts/mynerve-strokes.json").catch(() => {});
   initBoard();
 
   tick();
@@ -819,6 +796,9 @@ function boot() {
     } else if (hero && !inVideoMode) {
       hero.classList.add("is-revealed", "is-in");
     }
+
+    // Starting in video mode: write the intro once the curtain is up
+    if (inVideoMode) setTimeout(() => initBoard.writeIntro?.(), 260);
 
     setTimeout(() => sub && sub.classList.add("is-revealed", "is-in"), 260);
     document.querySelectorAll(".hero .frame").forEach((f, i) =>
@@ -1063,6 +1043,137 @@ function initBoard() {
       `<div class="tip-a">${t.a}</div></div>`).join("");
   }
 
+  /* ---------- Live handwritten reply ---------- */
+  // Writes the newest answer over the showreel in Adi Hand. When a real
+  // agent is connected, this is already the surface its replies land on —
+  // only answerFor() changes.
+  const reply = document.getElementById("hero-reply");
+  const replyQ = document.getElementById("hero-reply-q");
+  const replyA = document.getElementById("hero-reply-a");
+  let writeToken = 0;
+
+  // Flatten the answer's markup into characters that remember their own
+  // emphasis. Writing the tags out mid-stream does not work: the parser
+  // closes <strong> as soon as it is inserted, so every character after it
+  // lands outside and the emphasis is lost.
+  function charsOf(html) {
+    const box = document.createElement("div");
+    box.innerHTML = html;
+    const out = [];
+
+    (function walk(node, bold) {
+      node.childNodes.forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          for (const ch of child.textContent) out.push({ ch, bold });
+        } else {
+          const tag = child.tagName.toLowerCase();
+          walk(child, bold || tag === "strong" || tag === "b");
+        }
+      });
+    })(box, false);
+
+    return out;
+  }
+
+  // One writer, used for the intro and for every reply: it lays characters
+  // down one at a time under a crosshair that travels with the pen.
+  function writeHand(host, html, token) {
+    // Real pen strokes when the centreline data has loaded; otherwise the
+    // per-glyph wipe below, so a slow or failed fetch never blanks the text.
+    if (window.Handwriting?.ready) {
+      return window.Handwriting.write(host, charsOf(html), { live: token })
+        .catch(() => { host.innerHTML = html; });
+    }
+
+    return new Promise(resolve => {
+      host.innerHTML = "";
+
+      if (REDUCED) { host.innerHTML = html; resolve(); return; }
+
+      const chars = charsOf(html);
+      const pen = document.createElement("span");
+      pen.className = "hw-pen";
+      pen.setAttribute("aria-hidden", "true");
+      host.appendChild(pen);
+
+      const movePen = el => {
+        const box = el.getBoundingClientRect();
+        const base = host.getBoundingClientRect();
+        const x = box.right - base.left;
+        const y = box.top - base.top + box.height * 0.62;
+        pen.style.setProperty("--x", `${x}px`);
+        pen.style.setProperty("--y", `${y}px`);
+        pen.style.transform = `translate(${x}px, ${y}px)`;
+      };
+
+      let i = 0;
+      let word = null;          // characters are grouped so words never split
+
+      (function stroke() {
+        if (!token()) return resolve();
+
+        if (i >= chars.length) {
+          pen.classList.add("is-done");
+          setTimeout(() => { pen.remove(); resolve(); }, 700);
+          return;
+        }
+
+        const { ch, bold } = chars[i++];
+
+        if (ch === " ") {
+          word = null;          // a line may break here, but not inside a word
+          host.insertBefore(document.createTextNode(" "), pen);
+        } else {
+          if (!word) {
+            word = document.createElement("span");
+            word.className = "hw-word";
+            host.insertBefore(word, pen);
+          }
+          const span = document.createElement("span");
+          span.className = "hw-char" + (bold ? " hw-b" : "");
+          span.textContent = ch;
+          word.appendChild(span);
+          movePen(span);
+        }
+
+        // A hand slows at the end of a word and lifts at punctuation
+        let wait = 42 + Math.random() * 30;
+        if (ch === " ") wait += 70;
+        if (/[.,;:!?]/.test(ch)) wait += 210;
+
+        setTimeout(stroke, wait);
+      })();
+    });
+  }
+
+  function writeReply(q, a) {
+    if (!reply) return;
+    const mine = ++writeToken;
+
+    reply.classList.add("is-on");
+    replyQ.textContent = q;
+    writeHand(replyA, a, () => mine === writeToken);
+  }
+
+  /* ---------- Intro ---------- */
+  // The two lines the showreel used to play, written rather than filmed.
+  const INTRO = ["Hi, I'm Adi", "I like to draw"];
+  let introRun = false;
+
+  async function writeIntro() {
+    const l1 = document.getElementById("hero-intro-1");
+    const l2 = document.getElementById("hero-intro-2");
+    if (!l1 || !l2 || introRun) return;
+    introRun = true;
+
+    const mine = ++writeToken;
+    const live = () => mine === writeToken;
+
+    await writeHand(l1, INTRO[0], live);
+    if (live()) await writeHand(l2, INTRO[1], live);
+  }
+  initBoard.writeIntro = writeIntro;
+
   /* ---------- History rail ---------- */
   function renderRail() {
     rail.innerHTML = "";
@@ -1161,6 +1272,7 @@ function initBoard() {
 
     turns.push({ q, a });
     history.set(note, turns);
+    writeReply(q, a);
     log.push({ q, a, note, label: threeWordLabel(q) });
     renderTip(note);
     renderRail();

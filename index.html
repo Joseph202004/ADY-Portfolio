@@ -7,8 +7,8 @@
   <meta name="description" content="Product designer crafting digital experiences from UX to UI systems." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=51" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=62" />
 </head>
 <body class="is-loading mode-full">
 
@@ -72,11 +72,19 @@
            note board that actually works — type, format, drag, add notes. -->
       <div class="hero-stage">
         <figure class="frame hero-video ratio-hero">
-          <video id="hero-video" class="hero-video-el"
-                 muted loop playsinline preload="metadata"
-                 aria-label="Showreel">
-            <source src="media/hero.mp4" type="video/mp4" />
-          </video>
+          <!-- The live reply is written in Adi Hand, the typeface traced from
+               the same handwriting as the showreel, so an answer from the
+               board can be written out instead of pre-filmed. -->
+          <div class="hero-reply" id="hero-reply" aria-live="polite">
+            <div class="hero-reply-q" id="hero-reply-q"></div>
+            <div class="hero-reply-a hand" id="hero-reply-a"></div>
+          </div>
+          <!-- Was a recording of Adi writing. It is the typeface now, written
+               out by the same pen animation the replies use. -->
+          <div class="hero-intro" id="hero-intro" aria-label="Hi, I'm Adi. I like to draw">
+            <div class="hero-intro-line hand" id="hero-intro-1" aria-hidden="true"></div>
+            <div class="hero-intro-line hand" id="hero-intro-2" aria-hidden="true"></div>
+          </div>
         </figure>
 
         <section class="board" id="board" aria-label="Sticky note board">
@@ -271,6 +279,7 @@
     </div>
   </footer>
 
-  <script src="script.js?v=51"></script>
+  <script src="hand.js?v=62"></script>
+  <script src="script.js?v=62"></script>
 </body>
 </html>

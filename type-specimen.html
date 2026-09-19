@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mynerve — type specimen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Mynerve&display=swap" rel="stylesheet" />
+<style>
+  @font-face {
+    font-family: "Adi Hand";
+    src: url("fonts/AdiHand-Regular.woff2") format("woff2"),
+         url("fonts/AdiHand-Regular.woff") format("woff");
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  :root { --ink: #1a1a1a; --muted: #6b7280; --line: #e5e7eb; --bg: #fff; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 56px 24px 96px;
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.6 ui-sans-serif, -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 30px; font-weight: 600; margin: 0 0 6px; letter-spacing: -.02em; }
+  .sub { color: var(--muted); margin: 0 0 44px; }
+  h2 {
+    font-size: 12px; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+    margin: 48px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line);
+  }
+  .hand { font-family: "Mynerve", "Adi Hand", cursive; }
+  .traced { font-family: "Adi Hand", cursive; }
+  .row { margin: 14px 0; }
+  .size { display: block; font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+  .s96 { font-size: 96px; } .s64 { font-size: 64px; } .s40 { font-size: 40px; }
+  .s28 { font-size: 28px; } .s20 { font-size: 20px; }
+  input {
+    width: 100%; padding: 14px 16px; margin-bottom: 14px;
+    border: 1px solid var(--line); border-radius: 10px;
+    font: inherit; color: var(--ink);
+  }
+  input:focus { outline: 2px solid #3b82f6; outline-offset: 1px; }
+  #live { font-size: 44px; min-height: 64px; }
+  ol { padding-left: 20px; } li { margin: 7px 0; }
+  code { background: #f3f4f6; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .note { border-left: 3px solid var(--line); padding-left: 14px; color: var(--muted); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  td, th { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Mynerve</h1>
+  <p class="sub">The handwriting the site writes its replies in. Below it, <em>Adi Hand</em> —
+     the face traced from Adi's own specimen — is kept for comparison and stays in
+     <code>fonts/</code> as the fallback.</p>
+
+  <h2>Alphabet</h2>
+  <div class="row hand s64">ABCDEFGHIJKLM</div>
+  <div class="row hand s64">NOPQRSTUVWXYZ</div>
+  <div class="row hand s64">abcdefghijklm</div>
+  <div class="row hand s64">nopqrstuvwxyz</div>
+
+  <h2>Sizes</h2>
+  <div class="row"><span class="size">96px</span><span class="hand s96">Hi I am Adi</span></div>
+  <div class="row"><span class="size">64px</span><span class="hand s64">I like to draw</span></div>
+  <div class="row"><span class="size">40px</span><span class="hand s40">Tell me about Joseph</span></div>
+  <div class="row"><span class="size">28px</span><span class="hand s28">What are the design skills he has?</span></div>
+  <div class="row"><span class="size">20px</span><span class="hand s20">No. A Fossil Outlet Store is a retail store located in an outlet shopping center, not a warehouse.</span></div>
+
+  <h2>Try it</h2>
+  <input id="type" value="Type anything and it is written in Adi's hand" aria-label="Sample text" />
+  <div id="live" class="hand"></div>
+
+  <h2>Adi Hand — the traced fallback, and how it was made</h2>
+  <div class="row traced s40">Hi I am Adi</div>
+  <div class="row traced s28">I like to draw</div>
+  <ol>
+    <li><strong>Source.</strong> The handwritten A–Z chart, 1102&times;348px.</li>
+    <li><strong>Segment.</strong> Binarise, label connected components, cluster them into three
+        rows, then cut each row at its widest gaps so the pair count matches the alphabet
+        exactly. Each pair splits into uppercase and lowercase.</li>
+    <li><strong>Separate touching letters.</strong> Thirteen pairs touch or overlap
+        (<code>C F K M N P R S T U V Y Z</code>). No automatic rule separates R's leg from the
+        r beside it, so those cuts were read off the source by eye and hard-coded.</li>
+    <li><strong>Rasterise per glyph.</strong> Each glyph is masked to its <em>own</em> strokes,
+        so a touching neighbour cannot bleed into it.</li>
+    <li><strong>Trace.</strong> <code>potrace</code> converts each bitmap to Bézier outlines.</li>
+    <li><strong>Assemble.</strong> fontTools builds the CFF font: 1000 units/em, 700 cap height,
+        45-unit side bearings, plus a space glyph and cmap.</li>
+    <li><strong>Baselines.</strong> Measured bottoms scattered by up to a third of the cap
+        height — noise, not handwriting. Every glyph is snapped to the baseline;
+        <code>g j p q y f</code> keep the drop they were drawn with.</li>
+    <li><strong>Weight.</strong> The source pen is ~2px on capitals drawn 47px tall, which
+        lands near 30 units/em and disappears at text sizes. Tall glyphs are thickened;
+        the small lowercase are left alone, because the same step turns a 20px letter solid.
+        Closing pinholes is size-aware for the same reason &mdash; a 3&times;3 close seals the
+        counter of <code>a e o</code> at that size.</li>
+    <li><strong>Joins.</strong> Each glyph carries a short stroke on the baseline in its side
+        bearings. Two adjacent letters put those end to end and the pen appears not to lift,
+        which closes the gaps and reads as joined-up writing.</li>
+    <li><strong>Ship.</strong> Exported as .otf, .woff and .woff2.</li>
+  </ol>
+
+  <h2>Files</h2>
+  <p class="note" style="margin-bottom:12px">Mynerve loads from Google Fonts; these are the traced face.</p>
+  <table>
+    <tr><th>File</th><th>Use</th><th>Size</th></tr>
+    <tr><td><code>fonts/AdiHand-Regular.woff2</code></td><td>the web font the site loads</td><td>7 KB</td></tr>
+    <tr><td><code>fonts/AdiHand-Regular.woff</code></td><td>fallback for older browsers</td><td>8 KB</td></tr>
+    <tr><td><code>fonts/AdiHand-Regular.otf</code></td><td>desktop / design tools</td><td>9 KB</td></tr>
+  </table>
+
+  <h2>Where it is used</h2>
+  <p class="note">Ask a question on the jam board and the answer is written out in Mynerve
+     over the showreel, a character at a time. That surface is already live — when a
+     real agent is connected, only <code>answerFor()</code> in <code>script.js</code> changes,
+     and the replies arrive in Adi's handwriting automatically.</p>
+
+  <h2>Known limits of the traced face</h2>
+  <p class="note">This joins printed handwriting; it does not restyle the letters into looped
+     cursive, which would mean redrawing them. The source chart draws lowercase at roughly
+     15&ndash;20px, so <code>e n o z</code> carry little detail and read best above ~28px, and
+     letters that touched in the source (<code>c f p t</code> especially) keep a trace of their
+     neighbour's ink. There is no punctuation, no digits and no kerning &mdash; a comma or full
+     stop falls back to the next font in the stack. A higher-resolution chart, and a second
+     sheet with <code>. , ? !</code> and <code>0&ndash;9</code>, would fix most of this.</p>
+
+</div>
+<script>
+  const input = document.getElementById('type');
+  const live = document.getElementById('live');
+  const render = () => { live.textContent = input.value; };
+  input.addEventListener('input', render);
+  render();
+</script>
+</body>
+</html>
