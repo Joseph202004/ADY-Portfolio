@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=24" />
+  <link rel="stylesheet" href="styles.css?v=51" />
 </head>
-<body class="is-loading">
+<body class="is-loading mode-full">
 
   <!-- ===== Preloader ===== -->
   <div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Loading">
@@ -46,26 +46,95 @@
 
   <main id="main">
     <!-- ===== Hero ===== -->
-    <section class="hero wrap hero--video" id="top">
-      <div class="hero-switch">
-        <button class="mode-toggle" id="hero-mode" type="button" aria-pressed="false">
-          <span class="mode-dot" aria-hidden="true"></span>
-          <span id="hero-mode-label">Show headline</span>
-        </button>
+    <section class="hero wrap hero--text" id="top">
+      <div class="hero-head">
+        <!-- The switch lives here, not inside the h1: video mode clips the h1
+             away for screen readers only, and a toggle inside it would become
+             unreachable. positionHeroSwitch() anchors it to the last line. -->
+        <div class="hero-switch">
+          <button class="mode-toggle" id="hero-mode" type="button" aria-pressed="true">
+            <span class="mode-dot" aria-hidden="true"></span>
+            <span id="hero-mode-label">Show video</span>
+          </button>
+        </div>
+
+        <!-- One h1 for both modes: in video mode it is visually hidden but still
+             readable by search engines and screen readers, since the video
+             cannot convey the text. -->
+        <h1 class="display" data-split data-kinetic data-typewriter>Designer <em>crafting</em> digital <em>experiences</em> from UX to UI systems.</h1>
+
+        <figure class="frame hero-aside ratio-43" data-parallax="-24">
+          <div class="ph cool">Hero image 3</div>
+        </figure>
       </div>
 
-      <!-- One h1 for both modes: in video mode it is visually hidden but still
-           readable by search engines and screen readers, since the video
-           cannot convey the text. -->
-      <h1 class="display" data-split data-kinetic data-typewriter>Designer <em>crafting</em> digital <em>experiences</em> from UX to UI systems.</h1>
+      <!-- Video mode splits into two panes: the showreel, and a small sticky
+           note board that actually works — type, format, drag, add notes. -->
+      <div class="hero-stage">
+        <figure class="frame hero-video ratio-hero">
+          <video id="hero-video" class="hero-video-el"
+                 muted loop playsinline preload="metadata"
+                 aria-label="Showreel">
+            <source src="media/hero.mp4" type="video/mp4" />
+          </video>
+        </figure>
 
-      <figure class="frame hero-video ratio-hero">
-        <video id="hero-video" class="hero-video-el"
-               muted loop playsinline preload="metadata"
-               aria-label="Showreel">
-          <source src="media/hero.mp4" type="video/mp4" />
-        </video>
-      </figure>
+        <section class="board" id="board" aria-label="Sticky note board">
+          <div class="board-bar" id="board-bar" role="toolbar" aria-label="Note formatting">
+            <div class="bb-group">
+              <button class="bb-btn bb-swatch" type="button" data-menu="color"
+                      aria-haspopup="true" aria-expanded="false" aria-label="Note colour">
+                <span class="bb-dot" aria-hidden="true"></span>
+                <span class="bb-caret" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="bb-group">
+              <button class="bb-btn bb-font" type="button" data-menu="font"
+                      aria-haspopup="true" aria-expanded="false" aria-label="Typeface">
+                <span aria-hidden="true">Aa</span>
+                <span class="bb-caret" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="bb-group">
+              <button class="bb-btn bb-size" type="button" data-menu="size"
+                      aria-haspopup="true" aria-expanded="false" aria-label="Text size">
+                <span id="bb-size-label" aria-hidden="true">24</span>
+                <span class="bb-caret" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="bb-group">
+              <button class="bb-btn" type="button" data-act="bold" aria-label="Bold">
+                <strong aria-hidden="true">B</strong>
+              </button>
+              <button class="bb-btn bb-strike" type="button" data-act="strike"
+                      aria-label="Strikethrough">
+                <span aria-hidden="true">S</span>
+              </button>
+              <button class="bb-btn" type="button" data-act="link" aria-label="Add link">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+              </button>
+              <button class="bb-btn bb-on" type="button" data-act="list"
+                      aria-label="Numbered list" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 5h1v4M4 15h2v1H4v2h2"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Popovers live outside the bar so they are not clipped by it -->
+          <div class="bb-pop bb-pop-swatches" id="pop-color" role="menu" hidden></div>
+          <div class="bb-pop" id="pop-font" role="menu" hidden></div>
+          <div class="bb-pop" id="pop-size" role="menu" hidden></div>
+
+          <div class="board-canvas" id="board-canvas" data-native-scroll></div>
+
+          <button class="board-add" id="board-add" type="button" aria-label="Add a note">
+            <span aria-hidden="true">+</span>
+          </button>
+        </section>
+      </div>
 
       <p class="hero-sub" data-split-lines>
         Product designer with 10 years of experience designing digital products
@@ -202,6 +271,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=24"></script>
+  <script src="script.js?v=51"></script>
 </body>
 </html>

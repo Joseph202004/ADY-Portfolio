@@ -197,6 +197,11 @@ function typewrite(el, { speed = 38, jitter = 26 } = {}) {
     return Promise.resolve();
   }
 
+  // Clear whatever a previous run left behind. A cancelled run returns
+  // without tidying up, so without this its caret is orphaned mid-word
+  // and its is-typed chars bleed into this run's progression.
+  resetTypewriter(el);
+
   // Every scheduled step checks this token, so toggling away mid-word
   // stops the chain instead of leaving it writing into a hidden element.
   const mine = ++typewriteToken;
@@ -489,7 +494,9 @@ function initHeroMode() {
     if (showText) {
       if (video) video.pause();
       resetTypewriter(title);        // rewind, then replay the typing
-      typewrite(title);
+      // While the preloader is still up, the curtain callback starts the
+      // run instead — two overlapping runs fight over the same chars.
+      if (document.body.classList.contains("is-ready")) typewrite(title);
     } else {
       resetTypewriter(title);        // stop typing into the hidden heading
       if (video && !REDUCED) video.play().catch(() => {});
@@ -500,7 +507,7 @@ function initHeroMode() {
     runParallax();
   }
 
-  setMode(false);                    // start on the drawing
+  setMode(true);                     // start on the headline
 
   btn.addEventListener("click", () =>
     setMode(btn.getAttribute("aria-pressed") !== "true"));
@@ -605,7 +612,106 @@ function tick() {
 }
 
 /* ============================================================
-   11. PRELOADER
+   11. SMOOTH SCROLL
+   Wheel and keyboard input drive a target offset; a rAF loop eases
+   the real scroll position toward it. We move the window itself
+   rather than transforming a wrapper, so position: sticky, the
+   pinned scrolly section and every scrollY reader keep working.
+   Touch keeps its native momentum; reduced motion opts out.
+   ============================================================ */
+function initSmoothScroll() {
+  if (REDUCED || !FINE_POINTER) return;
+
+  const EASE = 0.1;          // fraction of the remaining gap eaten per frame
+  const KEY_STEP = 120;
+  let target = window.scrollY;
+  let running = false;
+
+  const maxScroll = () =>
+    document.documentElement.scrollHeight - window.innerHeight;
+
+  const clamp = v => Math.max(0, Math.min(v, maxScroll()));
+
+  function loop() {
+    const gap = target - window.scrollY;
+
+    if (Math.abs(gap) < 0.5) {
+      window.scrollTo({ top: target, behavior: "instant" });
+      running = false;
+      return;
+    }
+
+    window.scrollTo({ top: window.scrollY + gap * EASE, behavior: "instant" });
+    requestAnimationFrame(loop);
+  }
+
+  function glideTo(y) {
+    target = clamp(y);
+    if (running) return;
+    running = true;
+    requestAnimationFrame(loop);
+  }
+
+  addEventListener("wheel", e => {
+    // Leave trackpad pinch-zoom and opted-out panes alone
+    if (e.ctrlKey || e.defaultPrevented) return;
+    if (e.target.closest?.("[data-native-scroll]")) return;
+
+    e.preventDefault();
+    glideTo(target + e.deltaY);
+  }, { passive: false });
+
+  addEventListener("keydown", e => {
+    // contenteditable is neither INPUT nor TEXTAREA, but typing a space in a
+    // sticky note must insert a space, not page down
+    const el = document.activeElement;
+    const tag = el?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || el?.isContentEditable) return;
+
+    const step = {
+      ArrowDown: KEY_STEP,
+      ArrowUp: -KEY_STEP,
+      PageDown: window.innerHeight * 0.9,
+      PageUp: -window.innerHeight * 0.9,
+      " ": window.innerHeight * 0.9,
+    }[e.key];
+
+    if (step !== undefined) {
+      e.preventDefault();
+      glideTo(target + step);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      glideTo(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      glideTo(maxScroll());
+    }
+  });
+
+  // In-page links ease through the same loop instead of jumping
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener("click", e => {
+      const hash = a.getAttribute("href");
+      const el = hash.length > 1 ? document.getElementById(hash.slice(1)) : document.body;
+      if (!el) return;
+
+      e.preventDefault();
+      glideTo(el.getBoundingClientRect().top + window.scrollY);
+      history.pushState(null, "", hash);
+    });
+  });
+
+  // Anything that moves the page outside this loop — resize, the
+  // preloader unlocking, a browser scroll restore — must not get
+  // yanked back toward a stale target
+  const resync = () => { if (!running) target = window.scrollY; };
+  addEventListener("resize", resync, { passive: true });
+  addEventListener("scroll", resync, { passive: true });
+  initSmoothScroll.sync = () => { target = window.scrollY; };
+}
+
+/* ============================================================
+   12. PRELOADER
    ============================================================ */
 function initPreloader(onDone) {
   const pre = document.getElementById("preloader");
@@ -686,6 +792,8 @@ function boot() {
   initHeroVideo();
   initHeroMode();
   initHeader();
+  initSmoothScroll();
+  initBoard();
 
   tick();
   setInterval(tick, 30000);
@@ -693,9 +801,14 @@ function boot() {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   runParallax();
-  addEventListener("resize", () => { collectParallax(); runParallax(); }, { passive: true });
+  addEventListener("resize", () => {
+    collectParallax();
+    runParallax();
+  }, { passive: true });
 
   initPreloader(() => {
+    initSmoothScroll.sync?.();
+
     // Play the hero once the curtain lifts
     const hero = document.querySelector(".hero .display");
     const sub = document.querySelector(".hero-sub");
@@ -718,4 +831,639 @@ if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(boot);
 } else {
   addEventListener("DOMContentLoaded", boot);
+}
+
+/* ============================================================
+   14. STICKY NOTE BOARD
+   A small working board beside the showreel: notes can be typed
+   into, formatted, dragged and added. Formatting uses
+   document.execCommand — deprecated, but still the only one-line
+   way to apply bold/strike/link/list to a selection inside a
+   contenteditable, and it works in every current browser.
+   ============================================================ */
+// Swatch row, in the reference's order
+const NOTE_COLOURS = [
+  "#ffffff", "#d9d9d9", "#f7a9a0", "#f8cba6", "#f8dc95",
+  "#bfe3c6", "#b9e5e0", "#bcd8f5", "#ded0f7", "#f3c6dd",
+];
+
+const NOTE_AUTHOR = "Navanta Design Team";
+
+const NOTE_FONTS = [
+  { label: "Sans",      css: "" },
+  { label: "Serif",     css: '"Instrument Serif", Georgia, serif' },
+  { label: "Handwritten", css: '"Caveat", cursive' },
+];
+
+const NOTE_SIZES = [
+  { label: "Small", px: 16 },
+  { label: "Medium", px: 24 },
+  { label: "Large", px: 40 },
+  { label: "Extra large", px: 64 },
+  { label: "Huge", px: 96 },
+];
+
+/* ------------------------------------------------------------
+   Canned responder.
+
+   There is no backend here, and a browser-side API key would be
+   readable by anyone viewing source — so replies are matched
+   locally. To hand this to a real model later, replace the body
+   of answerFor() with a fetch to your own endpoint (it may
+   return a promise; the caller awaits it).
+   ------------------------------------------------------------ */
+const ANSWERS = [
+  {
+    match: /warehouse|wearhouse|outlet|store/i,
+    reply: "No. A <strong>Fossil Outlet Store</strong> is a retail store located in an outlet shopping center, not a warehouse.",
+  },
+  {
+    match: /design skill|skills|what can|capab/i,
+    reply: "End-to-end product design: <strong>UX research, UI systems, prototyping and motion</strong> — plus enough front-end to ship it.",
+  },
+  {
+    match: /who is|tell me about|about (joseph|adi)/i,
+    reply: "A product designer with <strong>10 years</strong> designing digital products end-to-end, working from user needs through to shipped interfaces.",
+  },
+  {
+    match: /process|how do you work|method/i,
+    reply: "Five stages: <strong>Discover, Define, Design, Systemise, Ship</strong> — each one grounded in evidence rather than taste.",
+  },
+  {
+    match: /contact|hire|available|work together/i,
+    reply: "Say hi at <strong>hello@example.com</strong> — always happy to talk about new work.",
+  },
+];
+
+function answerFor(question) {
+  const hit = ANSWERS.find(a => a.match.test(question));
+  if (hit) return hit.reply;
+  return `I don't have a note on that yet — try asking about the ` +
+         `<strong>process</strong>, <strong>design skills</strong> or <strong>getting in touch</strong>.`;
+}
+
+/* Three words that say what a turn was about — the rail is too small for
+   a sentence. Stopwords out, first three survivors in, capitalised. */
+const STOPWORDS = new Set(("a an the is are was were do does did have has had of for to in on at " +
+  "by with from about like and or but if then than that this these those it its as can could " +
+  "would should will shall you your he she they we i me my our their what which who whom how " +
+  "why when where all any some more most other into over under").split(" "));
+
+function threeWordLabel(text) {
+  const words = text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (!words.length) return "Untitled";
+
+  const cap = w => w[0].toUpperCase() + w.slice(1);
+
+  // Content words carry the meaning, so they are picked first
+  const picked = new Set();
+  words.forEach((w, i) => {
+    if (picked.size < 3 && !STOPWORDS.has(w)) picked.add(i);
+  });
+
+  // A short question ("What is your process?") may have only one content
+  // word. Pad outwards from what was picked rather than from the start, so
+  // the label still reads as a phrase instead of a keyword dump.
+  if (picked.size < 3 && words.length > picked.size) {
+    const lo = Math.min(...picked, words.length);
+    const hi = Math.max(...picked, -1);
+    for (let d = 1; picked.size < 3 && d <= words.length; d++) {
+      if (lo - d >= 0) picked.add(lo - d);
+      if (picked.size < 3 && hi + d < words.length) picked.add(hi + d);
+    }
+  }
+
+  // Outward expansion can't reach a gap between two picked words
+  // ("Tell me about Joseph" leaves "me"/"about" unused), so mop up.
+  for (let i = 0; picked.size < 3 && i < words.length; i++) picked.add(i);
+
+  return [...picked].sort((a, b) => a - b).map(i => cap(words[i])).join(" ");
+}
+
+function initBoard() {
+  const board = document.getElementById("board");
+  const canvas = document.getElementById("board-canvas");
+  const bar = document.getElementById("board-bar");
+  const addBtn = document.getElementById("board-add");
+  const sizeLabel = document.getElementById("bb-size-label");
+  const pops = {
+    color: document.getElementById("pop-color"),
+    font: document.getElementById("pop-font"),
+    size: document.getElementById("pop-size"),
+  };
+  if (!board || !canvas || !bar) return;
+
+  const RAIL_GUTTER = 44;  // keeps notes clear of the history rail
+
+  let selected = null;
+  let topZ = 1;            // notes stack in pick-up order, not DOM order
+  const history = new WeakMap();   // note -> [{ q, a }]
+  const log = [];                  // every turn on the board, in order
+
+  const rail = document.createElement("div");
+  rail.className = "board-rail";
+  rail.setAttribute("role", "list");
+  rail.setAttribute("aria-label", "Conversation history");
+
+  const railCard = document.createElement("div");
+  railCard.className = "rail-card";
+
+  board.append(rail, railCard);
+
+  const bodyOf = n => n?.querySelector(".note-text");
+
+  const safeState = cmd => {
+    try { return document.queryCommandState(cmd); } catch { return false; }
+  };
+
+  /* ---------- Popover contents ---------- */
+  pops.color.innerHTML = NOTE_COLOURS.map(c =>
+    `<button class="bb-chip" type="button" role="menuitem" data-colour="${c}"` +
+    ` style="background:${c}" aria-label="Colour ${c}"></button>`).join("");
+
+  pops.font.innerHTML = NOTE_FONTS.map((f, i) =>
+    `<button class="bb-item" type="button" role="menuitem" data-font="${i}">` +
+    `<span style="font-family:${f.css || "inherit"}">${f.label}</span>` +
+    `<span class="bb-tick" aria-hidden="true">✓</span></button>`).join("");
+
+  pops.size.innerHTML =
+    NOTE_SIZES.map(sz =>
+      `<button class="bb-item" type="button" role="menuitem" data-size="${sz.px}">` +
+      `<span>${sz.label}</span><span class="bb-num">${sz.px}</span></button>`).join("") +
+    `<input class="bb-custom" id="bb-size-input" type="number" min="8" max="200"` +
+    ` value="18" aria-label="Custom text size">`;
+
+  const sizeInput = document.getElementById("bb-size-input");
+
+  // prompt() is blocked in some embedders (and is a poor experience anyway),
+  // so the link URL is collected inline instead.
+  const linkPop = document.createElement("div");
+  linkPop.className = "bb-pop";
+  linkPop.hidden = true;
+  linkPop.innerHTML =
+    '<input class="bb-custom" id="bb-link-input" type="url"' +
+    ' placeholder="https://…" aria-label="Link URL">';
+  board.appendChild(linkPop);
+  pops.link = linkPop;
+  const linkInput = linkPop.querySelector("#bb-link-input");
+
+  // Opening the popover moves focus out of the note and collapses the
+  // selection, so remember it and put it back before applying the link.
+  let savedRange = null;
+
+  /* ---------- Notes ---------- */
+  function makeNote({ x, y, text = "", colour = NOTE_COLOURS[4] }) {
+    const note = document.createElement("div");
+    note.className = "note";
+    note.style.left = `${x}px`;
+    note.style.top = `${y}px`;
+    note.style.background = colour;
+    note.dataset.colour = colour;
+    note.dataset.size = "18";
+    note.dataset.font = "0";
+
+    const body = document.createElement("div");
+    body.className = "note-text";
+    body.contentEditable = "true";
+    body.spellcheck = false;
+    body.dataset.placeholder = "Type something…";
+    body.style.fontSize = "18px";
+    body.innerHTML = text;
+
+    const by = document.createElement("div");
+    by.className = "note-by";
+    by.textContent = NOTE_AUTHOR;
+
+    const tip = document.createElement("div");
+    tip.className = "note-tip";
+    tip.hidden = true;
+
+    note.append(body, by, tip);
+    canvas.appendChild(note);
+
+    // Every question typed into this box, newest last
+    history.set(note, []);
+    return note;
+  }
+
+  /* ---------- Ask / answer ---------- */
+  function renderTip(note) {
+    const turns = history.get(note) || [];
+    const tip = note.querySelector(".note-tip");
+
+    if (!turns.length) { tip.hidden = true; return; }
+    tip.hidden = false;
+    tip.innerHTML = [...turns].reverse().map(t =>
+      `<div class="tip-turn"><div class="tip-q">${t.q}</div>` +
+      `<div class="tip-a">${t.a}</div></div>`).join("");
+  }
+
+  /* ---------- History rail ---------- */
+  function renderRail() {
+    rail.innerHTML = "";
+
+    log.forEach((turn, i) => {
+      const line = document.createElement("button");
+      line.type = "button";
+      line.className = "rail-line" + (i === log.length - 1 ? " is-latest" : "");
+      line.setAttribute("role", "listitem");
+      line.setAttribute("aria-label", turn.label);
+      line.dataset.i = String(i);
+      rail.appendChild(line);
+    });
+  }
+
+  function showCard(line) {
+    const turn = log[+line.dataset.i];
+    if (!turn) return;
+
+    railCard.innerHTML =
+      `<div class="rail-kicker">${turn.label}</div>` +
+      `<div class="rail-q">${turn.q}</div>` +
+      `<div class="rail-a">${turn.a}</div>`;
+    railCard.classList.add("is-on");
+
+    // Sit beside its line, nudged up so the card stays inside the board
+    const b = board.getBoundingClientRect();
+    const l = line.getBoundingClientRect();
+    const top = Math.max(8, Math.min(
+      l.top - b.top - railCard.offsetHeight / 2,
+      b.height - railCard.offsetHeight - 8,
+    ));
+    railCard.style.top = `${top}px`;
+  }
+
+  rail.addEventListener("pointerover", e => {
+    const line = e.target.closest(".rail-line");
+    if (line) showCard(line);
+  });
+  rail.addEventListener("focusin", e => {
+    const line = e.target.closest(".rail-line");
+    if (line) showCard(line);
+  });
+  const hideCard = () => railCard.classList.remove("is-on");
+  rail.addEventListener("pointerleave", hideCard);
+  rail.addEventListener("focusout", hideCard);
+
+  // Clicking a line jumps to the note that turn came from
+  rail.addEventListener("click", e => {
+    const line = e.target.closest(".rail-line");
+    const turn = line && log[+line.dataset.i];
+    if (!turn?.note?.isConnected) return;
+
+    select(turn.note);
+    turn.note.classList.remove("is-flash");
+    void turn.note.offsetWidth;          // restart the animation
+    turn.note.classList.add("is-flash");
+  });
+
+  function placeTip(note) {
+    const tip = note.querySelector(".note-tip");
+    if (tip.hidden) return;
+
+    // The tip is absolutely positioned inside the note, so its offsets are
+    // note-relative — but it has to be clamped against the canvas. Work the
+    // position out in canvas space, then subtract the note's own offset.
+    const cv = canvas.getBoundingClientRect();
+    const noteW = note.offsetWidth;
+    const noteH = note.offsetHeight;
+    const tipW = tip.offsetWidth;
+    const tipH = tip.offsetHeight;
+
+    let x = note.offsetLeft + noteW / 2 - tipW / 2;
+    x = Math.max(8, Math.min(x, cv.width - tipW - 8));
+
+    // Prefer above the note; drop below when it would be clipped
+    const above = note.offsetTop - tipH - 10;
+    const y = above >= canvas.scrollTop ? above : note.offsetTop + noteH + 10;
+
+    tip.style.left = `${x - note.offsetLeft}px`;
+    tip.style.top = `${y - note.offsetTop}px`;
+  }
+
+  async function ask(note) {
+    const body = bodyOf(note);
+    const q = body.innerText.trim();
+    const turns = history.get(note) || [];
+    if (!q || turns.at(-1)?.q === q) return;   // nothing new to ask
+
+    const dot = document.createElement("span");
+    dot.className = "note-thinking";
+    note.appendChild(dot);
+
+    const a = await answerFor(q);
+    dot.remove();
+
+    turns.push({ q, a });
+    history.set(note, turns);
+    log.push({ q, a, note, label: threeWordLabel(q) });
+    renderTip(note);
+    renderRail();
+  }
+
+  function select(note) {
+    if (selected === note) return;
+    selected?.classList.remove("is-selected");
+    selected = note;
+
+    if (!note) {
+      bar.classList.remove("is-on");
+      closePop();
+      return;
+    }
+
+    note.classList.add("is-selected");
+    note.style.zIndex = String(++topZ);
+    bar.classList.add("is-on");
+    syncBar();
+  }
+
+  /* ---------- Popover open/close ---------- */
+  let openPop = null;
+
+  function closePop() {
+    if (!openPop) return;
+    pops[openPop].hidden = true;
+    bar.querySelector(`[data-menu="${openPop}"]`)?.setAttribute("aria-expanded", "false");
+    openPop = null;
+  }
+
+  function togglePop(name, btn) {
+    if (openPop === name) { closePop(); return; }
+    closePop();
+
+    const pop = pops[name];
+    pop.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    openPop = name;
+
+    const b = btn.getBoundingClientRect();
+    const boardBox = board.getBoundingClientRect();
+    const barBox = bar.getBoundingClientRect();
+
+    let left = b.left - boardBox.left + b.width / 2 - pop.offsetWidth / 2;
+    left = Math.max(8, Math.min(left, boardBox.width - pop.offsetWidth - 8));
+    pop.style.left = `${left}px`;
+
+    // Colour sits above the bar as in the reference, but the board clips its
+    // overflow — so flip it below when there isn't room.
+    const above = barBox.top - boardBox.top - pop.offsetHeight - 8;
+    const below = barBox.bottom - boardBox.top + 8;
+    pop.style.top = `${name === "color" && above >= 8 ? above : below}px`;
+  }
+
+  /* ---------- Reflect the selected note in the toolbar ---------- */
+  function syncBar() {
+    if (!selected) return;
+
+    const state = {
+      bold: safeState("bold"),
+      strike: safeState("strikeThrough"),
+      list: safeState("insertOrderedList"),
+    };
+    bar.querySelectorAll("[data-act]").forEach(btn => {
+      const on = state[btn.dataset.act];
+      if (on === undefined) return;
+      btn.classList.toggle("is-active", on);
+      if (btn.hasAttribute("aria-pressed")) btn.setAttribute("aria-pressed", String(on));
+    });
+
+    const size = +selected.dataset.size;
+    const font = NOTE_FONTS[+selected.dataset.font].css;
+
+    bar.querySelector(".bb-dot").style.background = selected.dataset.colour;
+    if (sizeLabel) sizeLabel.textContent = String(size);
+    if (sizeInput) sizeInput.value = String(size);
+
+    pops.color.querySelectorAll(".bb-chip").forEach(c =>
+      c.classList.toggle("is-on", c.dataset.colour === selected.dataset.colour));
+    pops.font.querySelectorAll(".bb-item").forEach(i =>
+      i.classList.toggle("is-on", NOTE_FONTS[+i.dataset.font].css === font));
+    pops.size.querySelectorAll(".bb-item").forEach(i =>
+      i.classList.toggle("is-on", +i.dataset.size === size));
+  }
+
+  function setSize(px) {
+    if (!selected) return;
+    const size = Math.max(8, Math.min(200, px));
+    selected.dataset.size = String(size);
+    bodyOf(selected).style.fontSize = `${size}px`;
+    syncBar();
+  }
+
+  /* ---------- Toolbar ---------- */
+  // Keep the caret: mousedown in the bar would otherwise blur the note and
+  // collapse the selection before the command runs.
+  const holdCaret = e => {
+    if (e.target.closest("input")) return;
+    e.preventDefault();
+  };
+  bar.addEventListener("mousedown", holdCaret);
+  Object.values(pops).forEach(p => p.addEventListener("mousedown", holdCaret));
+
+  bar.addEventListener("click", e => {
+    const menuBtn = e.target.closest("[data-menu]");
+    if (menuBtn) { togglePop(menuBtn.dataset.menu, menuBtn); return; }
+
+    const btn = e.target.closest("[data-act]");
+    if (!btn || !selected) return;
+    closePop();
+
+    bodyOf(selected).focus();
+    const cmd = {
+      bold: "bold", strike: "strikeThrough",
+      link: "createLink", list: "insertOrderedList",
+    }[btn.dataset.act];
+    if (!cmd) return;
+
+    if (btn.dataset.act === "link") {
+      const sel = getSelection();
+      savedRange = sel.rangeCount ? sel.getRangeAt(0).cloneRange() : null;
+      togglePop("link", btn);
+      linkInput.value = "";
+      linkInput.focus();
+      return;
+    }
+
+    document.execCommand(cmd, false, null);
+    syncBar();
+  });
+
+  /* ---------- Popover actions ---------- */
+  pops.color.addEventListener("click", e => {
+    const chip = e.target.closest(".bb-chip");
+    if (!chip || !selected) return;
+    selected.dataset.colour = chip.dataset.colour;
+    selected.style.background = chip.dataset.colour;
+    syncBar();
+    closePop();
+  });
+
+  pops.font.addEventListener("click", e => {
+    const item = e.target.closest(".bb-item");
+    if (!item || !selected) return;
+    selected.dataset.font = item.dataset.font;
+    bodyOf(selected).style.fontFamily = NOTE_FONTS[+item.dataset.font].css;
+    syncBar();
+    closePop();
+  });
+
+  pops.size.addEventListener("click", e => {
+    const item = e.target.closest(".bb-item");
+    if (!item) return;
+    setSize(+item.dataset.size);
+    closePop();
+  });
+
+  linkInput.addEventListener("keydown", e => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    const url = linkInput.value.trim();
+    closePop();
+    if (!url || !savedRange || !selected) return;
+
+    const body = bodyOf(selected);
+    body.focus();
+    const sel = getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedRange);
+    document.execCommand("createLink", false, url);
+    syncBar();
+  });
+
+  sizeInput?.addEventListener("input", () => {
+    const v = parseInt(sizeInput.value, 10);
+    if (!isNaN(v)) setSize(v);
+  });
+  sizeInput?.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); closePop(); bodyOf(selected)?.focus(); }
+  });
+
+  /* ---------- Add ---------- */
+  addBtn?.addEventListener("click", () => {
+    const n = canvas.querySelectorAll(".note").length;
+    const note = makeNote({
+      x: RAIL_GUTTER + 6 + (n % 3) * 26,
+      y: 74 + (n % 3) * 26,
+      colour: NOTE_COLOURS[(n + 4) % NOTE_COLOURS.length],
+    });
+    select(note);
+    bodyOf(note).focus();
+  });
+
+  /* ---------- Dragging ---------- */
+  // Dragging starts on the note body only; the text area keeps normal caret
+  // placement, so a note stays typable while still draggable.
+  let drag = null;
+
+  canvas.addEventListener("pointerdown", e => {
+    const note = e.target.closest(".note");
+    select(note || null);
+    if (!note || e.target.closest(".note-text")) return;
+
+    const box = note.getBoundingClientRect();
+    drag = {
+      note,
+      dx: e.clientX - box.left,
+      dy: e.clientY - box.top,
+      cv: canvas.getBoundingClientRect(),
+    };
+    note.classList.add("is-dragging");
+    // Capture can throw if the pointer is already gone; dragging still works
+    // via the canvas listeners without it.
+    try { note.setPointerCapture(e.pointerId); } catch {}
+  });
+
+  canvas.addEventListener("pointermove", e => {
+    if (!drag) return;
+    const x = e.clientX - drag.cv.left - drag.dx + canvas.scrollLeft;
+    const y = e.clientY - drag.cv.top - drag.dy + canvas.scrollTop;
+    drag.note.style.left = `${Math.max(RAIL_GUTTER, x)}px`;
+    drag.note.style.top = `${Math.max(0, y)}px`;
+  });
+
+  const endDrag = () => {
+    if (!drag) return;
+    drag.note.classList.remove("is-dragging");
+    drag = null;
+  };
+  canvas.addEventListener("pointerup", endDrag);
+  canvas.addEventListener("pointercancel", endDrag);
+
+  /* ---------- Asking ---------- */
+  // Cmd/Ctrl+Enter asks without leaving the note; blurring asks too, so a
+  // question is never lost just because the user clicked away.
+  canvas.addEventListener("keydown", e => {
+    if (!e.target.closest(".note-text")) return;
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      ask(e.target.closest(".note"));
+    }
+  });
+
+  canvas.addEventListener("focusout", e => {
+    const note = e.target.closest(".note");
+    if (note && e.target.classList.contains("note-text")) ask(note);
+  }, true);
+
+  /* ---------- Hover bubble ---------- */
+  canvas.addEventListener("pointerover", e => {
+    const note = e.target.closest(".note");
+    if (!note || drag) return;
+    const tip = note.querySelector(".note-tip");
+    if (tip.hidden) return;
+    placeTip(note);
+    tip.classList.add("is-on");
+  });
+
+  canvas.addEventListener("pointerout", e => {
+    const note = e.target.closest(".note");
+    if (!note || note.contains(e.relatedTarget)) return;
+    note.querySelector(".note-tip").classList.remove("is-on");
+  });
+
+  /* ---------- Dismissal ---------- */
+  document.addEventListener("pointerdown", e => {
+    if (!e.target.closest(".bb-pop") && !e.target.closest("[data-menu]")) closePop();
+    if (!board.contains(e.target)) select(null);
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closePop();
+  });
+
+  document.addEventListener("selectionchange", () => {
+    if (selected && document.activeElement === bodyOf(selected)) syncBar();
+  });
+
+  /* ---------- Seed ---------- */
+  // Side by side when there is room, stacked when there isn't. Measured off
+  // the viewport, not the canvas: the board starts hidden (headline mode),
+  // so its own clientWidth is 0 at this point.
+  const roomy = window.matchMedia("(min-width: 1024px)").matches;
+
+  const seed = (note, q) => {
+    const a = answerFor(q);
+    history.set(note, [{ q, a }]);
+    log.push({ q, a, note, label: threeWordLabel(q) });
+    renderTip(note);
+    renderRail();
+  };
+
+  seed(makeNote({
+    x: 48, y: 74,
+    text: "<ol><li>Tell me about Joseph.</li></ol>",
+    colour: NOTE_COLOURS[4],
+  }), "Tell me about Joseph.");
+
+  seed(makeNote({
+    x: roomy ? 248 : 62,
+    y: roomy ? 128 : 266,
+    text: "What are the design skills he has?",
+    colour: NOTE_COLOURS[7],
+  }), "What are the design skills he has?");
 }
