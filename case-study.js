@@ -1,15 +1,16 @@
 /* The prototype and the design system open in a tab of their own: they want
  * the whole window, and inside the portal modal they were running in a panel
  * a third of that size. The app's own close control still needs somewhere to
- * go back to, and that is this page, wherever it happens to be served from,
- * so the link is stamped at run time rather than pinned to the production
- * host.
+ * go back to, and that is the portfolio itself — closing the product should
+ * land on the work, not back on the page you had already read. It is stamped
+ * at run time from this page's own origin, so it stays correct on localhost
+ * as well as on the deployed site.
  */
 (function () {
-  const here = location.href.split("#")[0];
+  const home = new URL("/", location.href).toString();
   document.querySelectorAll("a[data-embed]").forEach(a => {
     const url = new URL(a.getAttribute("href"), location.href);
-    url.searchParams.set("back", here);
+    url.searchParams.set("back", home);
     a.setAttribute("href", url.toString());
     a.setAttribute("target", "_blank");
     a.setAttribute("rel", "noopener");
