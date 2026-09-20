@@ -145,7 +145,7 @@ const WORK = [
     },
   },
   { title: "Oykot Money", tags: "Personal finance, 50/30/20 budgeting",
-    tone: "alt", href: "https://oykot-money.vercel.app",
+    tone: "alt", href: "oykot-case-study.html",
     // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
     // ground, so the wordmark and the hands survive the card's scale-in.
     thumb: "media/oykot-money-card.webp" },
