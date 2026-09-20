@@ -387,7 +387,7 @@ body.mode-full .hero-video { display: none; }
 /* This one heading introduces the whole grid below it rather than labelling
    a column, so it sits on the page's centre line and at a size that reads as
    a heading instead of a tag. */
-.hero-media-head { margin-top: 52px; margin-bottom: 24px; }
+.hero-media-head { margin-top: 52px; margin-bottom: 56px; }
 /* Two classes deep on purpose: a later media query turns .section-head into a
    row aligned to its end, and this heading has to beat it at any width. */
 .section-head.hero-media-head { justify-content: center; align-items: center; text-align: center; }
