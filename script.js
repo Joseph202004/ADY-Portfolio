@@ -1112,6 +1112,7 @@ function initHeroMode() {
   // own per-link crossover at the same time, so the header keeps moving
   // while the hero is dark.
   let switching = false;
+  let pressTimer = 0;
   btn.addEventListener("click", () => {
     if (switching) return;                       // ignore a double tap mid-fade
     const next = btn.getAttribute("aria-pressed") !== "true";
@@ -1120,6 +1121,15 @@ function initHeroMode() {
       setMode(next);
       return;
     }
+
+    // The face answers the press itself: a squash, then a turn, as the two
+    // screens change places behind it. Restarted from zero each time, or a
+    // second press inside the run would find the animation already at its end.
+    btn.classList.remove("is-pressed");
+    void btn.offsetWidth;
+    btn.classList.add("is-pressed");
+    clearTimeout(pressTimer);
+    pressTimer = setTimeout(() => btn.classList.remove("is-pressed"), 760);
 
     switching = true;
 

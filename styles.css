@@ -1859,6 +1859,55 @@ body.mode-full .hero-stage { display: none; }
 .mode-toggle:hover .mode-ring text { fill: var(--foreground); }
 @media (max-width: 767px) { .mode-ring { display: none; } }
 
+/* ---------- The press ---------- */
+/* The button swaps two whole screens, so it turns over rather than just
+   dipping: a squash on the way in, a half turn through the change, and a
+   small overshoot as it lands. The hover transform is suspended for the
+   run, or the two would fight over the same property. */
+.mode-toggle.is-pressed .mode-avatar,
+.mode-toggle.is-pressed:hover .mode-avatar {
+  animation: mode-press .62s var(--ease-out-expo) both;
+}
+@keyframes mode-press {
+  0%   { transform: scale(1) rotateY(0deg); }
+  18%  { transform: scale(.88) rotateY(0deg); }
+  55%  { transform: scale(1.04) rotateY(190deg); }
+  78%  { transform: scale(1.06) rotateY(340deg); }
+  100% { transform: scale(1) rotateY(360deg); }
+}
+
+/* A ring leaves the face as it turns — the press made something happen. */
+.mode-toggle.is-pressed::after {
+  content: "";
+  position: absolute; left: 50%; top: 50%;
+  width: 54px; height: 54px; margin: -27px 0 0 -27px;
+  border: 1.5px solid var(--foreground);
+  border-radius: 999px;
+  pointer-events: none;
+  animation: mode-press-ring .6s var(--ease-out-expo) forwards;
+}
+@keyframes mode-press-ring {
+  from { opacity: .32; transform: scale(.82); }
+  to   { opacity: 0;   transform: scale(1.75); }
+}
+
+/* "press me" ducks out of the way while the face turns, then comes back. */
+.mode-toggle.is-pressed .mode-ring text {
+  animation: mode-press-label .62s var(--ease) both;
+}
+@keyframes mode-press-label {
+  0%   { opacity: 1; }
+  30%  { opacity: 0; }
+  70%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-toggle.is-pressed .mode-avatar,
+  .mode-toggle.is-pressed::after,
+  .mode-toggle.is-pressed .mode-ring text { animation: none; }
+}
+
 /* ---------- Waving portrait beside the headline ---------- */
 /* Primary screen only. The drawing screen fills that side with the board and
    the handwritten reply, so the cartoon would be competing for the same room.
