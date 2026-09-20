@@ -171,13 +171,61 @@ if (marqueeEl) {
   marqueeEl.innerHTML = row + row; // duplicated for a seamless -50% loop
 }
 
+/* A drawn mark for each service, in line rather than fill so it belongs with
+   the rest of the page's hairlines. Each one keeps moving on its own quiet
+   loop — the animation is in the CSS, keyed off these class names, so the
+   markup stays a plain drawing. */
+const SERVICE_ICONS = {
+  // Research: findings radiating out from a point
+  "UX Design": `
+    <svg class="svc-icon svc-ripple" viewBox="0 0 64 64" aria-hidden="true">
+      <circle class="r1" cx="32" cy="32" r="7" />
+      <circle class="r2" cx="32" cy="32" r="14" />
+      <circle class="r3" cx="32" cy="32" r="21" />
+    </svg>`,
+  // Interface: a form turning in space
+  "UI Design": `
+    <svg class="svc-icon svc-cube" viewBox="0 0 64 64" aria-hidden="true">
+      <g class="spin">
+        <path d="M32 12 52 23 32 34 12 23 Z" />
+        <path d="M12 23 12 42 32 53 32 34 Z" />
+        <path d="M52 23 52 42 32 53 32 34 Z" />
+      </g>
+    </svg>`,
+  // Prototype: a pointer crossing the screen, and the tap it leaves
+  "Prototyping": `
+    <svg class="svc-icon svc-proto" viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="9" y="13" width="46" height="34" rx="3" />
+      <path d="M9 22 H55" />
+      <circle class="tap" cx="24" cy="36" r="6" />
+      <path class="cursor" d="M22 30 L34 36 L28 37.5 L25.5 43 Z" />
+    </svg>`,
+  // System: modules settling into an arrangement
+  "Design Systems": `
+    <svg class="svc-icon svc-grid" viewBox="0 0 64 64" aria-hidden="true">
+      <rect class="b1" x="10" y="14" width="24" height="12" rx="2" />
+      <rect class="b2" x="38" y="14" width="16" height="12" rx="2" />
+      <rect class="b3" x="10" y="30" width="16" height="12" rx="2" />
+      <rect class="b4" x="30" y="30" width="24" height="12" rx="2" />
+      <rect class="b5" x="18" y="46" width="28" height="12" rx="2" />
+    </svg>`,
+  // Reach: one shape, opened out so more people fit inside it
+  "Accessibility": `
+    <svg class="svc-icon svc-reach" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="17" r="6" />
+      <path class="arms" d="M16 29 H48" />
+      <path class="legs" d="M32 29 V41 M32 41 L23 53 M32 41 L41 53" />
+    </svg>`,
+};
+
 const servicesEl = document.getElementById("services");
 if (servicesEl) {
   servicesEl.innerHTML = SERVICES.map((s, i) => `
     <article class="service reveal" style="--d:${i * 80}ms">
       <span class="num">${s.num}</span>
-      <h3>${s.title}</h3>
-      <div>
+      <div class="service-mark">${SERVICE_ICONS[s.title] || ""}</div>
+      <div class="service-body">
+        <h3>${s.title}</h3>
         <p class="lede">${s.lede}</p>
         <p class="desc">${s.desc}</p>
       </div>
