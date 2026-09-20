@@ -35,16 +35,16 @@ const WORK = [
     // still the source, but cover-fitting it into a 4:3 card cropped a third
     // of the width away — the phone and the laptop's right edge went with it.
     thumb: "media/insure-tech-card.webp",
-    href: "https://eicore.vercel.app/",
+    // "Open live" goes to the prototype and design system, not to
+    // eicore.vercel.app: that project still serves a build from before the app
+    // learned to read ?tabs and ?chrome, so it ignores both and opens on its
+    // own Case Study tab behind an icon rail. Point this back once
+    // swostiprasadnayak/eicore-onebuzz#embed-tab-filter is merged there.
+    href: "https://eicore-onebuzz.vercel.app/?tabs=prototype,design-system&chrome=0",
     // The written case study, on its own page, in the portfolio's own design.
     // It opens with buttons through to the prototype and the design system —
     // the embed used to carry those as tabs, which meant the modal showed a
     // tool before it had said what the tool was for.
-    // Not eicore.vercel.app: that project is still serving a build from before
-    // the app learned to read ?tabs and ?chrome, so it ignores both and shows
-    // all three views with its icon rail. This deployment carries the branch.
-    // Point it back once swostiprasadnayak/eicore-onebuzz#embed-tab-filter
-    // is merged and eicore.vercel.app rebuilds.
     live: "insure-tech-case-study.html",
     blurb: "Redesigning an AI-powered insurance Product Plan Builder \u2014 compressing " +
            "3\u20135 days of manual configuration into hours of intelligent, trustworthy review.",
