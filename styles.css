@@ -391,7 +391,6 @@ body.mode-full .hero-video { display: none; }
 /* Two classes deep on purpose: a later media query turns .section-head into a
    row aligned to its end, and this heading has to beat it at any width. */
 .section-head.hero-media-head { justify-content: center; align-items: center; text-align: center; }
-.hero-media-head .eyebrow { font-size: var(--font-size-lg); }
 body.mode-video .hero-media-head { display: none; }
 
 .hero-media {
@@ -710,6 +709,9 @@ body.mode-video .hero-aside { display: none; }
 .section { padding-block: var(--space-section); }
 
 .section-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; }
+/* A section label is the first thing read in its section, so it carries the
+   size of a heading rather than of a tag. */
+.section-head .eyebrow, .scrolly-text .eyebrow { font-size: var(--font-size-lg); }
 @media (min-width: 768px) {
   .section-head { flex-direction: row; align-items: flex-end; justify-content: space-between; }
 }
