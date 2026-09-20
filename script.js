@@ -1892,7 +1892,7 @@ function initBoard() {
 
   /* ---------- Intro ---------- */
   // The two lines the showreel used to play, written rather than filmed.
-  const INTRO = ["Hi, I'm Adi", "I design for clarity"];
+  const INTRO = ["Hi, I'm Adi", "Ask me anything.."];
   let introRun = false;
 
   async function writeIntro() {
