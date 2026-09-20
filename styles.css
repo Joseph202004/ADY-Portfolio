@@ -1778,11 +1778,8 @@ body.mode-full .hero-stage { display: none; }
     align-items: start;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto 1fr auto auto 1fr;
-    column-gap: 32px;
+    column-gap: clamp(40px, 6vw, 96px);
   }
-  /* The headline's 20ch cap is wider than its column at these sizes. */
-  body.mode-full .hero-head .display,
-  body.mode-full .hero-head .hero-sub { max-width: 100%; }
   body.mode-full .hero-head .display { grid-row: 3; }
   body.mode-full .hero-head .hero-sub { grid-row: 4; }
   .hero-head { grid-template-columns: 1fr; }
@@ -1956,6 +1953,15 @@ body.mode-video .doodles { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .doodle:hover .frame,
   .doodle:nth-child(even):hover .frame { transform: none; }
+}
+
+/* Between 768 and 1023 the text column is narrower than the headline's own
+   20ch cap, so the cap has to give way there — and only there. Above it the
+   cap is what holds the headline off the portrait; removing it everywhere let
+   the text run to within 32px of the drawing. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  body.mode-full .hero-head .display,
+  body.mode-full .hero-head .hero-sub { max-width: 100%; }
 }
 
 /* ---------- Small screens ---------- */
