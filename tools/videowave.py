@@ -68,6 +68,8 @@ KEYED = "/tmp/wavekey"
 T = 12               # <= this in every channel is candidate background
 THIN = 11            # background channels narrower than this are fabric creases
 SKIN_KEEP = 14       # ... unless they run beside skin, which is a finger gap
+CREASE_MIN = 400     # ... and unless they are specks, or touch the frame edge,
+ENCLOSE = 0.88       # or are not ringed by figure. See the note in key().
 SKIN_MAX = 235.0     # brightest skin channel; the un-premultiply reference
 CRISP = 1.15         # keep frames within this multiple of the median blur
 START = 56           # the wave only. The raise before it (f42-49) is filmed on a
@@ -120,7 +122,37 @@ def key(path):
     rr, gg, bb2 = a[..., 0], a[..., 1], a[..., 2]
     skin_for_gaps = (rr > gg) & (gg > bb2) & ((rr - bb2) > 25) & (mx >= 60) & ~bg
     near_skin = ndimage.binary_dilation(skin_for_gaps, _disk(SKIN_KEEP))
-    crease = bg & ~ndimage.binary_opening(bg, _disk(THIN)) & ~near_skin
+    cand = bg & ~ndimage.binary_opening(bg, _disk(THIN)) & ~near_skin
+
+    # Narrowness alone catches far more than the crease: measured on one frame,
+    # 79 components, of which exactly one was the crease. The rest were the
+    # gaps between hair curls and the thin band where the figure runs off the
+    # top and bottom of the frame — all of which, reclaimed, paint a black
+    # block onto the page. Three properties separate them, and every frame
+    # agrees: the crease is 958-1024 px where the specks are ~300; it never
+    # reaches the frame edge where the top and bottom bands do by definition;
+    # and it is ringed by figure on 0.917-0.930 of its perimeter where the
+    # bands manage 0.63 and 0.76.
+    crease = np.zeros_like(cand)
+    lab2, n = ndimage.label(cand)
+    H, W = cand.shape
+    for k, sl in enumerate(ndimage.find_objects(lab2), start=1):
+        if sl is None:
+            continue
+        sub = lab2[sl] == k
+        if sub.sum() < CREASE_MIN:
+            continue
+        if sl[0].start == 0 or sl[0].stop == H or sl[1].start == 0 or sl[1].stop == W:
+            continue
+        pad = 12
+        y0, y1 = max(0, sl[0].start - pad), min(H, sl[0].stop + pad)
+        x0, x1 = max(0, sl[1].start - pad), min(W, sl[1].stop + pad)
+        big = np.zeros((y1 - y0, x1 - x0), bool)
+        big[sl[0].start - y0:sl[0].stop - y0, sl[1].start - x0:sl[1].stop - x0] = sub
+        ring = ndimage.binary_dilation(big, _disk(10)) & ~big
+        if (~bg[y0:y1, x0:x1])[ring].mean() < ENCLOSE:
+            continue
+        crease[sl][sub] = True
     bg = bg & ~crease
 
     m = Image.fromarray(np.where(bg, 0, 255).astype(np.uint8))
