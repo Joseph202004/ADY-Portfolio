@@ -8,24 +8,23 @@
 // Set GEMINI_API_KEY in your host's environment (Vercel: Project → Settings →
 // Environment Variables). Never commit it.
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
-/* The key has been set under more than one name on this project, so the
-   proxy looks under each of them rather than insisting on one. A Google API
-   key begins "AIza" — anything else in these slots is something other than a
-   Gemini key (an OAuth token, say), so a well-formed one is preferred over
-   whatever happens to be first. */
+/* The key has been set under more than one name on this project, so the proxy
+   looks under each of them rather than insisting on one. No judgement is made
+   about the shape: AI Studio issues both "AIza..." and the newer "AQ..."
+   keys, and both authenticate. */
 const KEY_NAMES = [
   "GEMINI_API_KEY", "GOOGLE_API_KEY", "GEMINI_KEY",
   "PORTFOLIO", "portfolio", "Portfolio",
 ];
 
 function findKey() {
-  const found = KEY_NAMES
-    .map(n => [n, (process.env[n] || "").trim()])
-    .filter(([, v]) => v);
-  const wellFormed = found.find(([, v]) => v.startsWith("AIza"));
-  return wellFormed || found[0] || null;
+  for (const n of KEY_NAMES) {
+    const v = (process.env[n] || "").trim();
+    if (v) return [n, v];
+  }
+  return null;
 }
 
 export default async function handler(req, res) {
@@ -39,7 +38,10 @@ export default async function handler(req, res) {
       model: MODEL,
       namesSet: KEY_NAMES.filter(n => (process.env[n] || "").trim()),
       using: hit ? hit[0] : null,
-      looksLikeGoogleKey: hit ? hit[1].startsWith("AIza") : false,
+      // Enough to tell one key from another, or to catch a truncated paste,
+      // and nothing that could be used as a key.
+      keyPrefix: hit ? hit[1].slice(0, 3) : null,
+      keyLength: hit ? hit[1].length : 0,
     });
   }
 
@@ -64,7 +66,15 @@ export default async function handler(req, res) {
       role: m.role === "assistant" ? "model" : "user",
       parts: [{ text: String(m.content).slice(0, 2000) }],
     })),
-    generationConfig: { temperature: 0.7, maxOutputTokens: 160 },
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 300,
+      /* The 3.x models think before answering and charge that thinking to the
+         same budget: at 160 tokens, 151 went on thoughts and the reply was cut
+         off after four words. The board wants a couple of sentences, not
+         deliberation, so the thinking is switched off and the budget raised. */
+      thinkingConfig: { thinkingBudget: 0 },
+    },
   };
   if (system) body.systemInstruction = { parts: [{ text: system }] };
 
@@ -80,7 +90,34 @@ export default async function handler(req, res) {
       }
     );
 
-    const data = await r.json();
+    let data = await r.json();
+
+    /* Google retires a model and says which one replaces it. Rather than
+       failing until someone redeploys, take that hint once — the board is a
+       page on a portfolio, and a dead model name should not silence it. */
+    const swap = !r.ok && r.status === 404 &&
+      /no longer available/i.test(data?.error?.message || "") &&
+      (data.error.message.match(/use models\/([\w.-]+)/) || [])[1];
+    if (swap) {
+      const r2 = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${swap}:generateContent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
+        }
+      );
+      if (r2.ok) {
+        data = await r2.json();
+        const reply = data.candidates?.[0]?.content?.parts?.map(p => p.text).join("").trim();
+        if (reply) {
+          res.setHeader("Cache-Control", "no-store");
+          return res.status(200).json({ reply, model: swap });
+        }
+      }
+    }
+
     if (!r.ok) {
       // Pass the status through but not the provider's message, which can
       // echo the key back in some error shapes.
