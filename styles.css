@@ -1042,6 +1042,18 @@ body.mode-video .contact-title em { font-family: inherit; font-style: normal; }
 body.mode-full .hero-stage { display: none; }
 
 /* ---------- Board shell ---------- */
+/* The board with its own line above it. A card is a question and Enter sends
+   it; neither is apparent from looking at an empty note, so the board says so
+   in the same hand it answers in. */
+.board-col { display: flex; flex-direction: column; min-height: 0; }
+.board-label {
+  margin: 0 0 12px;
+  font-size: clamp(17px, 1.7vw, 21px);
+  color: var(--muted-2);
+  letter-spacing: .01em;
+}
+@media (max-width: 1023px) { .board-label { margin-bottom: 8px; } }
+
 .board {
   position: relative;
   display: flex; flex-direction: column;

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=298" />
+  <link rel="stylesheet" href="styles.css?v=299" />
 </head>
 <body class="is-loading mode-full">
 
@@ -115,6 +115,10 @@
           </div>
         </figure>
 
+        <div class="board-col">
+        <!-- The board does not explain itself: a card is a question and Enter
+             sends it, neither of which is obvious from looking. -->
+        <p class="board-label hand">Pick a card and ask me anything</p>
         <section class="board" id="board" aria-label="Sticky note board">
           <div class="board-bar" id="board-bar" role="toolbar" aria-label="Note formatting">
             <div class="bb-group">
@@ -170,6 +174,7 @@
             <span aria-hidden="true">+</span>
           </button>
         </section>
+        </div>
       </div>
 
 
@@ -356,6 +361,6 @@
   </footer>
 
   <script src="hand.js?v=253"></script>
-  <script src="script.js?v=298"></script>
+  <script src="script.js?v=299"></script>
 </body>
 </html>
