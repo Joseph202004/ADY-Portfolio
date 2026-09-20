@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=216" />
+  <link rel="stylesheet" href="styles.css?v=226" />
 </head>
 <body class="is-loading mode-full">
 
@@ -169,8 +169,22 @@
 
       <!-- Featured projects. Rendered from the same WORK data as the grid
            below, so a project is described in one place only. -->
+      <div class="section-head hero-media-head">
+        <span class="eyebrow">Selected projects</span>
+      </div>
       <div class="hero-media" id="hero-projects"></div>
 
+    </section>
+
+    <!-- ===== Drawings and other things (drawing screen only) =====
+         The primary screen is the work: projects, toolkit, case studies. This
+         is the other half of the person, so it lives on the other screen and
+         nowhere else. Rendered from DOODLES in script.js. -->
+    <section class="doodles" id="doodles" aria-labelledby="doodles-title">
+      <div class="wrap">
+        <h2 class="doodles-title hand" id="doodles-title">and some other things I make</h2>
+        <div class="doodle-grid" id="doodle-grid"></div>
+      </div>
     </section>
 
     <!-- ===== Pinned scroll section ===== -->
@@ -324,7 +338,7 @@
     </div>
   </footer>
 
-  <script src="hand.js?v=216"></script>
-  <script src="script.js?v=216"></script>
+  <script src="hand.js?v=226"></script>
+  <script src="script.js?v=226"></script>
 </body>
 </html>

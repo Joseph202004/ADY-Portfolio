@@ -148,6 +148,18 @@ const WORK = [
   { title: "Project 04", tags: "Interface systems", tone: "warm", href: "#" },
 ];
 
+/* The drawing screen's own shelf: sketchbook pages, lettering, whatever else
+   gets made away from a brief. Add `img: "media/doodles/x.webp"` to a card and
+   it shows the picture instead of the tinted plate — nothing else to change.
+   `ratio` is any of the .frame ratio classes, so the shelf can hold a portrait
+   sketchbook page next to a square study without cropping either. */
+const DOODLES = [
+  { title: "Sketchbook",     note: "Pages from this year",      tone: "warm", ratio: "ratio-34" },
+  { title: "Lettering",      note: "The hand this site is set in", tone: "alt",  ratio: "ratio-11" },
+  { title: "Character study", note: "Adi, in many moods",       tone: "cool", ratio: "ratio-11" },
+  { title: "Daily doodles",  note: "Ten minutes, most mornings", tone: "warm", ratio: "ratio-34" },
+];
+
 /* ============================================================
    1. RENDER CONTENT
    ============================================================ */
@@ -195,6 +207,22 @@ if (heroProjects) {
   heroProjects.innerHTML = WORK.slice(0, 2)
     .map((w, i) => projectCard(w, i, { ratio: "ratio-43", parallax: i ? 40 : -40 }))
     .join("");
+}
+
+const doodleGrid = document.getElementById("doodle-grid");
+if (doodleGrid) {
+  doodleGrid.innerHTML = DOODLES.map((d, i) => `
+    <figure class="doodle reveal" style="--d:${i * 70}ms">
+      <div class="frame ${d.ratio || "ratio-11"}">
+        ${d.img
+          ? `<img class="doodle-img" src="${d.img}" alt="${d.title}" loading="lazy" />`
+          : `<div class="ph ${d.tone || ""}">${d.title}</div>`}
+      </div>
+      <figcaption class="doodle-cap">
+        <span class="doodle-title hand">${d.title}</span>
+        <span class="doodle-note">${d.note || ""}</span>
+      </figcaption>
+    </figure>`).join("");
 }
 
 const workGrid = document.getElementById("work-grid");
@@ -992,6 +1020,24 @@ function initHeroMode() {
       requestAnimationFrame(() => hero.classList.remove("is-switching"));
       setTimeout(() => { switching = false; }, 220);
     }, 220);
+  });
+
+  // The wordmark is "home", and home is the primary screen at the top of it.
+  // It used to be a bare #top anchor, which from the drawing screen scrolled
+  // you to the top of the drawing screen — the one place you were already
+  // trying to leave.
+  const brand = document.querySelector(".brand");
+  brand?.addEventListener("click", e => {
+    e.preventDefault();                          // never the raw #top jump as
+                                                 // well — that fought the
+                                                 // smooth scroll below
+    const wasVideo = document.body.classList.contains("mode-video");
+    if (wasVideo && !switching) btn.click();     // reuse the crossfade
+
+    // Coming off the drawing screen the page height changes under the scroll,
+    // so land first and let the crossfade play over it. Already on the
+    // headline, glide.
+    scrollTo({ top: 0, behavior: REDUCED || wasVideo ? "auto" : "smooth" });
   });
 
   // Expose so the preloader can start the right mode

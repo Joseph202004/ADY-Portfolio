@@ -228,11 +228,15 @@ body.is-ready .site-header .nav a:nth-child(4) { transition-delay: .40s; }
 /* Video mode: strip the page back to nav + drawing */
 body.mode-video .hero-sub,
 body.mode-video .hero-media,
-body.mode-video main > section:not(#top),
-body.mode-video .site-footer,
+/* #doodles is the exception: it belongs to this screen and only this one */
+body.mode-video main > section:not(#top):not(#doodles),
 /* The wordmark stays in video mode: it is the only thing on screen naming
    whose portfolio this is. Only the clock and location step back. */
 body.mode-video .meta { display: none; }
+
+/* The footer stays on both screens. With the drawings shelf under the board
+   this screen now scrolls, and a page that scrolls needs an end — without it
+   the last row of cards just stops. */
 
 /* the grid above already holds the columns in place */
 body.mode-video .site-header { border-bottom-color: transparent !important; }
@@ -335,6 +339,11 @@ body.mode-full .hero-video { display: none; }
    without the 180px it started at, which pushed it a third of the way down. */
 .hero { position: relative; padding-top: 128px; padding-bottom: var(--space-section); }
 @media (min-width: 768px) { .hero { padding-top: 212px; } }
+/* Tighter once the hero runs two columns: at 212px the project cards started
+   6px below the fold, so the first screen ended on white and gave no sign
+   there was work underneath. 168 lifts them into view without taking the
+   breathing room off the headline. */
+@media (min-width: 1024px) { .hero { padding-top: 168px; } }
 
 .display {
   font-size: var(--font-size-2xl);
@@ -372,8 +381,14 @@ body.mode-full .hero-video { display: none; }
   color: var(--muted);
 }
 
+/* The label sits where the cards' top margin used to be, so the peek is
+   unchanged: the eyebrow is the first thing over the fold and the cards follow
+   it. Hidden with them on the drawing screen. */
+.hero-media-head { margin-top: 52px; margin-bottom: 16px; }
+body.mode-video .hero-media-head { display: none; }
+
 .hero-media {
-  margin-top: var(--space-block);
+  margin-top: 0;
   display: grid; gap: 16px;
   grid-template-columns: 1fr;
 }
@@ -1852,4 +1867,69 @@ body.mode-full .hero-stage { display: none; }
 .mode-toggle:hover .mode-ring text { fill: var(--foreground); }
 @media (max-width: 767px) { .mode-ring { display: none; } }
 
+
+
+/* ---------- Drawings and other things ---------- */
+/* The drawing screen's shelf. Hidden by default rather than shown and then
+   hidden, so the primary screen never flashes it while the mode class settles.
+   The cards sit on the page itself — no panel — because the board above is
+   already a panel and two stacked would read as a form. */
+.doodles { display: none; padding-block: 96px 120px; }
+body.mode-video .doodles { display: block; }
+
+.doodles-title {
+  margin: 0 0 32px;
+  font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+  font-weight: 400;
+}
+
+.doodle-grid {
+  display: grid; gap: 28px 20px;
+  grid-template-columns: repeat(2, 1fr);
+  /* The cards hang off a shared top line, not a shared height: a portrait
+     sketchbook page and a square study keep their own proportions instead of
+     one of them being cropped to match the other. */
+  align-items: start;
+}
+@media (min-width: 768px) { .doodle-grid { grid-template-columns: repeat(4, 1fr); gap: 32px 24px; } }
+
+.doodle { margin: 0; }
+.doodle .frame { border-radius: 12px; overflow: hidden; }
+
+/* Opt these frames out of the reveal clip. .frame starts fully clipped and
+   its contents scaled to 1.12, both undone when the scroll observer adds
+   .is-in — but this section is display:none on the primary screen, and an
+   element inside a hidden subtree never intersects, so the observer had
+   already passed it by. It became visible on the mode switch still clipped to
+   nothing. The figure's own .reveal fade carries the entrance instead. */
+.doodle .frame { clip-path: none; }
+.doodle .frame > * { transform: none; }
+
+/* One light grey for every plate, tones ignored. The tinted gradients the
+   project cards use are stand-ins for artwork that isn't here yet — four of
+   them in a row read as the content rather than as empty frames waiting for
+   drawings. Grey says "nothing in this one yet" and lets the handwriting
+   underneath carry the row. */
+.doodle .ph,
+.doodle .ph.alt,
+.doodle .ph.warm,
+.doodle .ph.cool {
+  background: #EDEDEB;
+  color: var(--muted-2);
+}
+.doodle-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* A slight lift on hover, and a tilt — these are pinned-up drawings, not
+   product shots, so they are allowed to sit crooked. */
+.doodle .frame { transition: transform .35s var(--ease-out-expo); }
+.doodle:hover .frame { transform: translateY(-4px) rotate(-1.2deg); }
+.doodle:nth-child(even):hover .frame { transform: translateY(-4px) rotate(1.2deg); }
+
+.doodle-cap { display: flex; flex-direction: column; gap: 2px; margin-top: 12px; }
+.doodle-title { font-size: var(--font-size-md); }
+.doodle-note { font-size: var(--font-size-xs); color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .doodle:hover .frame,
+  .doodle:nth-child(even):hover .frame { transform: none; }
 }
