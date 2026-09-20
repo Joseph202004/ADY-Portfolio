@@ -1964,6 +1964,16 @@ body.mode-video .doodles { display: block; }
   body.mode-full .hero-head .hero-sub { max-width: 100%; }
 }
 
+/* The hero's own bottom padding stacks on top of the pinned section's
+   centring slack: the toolkit panel is 600px centred in a 100vh sticky, so it
+   already starts 150px below where that section begins. 112 + 150 left a
+   quarter of a screen of white between the project cards and the panel.
+   Only where the pin is active — below 900px the section is not pinned and
+   the full rhythm is right. */
+@media (min-width: 900px) {
+  .hero { padding-bottom: 40px; }
+}
+
 /* ---------- Small screens ---------- */
 /* The portrait was desktop-only, so a phone opened on a headline with an
    empty column beside it — a greeting with nobody doing the greeting. Below
