@@ -1717,12 +1717,13 @@ async function askModel(question) {
 }
 
 async function answerFor(question) {
-  // A question this board keeps its own answer to is answered here. The model
-  // used to speak first and overrule them, which made a stored reply one that
-  // never appeared — so the bank wins where it matches, and the model takes
-  // everything it does not.
-  const own = ANSWERS.find(a => a.match.test(question));
-  if (own) return own.reply;
+  /* Only a pinned answer speaks over the model. Letting the whole bank go
+     first meant "tell me about his projects" was caught by the pattern for
+     "tell me about" and answered with the introduction — the right words to
+     the wrong question. The pinned ones are written to be heard exactly as
+     written; the rest are what to say when nothing can be reached. */
+  const pinned = ANSWERS.find(a => a.pin && a.match.test(question));
+  if (pinned) return pinned.reply;
 
   const live = await askModel(question);
   return live ? trimRefusal(live) : cannedAnswer(question);
@@ -1757,8 +1758,10 @@ const ANSWERS = [
     match: /contact|hire|available|work together|email|reach/i,
     reply: "Say hello at <strong>adijosantony@gmail.com</strong> — let's create something clear, useful and memorable.",
   },
-  // Asked often enough, and answered honestly.
+  // Asked often enough, and answered honestly. Pinned: this one is the
+  // answer, not a stand-in for a model that could not be reached.
   {
+    pin: true,
     match: /single|girlfriend|relationship|dating|taken|boyfriend/i,
     reply: "Hmmm, he hasn't talked to his girlfriend in two days, and he misses her a lot, and she's out there partying without him — <strong>full mazeee mere bina..</strong> XDDDD BABEEEEEEEE KISSIE PISSIE",
   },
