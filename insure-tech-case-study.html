@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Eicore OneBuzz Product Plan Builder — a UX case study on making AI-extracted insurance configuration trustworthy.">
+  <title>Insure-Tech — Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="case-study.css?v=1">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to case study</a>
+
+  <header class="site-header wrap">
+    <a class="brand" href="#main">Eicore OneBuzz.</a>
+    <div class="header-meta"><span>Case study</span><span>2026</span></div>
+    <a class="back" href="https://eicore.vercel.app/" target="_blank" rel="noopener">Visit product <span>↗</span></a>
+  </header>
+
+  <main id="main">
+
+    <!-- ===== Hero ===== -->
+    <section class="hero wrap module">
+      <p class="eyebrow">01 — B2B InsurTech · Enterprise UX</p>
+      <div class="hero-grid">
+        <div>
+          <h1>Making an AI's answer <em>worth trusting.</em></h1>
+          <p class="lede">Eicore OneBuzz reads insurance product configurations out of business requirement documents, rate cards and policy wordings. The extraction was already fast. The interface was the reason nobody could rely on it.</p>
+          <!-- The prototype and the design system are the work itself, so
+               they lead the page rather than sitting at the end of it. -->
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://eicore-onebuzz.vercel.app/?tabs=prototype&chrome=0" target="_blank" rel="noopener">Open the prototype <span>→</span></a>
+            <a class="btn btn-secondary" href="https://eicore-onebuzz.vercel.app/?tabs=design-system&chrome=0" target="_blank" rel="noopener">Open the design system <span>→</span></a>
+          </div>
+        </div>
+        <dl class="project-facts">
+          <div><dt>Role</dt><dd>Product design</dd></div>
+          <div><dt>Scope</dt><dd>Audit, UX, UI system</dd></div>
+          <div><dt>Domain</dt><dd>Health insurance</dd></div>
+        </dl>
+      </div>
+      <div class="tags"><span>B2B InsurTech</span><span>AI Workflow</span><span>Enterprise UX</span><span>Product Design</span></div>
+      <figure class="hero-image"><img src="media/insure/06-heor.webp?v=1" alt="The Product Plan Builder's unified workspace: an extraction-health donut at 89%, a field map heat grid, source document pills, plan variants, and a right rail holding tree, issues, data and document tabs."></figure>
+      <p class="caption">The redesigned workspace: extraction health, source documents, plan structure and open issues in one view, so verification starts without hunting across tabs.</p>
+    </section>
+
+    <!-- ===== 02 The challenge ===== -->
+    <section class="statement module">
+      <div class="wrap two-col">
+        <p class="eyebrow">02 — The challenge</p>
+        <div>
+          <h2>A tool that knew too much — and told you <em>nothing clearly.</em></h2>
+          <p>OneBuzz uses AI to extract insurance product configurations from BRDs, rate cards and policy wordings, compressing 3–5 days of manual configuration into hours of review. But the interface surfaced errors in four separate places, hid the connection between an extracted value and the document it came from, and confronted users with blocking validation only at the very end.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap module">
+      <div class="stat-row">
+        <div><b>3–5 days</b><p>Manual configuration time before AI</p></div>
+        <div><b>155 fields</b><p>AI-extracted across 8 categories</p></div>
+        <div><b>8 UX flaws</b><p>Identified in the interface audit</p></div>
+      </div>
+    </section>
+
+    <!-- ===== 03 Who it is for ===== -->
+    <section class="audience module">
+      <div class="wrap audience-grid">
+        <div><p class="eyebrow">03 — Who it is for</p><h2>Domain experts who cannot afford <em>UI friction.</em></h2></div>
+        <div>
+          <p class="lede">The system serves deep insurance domain experts, not developers. They configure several products a quarter, each across multiple sessions, where a single misread co-payment bracket can cost millions.</p>
+          <div class="pain-grid">
+            <article>
+              <span>Persona 01</span>
+              <h3>Product Manager / Head of Product</h3>
+              <p><b>Motive</b> — speed-to-market and compliance.<br>
+                 <b>Needs</b> — high-level coverage verification, exclusions, compliance checklists.<br>
+                 <b>Pain</b> — blockers surface only at final pre-publish, costing hours of rework.</p>
+            </article>
+            <article>
+              <span>Persona 02</span>
+              <h3>Senior Actuarial Analyst</h3>
+              <p><b>Motive</b> — precision and underwriting safety.<br>
+                 <b>Needs</b> — verify rate cards, co-pays and age bands with total precision.<br>
+                 <b>Pain</b> — source attribution is passive; no live link from a field back to its page.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 04 The audit ===== -->
+    <section class="wrap module problem-section">
+      <div class="section-intro">
+        <p class="eyebrow">04 — Eight flaws, eight responses</p>
+        <h2>An audit of the existing interface.</h2>
+      </div>
+      <p class="lede">Eight behaviours were undermining trust in the AI-extracted output. The redesign answers each with a specific, scoped affordance — no blanket rewrites.</p>
+      <ol class="flaws">
+        <li><span class="n">01</span><div><h3>Attention fragmentation</h3><p>Errors and confidence scores live in four places — panic and skipped steps.</p></div><div class="fix"><b>Response</b><p>A dedicated Issues tab with one-click Resolve; the stepper carries a live "Needs Attention" count.</p></div></li>
+        <li><span class="n">02</span><div><h3>Passive source attribution</h3><p>"From: BRD" is a text tag — users hunt through five PDFs manually.</p></div><div class="fix"><b>Response</b><p>Every value cites its origin (BRD Pg 2, Sec 4.1); the Document Inspector opens that passage highlighted.</p></div></li>
+        <li><span class="n">03</span><div><h3>Blind navigation</h3><p>Plan nodes give no signal of how close each one is to done.</p></div><div class="fix"><b>Response</b><p>The active stage expands its own sub-steps with a live progress bar.</p></div></li>
+        <li><span class="n">04</span><div><h3>Flat coverage scroll</h3><p>37 coverages in one flat list means endless vertical scrolling.</p></div><div class="fix"><b>Response</b><p>Coverages live under collapsible plan accordions — Mini, Medi, Max.</p></div></li>
+        <li><span class="n">05</span><div><h3>Competing side drawers</h3><p>Tree, Extraction, Issues and Docs tabs fight for the same panel.</p></div><div class="fix"><b>Response</b><p>A context-sensitive split — only the relevant panel surfaces while you are editing.</p></div></li>
+        <li><span class="n">06</span><div><h3>Disconnected "Mark Reviewed"</h3><p>Save, value, and "Mark Reviewed" are three separate clicks.</p></div><div class="fix"><b>Response</b><p>Save and the "Mark Reviewed (n/151)" counter co-locate; resolving updates the audit in place.</p></div></li>
+        <li><span class="n">07</span><div><h3>Post-hoc shock</h3><p>Critical errors surface only at the final pre-publish step.</p></div><div class="fix"><b>Response</b><p>Field-level amber and red borders surface weak values inline while editing.</p></div></li>
+        <li><span class="n">08</span><div><h3>High-risk friction</h3><p>Destructive actions — delete coverage, revert — lack visible feedback.</p></div><div class="fix"><b>Response</b><p>Standardised states: "Draft auto-saved", a visible Revert affordance, an undo path.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- ===== 05 Principles ===== -->
+    <section class="process module">
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">05 — Design principles</p>
+          <h2>Four ideas that shaped every decision.</h2>
+        </div>
+        <p class="lede">Once the audit was clear, four principles became the rubric for every layout, control and interaction in the rebuild.</p>
+        <ol class="process-list">
+          <li><span>01</span><div><h3>Confidence-coded fields</h3><p>Low-confidence values carry amber borders and a 75% badge — risk is visible inline during editing, not at final review.</p></div><b>Trust</b></li>
+          <li><span>02</span><div><h3>Inspect → live source split</h3><p>Confidence badges open a Document Inspector pinned to the canvas, scrolled to the exact BRD passage with the figure highlighted.</p></div><b>Evidence</b></li>
+          <li><span>03</span><div><h3>One multi-tab workspace</h3><p>Tree, Extraction, Issues and Docs live in a single right-hand panel — structure, audit, issues and source one click apart.</p></div><b>Focus</b></li>
+          <li><span>04</span><div><h3>Staged navigation with sub-steps</h3><p>The left rail maps the five stages; the active stage expands to show its own sub-step progress.</p></div><b>Orientation</b></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== 06 The trust loop ===== -->
+    <section class="wrap module">
+      <div class="section-intro">
+        <p class="eyebrow">06 — The trust loop</p>
+        <h2>The interaction that ties the whole system together.</h2>
+      </div>
+      <p class="lede">The user never has to leave the canvas to trust an AI extraction.</p>
+      <ol class="loop">
+        <li><b>01 — Notice</b><p>An amber 75% bead beside a field signals low confidence. The user scans; they do not search.</p></li>
+        <li><b>02 — Verify</b><p>One click opens the source passage on the left, highlighted at page 12 of the BRD. The user reads; they do not hunt.</p></li>
+        <li><b>03 — Resolve</b><p>Accept &amp; Verify turns the bead green. The auditor warning clears. Progress ticks 12/37 → 13/37.</p></li>
+      </ol>
+      <figure class="case-figure">
+        <img src="media/insure/03-parameter.webp?v=1" alt="The parameter editor for In-patient Hospitalisation, with a drawer showing the extracted value beside the user's value, a confidence badge, and the highlighted source passage from the BRD." loading="lazy">
+        <figcaption class="caption">The loop in one screen: the extracted value, the user's value, the confidence badge, and the sentence in the BRD it came from — side by side.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== 07 The designs ===== -->
+    <section class="feature-module module">
+      <div class="wrap">
+        <div class="feature-head">
+          <p class="eyebrow">07 — Final designs</p>
+          <div>
+            <h2>Five core surfaces across <em>the unified workspace.</em></h2>
+            <p>Each component traces back to a specific friction point retired by the audit — extraction trust, source attribution, drill-down navigation and dependency visibility.</p>
+          </div>
+        </div>
+
+        <div class="designs">
+          <figure class="design">
+            <img src="media/insure/05-tree-drawer.webp?v=1" alt="The tree canvas with a parameter drawer open on the right edge, showing extracted versus user value, a highlighted source passage, and a dependencies panel." loading="lazy">
+            <div class="design-meta">
+              <div>
+                <p class="n">01 — Tree + parameter drawer</p>
+                <h3>Inspect any card without losing the map.</h3>
+                <p>Clicking a card on the tree opens the parameter drawer on the right edge — the full canvas stays visible so dependencies and sibling values remain legible.</p>
+              </div>
+              <ul>
+                <li>Drawer slides in from the right; the tree canvas stays anchored as context</li>
+                <li>Extracted value and your value side by side, with a confidence label</li>
+                <li>Source passage with the highlighted BRD quote and a bidirectional link</li>
+                <li>Dependencies panel lists upstream rules — premium calculation, member eligibility</li>
+                <li>AI assist input — ask "why this value?" without leaving the tree</li>
+                <li>← / → walks through sibling parameters in the same category; Esc closes</li>
+              </ul>
+            </div>
+          </figure>
+
+          <figure class="design">
+            <img src="media/insure/01-workspace.webp?v=1" alt="Tree mode: the whole plan as one canvas, with parameter cards grouped into four category columns and connected by dependency edges." loading="lazy">
+            <div class="design-meta">
+              <div>
+                <p class="n">02 — Tree mode</p>
+                <h3>The whole plan as a single canvas.</h3>
+                <p>A full-screen anatomy view — every parameter rendered as a card, grouped by category, connected by dependency edges. Switch tier with one click; the issues count follows you.</p>
+              </div>
+              <ul>
+                <li>Mini Plan root branches into four category columns</li>
+                <li>Each card carries a status — verified, missing, low confidence, blocker</li>
+                <li>Per-card metadata — AI confidence, dependency count, source page</li>
+                <li>Side panel: ⌘K jump-to-any-field, tier picker with issue counts, filters</li>
+                <li>A floating legend explains the four card states</li>
+                <li>Bottom roadmap shows the lifecycle — upload, extract, verify, audit, publish</li>
+              </ul>
+            </div>
+          </figure>
+
+          <figure class="design">
+            <img src="media/insure/02-drilldown.webp?v=1" alt="Coverage drill-down: the left rail becomes a categories list with progress per group, while parameter cards show Mini, Medi and Max values side by side." loading="lazy">
+            <div class="design-meta">
+              <div>
+                <p class="n">03 — Coverage drill-down</p>
+                <h3>From workspace to category in one click.</h3>
+                <p>Selecting a category morphs the left rail into a categories list with progress per group, while the workspace shows per-parameter values across Mini, Medi and Max.</p>
+              </div>
+              <ul>
+                <li>Left rail switches to 33 categories with status dots and progress bars</li>
+                <li>Plan variants stay pinned at the top so tier context never drops</li>
+                <li>Cards show Mini / Medi / Max values inline, with a confidence dot per tier</li>
+                <li>A "needs review" chip flags the parameters demanding attention first</li>
+                <li>A mini extraction-health grid gives ambient quality orientation</li>
+              </ul>
+            </div>
+          </figure>
+
+          <figure class="design">
+            <img src="media/insure/04-tree.webp?v=1" alt="The plan tree at full width, showing category branches and parameter cards with their status and confidence." loading="lazy">
+            <div class="design-meta">
+              <div>
+                <p class="n">04 — Plan anatomy</p>
+                <h3>Dependencies you can see rather than infer.</h3>
+                <p>The same tree at full width, where the edges between cards carry the meaning: which values feed a premium calculation, and which are still unverified upstream of it.</p>
+              </div>
+              <ul>
+                <li>Dependency edges connect parameters across categories</li>
+                <li>Status is legible at a glance without opening a card</li>
+                <li>Tier switching preserves position in the canvas</li>
+              </ul>
+            </div>
+          </figure>
+
+          <figure class="design">
+            <img src="media/insure/06-heor.webp?v=1" alt="The unified workspace home screen with extraction health, field map, source pills, plan variants and an activity feed." loading="lazy">
+            <div class="design-meta">
+              <div>
+                <p class="n">05 — Unified workspace</p>
+                <h3>The product builder's home screen.</h3>
+                <p>Every signal needed to start verifying — extraction health, source documents, plan structure and open issues — consolidated into one view without hunting across tabs.</p>
+              </div>
+              <ul>
+                <li>89% extraction-health donut: 124 high, 40 medium, 15 low confidence</li>
+                <li>A field map heatmap colours all 234 extracted fields by AI confidence</li>
+                <li>Source pills jump straight to the active document — rate card, BRD, wording</li>
+                <li>The right rail unifies tree, issues, extracted data and document</li>
+                <li>Mini / Medi / Max variants with per-category field counts and quality score</li>
+                <li>A live activity feed with resolve and open-parameter shortcuts</li>
+              </ul>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 08 The five screens ===== -->
+    <section class="wrap module feature-grid-section">
+      <p class="eyebrow">08 — The five redesigned screens</p>
+      <div class="feature-grid">
+        <article class="feature-card"><span>01</span><h3>Configuration method</h3><p>Three paths — AI extraction as the primary route, template, or manual — with a live file-upload queue.</p></article>
+        <article class="feature-card"><span>02</span><h3>AI extraction &amp; audit</h3><p>A split-pane source viewer, an 89% extraction-quality audit, and parameter tables with per-row confidence.</p></article>
+        <article class="feature-card"><span>03</span><h3>Unified product workspace</h3><p>The core three-column screen — coverage navigation, an overview and edit canvas, and the tree/extraction/issues/docs panel.</p></article>
+        <article class="feature-card"><span>04</span><h3>Product review &amp; publish</h3><p>A pre-publish validator — the checklist of blockers and warnings, plan and coverage status, subsystem health.</p></article>
+        <article class="feature-card"><span>05</span><h3>Stakeholder overview</h3><p>A read-only shareable dashboard — metric cards plus per-plan limits and member-details tables.</p></article>
+      </div>
+    </section>
+
+    <!-- ===== 09 Outcomes ===== -->
+    <section class="wrap module response-section">
+      <p class="eyebrow">09 — Outcomes</p>
+      <div class="response-table">
+        <div class="response-row response-head"><span>Before</span><span>After</span><span>What changes</span></div>
+        <div class="response-row"><span>3–5 days</span><span><b>Hours of review</b></span><span>Time to configure a product</span></div>
+        <div class="response-row"><span>4 error surfaces</span><span><b>1 unified auditor</b></span><span>Where validation lives</span></div>
+        <div class="response-row"><span>37 flat items</span><span><b>8 semantic groups</b></span><span>Coverage navigation</span></div>
+        <div class="response-row"><span>No source link</span><span><b>Click-to-source</b></span><span>From a value back to the BRD</span></div>
+      </div>
+    </section>
+
+    <!-- ===== 10 Reflection ===== -->
+    <section class="flow-section module">
+      <div class="wrap">
+        <div class="section-intro"><p class="eyebrow">10 — Reflection</p><h2>What is settled, and what is still open.</h2></div>
+        <div class="flow-steps">
+          <div><b>What's next</b><p>Empirical confidence calibration — wiring the amber thresholds to real AI accuracy data from production.</p></div>
+          <div><b>Would change</b><p>The eight-section accordion could collapse to a sticky jump-to chip row on long pages.</p></div>
+          <div><b>Open question</b><p>How should the system handle a value the user accepts that the AI later refines — versioning, or override?</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Close ===== -->
+    <section class="impact module">
+      <div class="wrap impact-grid">
+        <p class="eyebrow">Try it</p>
+        <div>
+          <h2>The prototype is the argument. <em>Open it.</em></h2>
+          <p>Every screen described here is clickable — the five stages, the tree, the parameter drawer and the design system that holds them together.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://eicore-onebuzz.vercel.app/?tabs=prototype&chrome=0" target="_blank" rel="noopener">Open the prototype <span>→</span></a>
+            <a class="btn btn-secondary" href="https://eicore-onebuzz.vercel.app/?tabs=design-system&chrome=0" target="_blank" rel="noopener">Open the design system <span>→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap reflection module">
+      <p class="eyebrow">In one line</p>
+      <blockquote>"The extraction was never the hard part. Making someone willing to sign their name under it was."</blockquote>
+    </section>
+  </main>
+
+  <footer class="wrap"><span>© 2026 Aditya Joseph</span><span>Eicore OneBuzz case study</span></footer>
+</body>
+</html>
