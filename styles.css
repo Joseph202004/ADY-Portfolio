@@ -734,6 +734,8 @@ body.mode-video .hero-aside { display: none; }
 @media (min-width: 768px) { .info-grid { grid-template-columns: 1fr 1fr; gap: 64px; } }
 .info-body { font-size: var(--font-size-lg); font-weight: 300; line-height: 1.5; letter-spacing: -0.02em; }
 .info-body strong { font-weight: 500; }
+/* A second paragraph in the same voice and size; only the gap is new. */
+.info-body-2 { margin-top: 24px; }
 .info-aside { color: var(--muted); font-size: var(--font-size-sm); line-height: 1.625; }
 .info-grid .link-more { margin-top: 20px; }
 
