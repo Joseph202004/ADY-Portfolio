@@ -384,7 +384,14 @@ body.mode-full .hero-video { display: none; }
 /* The label sits where the cards' top margin used to be, so the peek is
    unchanged: the eyebrow is the first thing over the fold and the cards follow
    it. Hidden with them on the drawing screen. */
-.hero-media-head { margin-top: 52px; margin-bottom: 16px; }
+/* This one heading introduces the whole grid below it rather than labelling
+   a column, so it sits on the page's centre line and at a size that reads as
+   a heading instead of a tag. */
+.hero-media-head { margin-top: 52px; margin-bottom: 24px; }
+/* Two classes deep on purpose: a later media query turns .section-head into a
+   row aligned to its end, and this heading has to beat it at any width. */
+.section-head.hero-media-head { justify-content: center; align-items: center; text-align: center; }
+.hero-media-head .eyebrow { font-size: var(--font-size-lg); }
 body.mode-video .hero-media-head { display: none; }
 
 .hero-media {
@@ -783,6 +790,14 @@ body.mode-video .hero-aside { display: none; }
 @media (min-width: 768px) { .work-grid { grid-template-columns: 1fr 1fr; gap: 48px; } }
 .work-card { display: block; }
 .work-card .frame { margin-bottom: 16px; }
+/* The featured pair is numbered; the grid below is not, because there the
+   count is obvious and here it says these two were chosen. */
+.work-index {
+  display: block; margin-bottom: 12px;
+  font-size: var(--font-size-xs); color: var(--faint);
+  text-transform: uppercase; letter-spacing: .12em;
+}
+
 .work-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .work-title {
   font-size: var(--font-size-lg); font-weight: 400; letter-spacing: -0.02em;

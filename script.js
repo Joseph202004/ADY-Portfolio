@@ -188,10 +188,11 @@ if (servicesEl) {
 // A project card, used both by the featured pair in the hero and by the work
 // grid. Cards with a live project carry data-project, which the portal picks
 // up; the rest stay inert until they have somewhere to go.
-function projectCard(w, i, { ratio = "ratio-107", parallax = 0 } = {}) {
+function projectCard(w, i, { ratio = "ratio-107", parallax = 0, index = false } = {}) {
   return `
     <a class="work-card" href="${w.href}" data-cursor="View"
        ${w.thumb ? `data-project="${i}"` : ""}>
+      ${index ? `<span class="work-index">Project ${i + 1}</span>` : ""}
       <figure class="frame ${ratio}" data-parallax="${parallax}">
         ${w.thumb
           ? `<img class="work-thumb" src="${w.thumb}" alt="${w.title}" loading="lazy" />`
@@ -207,7 +208,7 @@ function projectCard(w, i, { ratio = "ratio-107", parallax = 0 } = {}) {
 const heroProjects = document.getElementById("hero-projects");
 if (heroProjects) {
   heroProjects.innerHTML = WORK.slice(0, 2)
-    .map((w, i) => projectCard(w, i, { ratio: "ratio-43", parallax: i ? 40 : -40 }))
+    .map((w, i) => projectCard(w, i, { ratio: "ratio-43", parallax: i ? 40 : -40, index: true }))
     .join("");
 }
 
