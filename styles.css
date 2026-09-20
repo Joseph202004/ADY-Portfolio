@@ -848,49 +848,76 @@ body.mode-video .hero { padding-top: 96px; }
 }
 
 /* ---------- The marks, moving ---------- */
-/* Long, slow loops: at a glance the row is still, and only a card actually
-   being looked at reads as animated. */
-.svc-ripple circle { transform-origin: 32px 32px; }
-.svc-ripple .r1 { animation: svc-ripple 3.2s var(--ease) infinite; }
-.svc-ripple .r2 { animation: svc-ripple 3.2s var(--ease) infinite .35s; }
-.svc-ripple .r3 { animation: svc-ripple 3.2s var(--ease) infinite .7s; }
-@keyframes svc-ripple {
-  0%   { transform: scale(.72); opacity: .25; }
-  45%  { opacity: 1; }
-  100% { transform: scale(1.1); opacity: .2; }
+/* Timings taken off the recording: the rings launch roughly every .8s, the
+   cubes come back into line every few seconds, the modules hold an
+   arrangement before moving, and the form rises and settles in about 3s. */
+
+/* Rings: born at the rim, contracting to nothing */
+.svc-rings circle { transform-origin: 32px 32px; }
+.svc-rings .r1 { animation: svc-contract 2.4s linear infinite; }
+.svc-rings .r2 { animation: svc-contract 2.4s linear infinite -0.8s; }
+.svc-rings .r3 { animation: svc-contract 2.4s linear infinite -1.6s; }
+@keyframes svc-contract {
+  0%   { transform: scale(1);    opacity: 1; }
+  85%  { transform: scale(.16);  opacity: .5; }
+  100% { transform: scale(.08);  opacity: 0; }
 }
 
-.svc-cube .spin {
-  transform-origin: 32px 32px;
-  animation: svc-turn 7s ease-in-out infinite;
+/* Cubes: one turn each way, meeting square halfway through */
+.svc-cubes g { transform-origin: 32px 32px; }
+.svc-cubes .outer { animation: svc-turn-cw 9s linear infinite; }
+.svc-cubes .inner { animation: svc-turn-ccw 9s linear infinite; }
+@keyframes svc-turn-cw  { to { transform: rotate(360deg); } }
+@keyframes svc-turn-ccw { to { transform: rotate(-360deg); } }
+
+/* The form: the top face lifts, the walls grow under it. Non-scaling stroke,
+   or a wall at a fifth of its height would draw a fifth of the line weight. */
+.svc-extrude .top, .svc-extrude line { vector-effect: non-scaling-stroke; }
+.svc-extrude .top { animation: svc-lift 3.2s var(--ease) infinite; }
+.svc-extrude line {
+  transform-box: fill-box; transform-origin: 50% 100%;
+  animation: svc-wall 3.2s var(--ease) infinite;
 }
-@keyframes svc-turn {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  50%      { transform: rotate(-12deg) scale(.94); }
+@keyframes svc-lift {
+  0%, 100% { transform: translateY(-3px); }
+  50%      { transform: translateY(-14px); }
+}
+@keyframes svc-wall {
+  0%, 100% { transform: scaleY(.214); }
+  50%      { transform: scaleY(1); }
 }
 
-.svc-proto .cursor { animation: svc-point 4s var(--ease) infinite; }
-@keyframes svc-point {
-  0%       { transform: translate(10px, 4px); }
-  35%, 62% { transform: translate(0, 0); }
-  100%     { transform: translate(10px, 4px); }
+/* Modules: two arrangements, held, with each piece on its own beat */
+.svc-modules rect { animation: 5s var(--ease-out-expo) infinite; }
+.svc-modules .m1 { animation-name: svc-m1; }
+.svc-modules .m2 { animation-name: svc-m2; animation-delay: .06s; }
+.svc-modules .m3 { animation-name: svc-m3; animation-delay: .12s; }
+.svc-modules .m4 { animation-name: svc-m4; animation-delay: .18s; }
+.svc-modules .m5 { animation-name: svc-m5; animation-delay: .24s; }
+@keyframes svc-m1 {
+  0%, 40%   { x: 8px;  y: 10px; width: 24px; height: 12px; }
+  55%, 92%  { x: 8px;  y: 10px; width: 16px; height: 12px; }
+  100%      { x: 8px;  y: 10px; width: 24px; height: 12px; }
 }
-.svc-proto .tap { transform-origin: 24px 36px; animation: svc-tap 4s var(--ease) infinite; }
-@keyframes svc-tap {
-  0%, 30% { transform: scale(.2); opacity: 0; }
-  46%     { transform: scale(1);  opacity: .55; }
-  70%     { transform: scale(1.4); opacity: 0; }
-  100%    { transform: scale(.2); opacity: 0; }
+@keyframes svc-m2 {
+  0%, 40%   { x: 36px; y: 10px; width: 20px; height: 12px; }
+  55%, 92%  { x: 28px; y: 10px; width: 28px; height: 12px; }
+  100%      { x: 36px; y: 10px; width: 20px; height: 12px; }
 }
-
-.svc-grid rect { animation: svc-settle 5s var(--ease-out-expo) infinite; }
-.svc-grid .b2 { animation-delay: .12s; }
-.svc-grid .b3 { animation-delay: .24s; }
-.svc-grid .b4 { animation-delay: .36s; }
-.svc-grid .b5 { animation-delay: .48s; }
-@keyframes svc-settle {
-  0%, 55%, 100% { transform: translateX(0); }
-  22%           { transform: translateX(4px); }
+@keyframes svc-m3 {
+  0%, 40%   { x: 8px;  y: 26px; width: 16px; height: 12px; }
+  55%, 92%  { x: 8px;  y: 26px; width: 12px; height: 28px; }
+  100%      { x: 8px;  y: 26px; width: 16px; height: 12px; }
+}
+@keyframes svc-m4 {
+  0%, 40%   { x: 28px; y: 26px; width: 28px; height: 12px; }
+  55%, 92%  { x: 24px; y: 26px; width: 32px; height: 12px; }
+  100%      { x: 28px; y: 26px; width: 28px; height: 12px; }
+}
+@keyframes svc-m5 {
+  0%, 40%   { x: 8px;  y: 42px; width: 30px; height: 12px; }
+  55%, 92%  { x: 24px; y: 42px; width: 32px; height: 12px; }
+  100%      { x: 8px;  y: 42px; width: 30px; height: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

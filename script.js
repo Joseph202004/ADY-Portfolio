@@ -169,43 +169,56 @@ if (marqueeEl) {
   marqueeEl.innerHTML = row + row; // duplicated for a seamless -50% loop
 }
 
-/* A drawn mark for each service, in line rather than fill so it belongs with
-   the rest of the page's hairlines. Each one keeps moving on its own quiet
-   loop — the animation is in the CSS, keyed off these class names, so the
-   markup stays a plain drawing. */
+/* The marks, traced from the reference recording frame by frame: rings
+   contracting inward, two cubes turning against each other, modules moving
+   between two arrangements, and a form extruding up and settling back. The
+   motion lives in the CSS; this is only the drawing. */
 const SERVICE_ICONS = {
-  // Research: findings radiating out from a point
+  // Rings born at the rim, each contracting to the centre and fading, one
+  // launched every third of the cycle so three are always in flight.
   "UX Design": `
-    <svg class="svc-icon svc-ripple" viewBox="0 0 64 64" aria-hidden="true">
-      <circle class="r1" cx="32" cy="32" r="7" />
-      <circle class="r2" cx="32" cy="32" r="14" />
+    <svg class="svc-icon svc-rings" viewBox="0 0 64 64" aria-hidden="true">
+      <circle class="r1" cx="32" cy="32" r="21" />
+      <circle class="r2" cx="32" cy="32" r="21" />
       <circle class="r3" cx="32" cy="32" r="21" />
     </svg>`,
-  // Interface: a form turning in space
+  // Two cubes on one axis, turning opposite ways, meeting square every few
+  // seconds before drifting apart again.
   "UI Design": `
-    <svg class="svc-icon svc-cube" viewBox="0 0 64 64" aria-hidden="true">
-      <g class="spin">
-        <path d="M32 12 52 23 32 34 12 23 Z" />
-        <path d="M12 23 12 42 32 53 32 34 Z" />
-        <path d="M52 23 52 42 32 53 32 34 Z" />
+    <svg class="svc-icon svc-cubes" viewBox="0 0 64 64" aria-hidden="true">
+      <g class="outer">
+        <path d="M32 12 49.3 22 49.3 42 32 52 14.7 42 14.7 22 Z" />
+        <path d="M32 32 32 12 M32 32 14.7 42 M32 32 49.3 42" />
+      </g>
+      <g class="inner">
+        <path d="M32 22 41.5 27.5 41.5 38.5 32 44 22.5 38.5 22.5 27.5 Z" />
+        <path d="M32 33 32 22 M32 33 22.5 38.5 M32 33 41.5 38.5" />
       </g>
     </svg>`,
-  // Prototype: a pointer crossing the screen, and the tap it leaves
+  // A form built up and let down again: the top face rises while its walls
+  // grow under it, so the solid stays a solid the whole way.
   "Prototyping": `
-    <svg class="svc-icon svc-proto" viewBox="0 0 64 64" aria-hidden="true">
-      <rect x="9" y="13" width="46" height="34" rx="3" />
-      <path d="M9 22 H55" />
-      <circle class="tap" cx="24" cy="36" r="6" />
-      <path class="cursor" d="M22 30 L34 36 L28 37.5 L25.5 43 Z" />
+    <svg class="svc-icon svc-extrude" viewBox="0 0 64 64" aria-hidden="true">
+      <path class="base" d="M32 30 58 46.5 49.3 52 32 41 13 52 4.3 46.5 Z" />
+      <g class="risers">
+        <line x1="32" y1="30" x2="32" y2="16" />
+        <line x1="58" y1="46.5" x2="58" y2="32.5" />
+        <line x1="49.3" y1="52" x2="49.3" y2="38" />
+        <line x1="32" y1="41" x2="32" y2="27" />
+        <line x1="13" y1="52" x2="13" y2="38" />
+        <line x1="4.3" y1="46.5" x2="4.3" y2="32.5" />
+      </g>
+      <path class="top" d="M32 30 58 46.5 49.3 52 32 41 13 52 4.3 46.5 Z" />
     </svg>`,
-  // System: modules settling into an arrangement
+  // Five modules that slide and resize between two arrangements, each on its
+  // own beat, so the middle of the move is a scatter rather than a shuffle.
   "Design Systems": `
-    <svg class="svc-icon svc-grid" viewBox="0 0 64 64" aria-hidden="true">
-      <rect class="b1" x="10" y="14" width="24" height="12" rx="2" />
-      <rect class="b2" x="38" y="14" width="16" height="12" rx="2" />
-      <rect class="b3" x="10" y="30" width="16" height="12" rx="2" />
-      <rect class="b4" x="30" y="30" width="24" height="12" rx="2" />
-      <rect class="b5" x="18" y="46" width="28" height="12" rx="2" />
+    <svg class="svc-icon svc-modules" viewBox="0 0 64 64" aria-hidden="true">
+      <rect class="m1" x="8"  y="10" width="24" height="12" rx="1.5" />
+      <rect class="m2" x="36" y="10" width="20" height="12" rx="1.5" />
+      <rect class="m3" x="8"  y="26" width="16" height="12" rx="1.5" />
+      <rect class="m4" x="28" y="26" width="28" height="12" rx="1.5" />
+      <rect class="m5" x="8"  y="42" width="30" height="12" rx="1.5" />
     </svg>`,
 };
 
