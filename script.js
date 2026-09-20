@@ -1686,7 +1686,7 @@ const ANSWERS = [
   // Asked often enough, and answered honestly.
   {
     match: /single|girlfriend|relationship|dating|taken|boyfriend/i,
-    reply: "Hmmm, he hasn't talked to his girlfriend in two days, and he misses her a lot, and she's out there partying without him — <strong>full mazeee mere bina..</strong>",
+    reply: "Hmmm, he hasn't talked to his girlfriend in two days, and he misses her a lot, and she's out there partying without him — <strong>full mazeee mere bina..</strong> XDDDD BABEEEEEEEE KISSIE PISSIE",
   },
 ];
 
