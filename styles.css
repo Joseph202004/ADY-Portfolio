@@ -487,6 +487,13 @@ body.mode-video .hero-media-head { display: none; }
 body.mode-video .hero-head { display: block; }
 body.mode-video .hero-aside { display: none; }
 
+/* The drawing screen has no headline above the stage, so the padding that
+   gives one room leaves the board sitting low. It starts higher here; the
+   portfolio screen keeps its own spacing. */
+body.mode-video .hero { padding-top: 96px; }
+@media (min-width: 768px)  { body.mode-video .hero { padding-top: 132px; } }
+@media (min-width: 1024px) { body.mode-video .hero { padding-top: 112px; } }
+
 /* Video mode: hide the headline visually but keep it for AT / SEO */
 .hero--video .display {
   position: absolute; width: 1px; height: 1px;
