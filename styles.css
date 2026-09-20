@@ -1297,6 +1297,33 @@ body.mode-full .hero-stage { display: none; }
 /* The written line settles into the real typeface once the pen lifts —
    the strokes are a tracing and read lighter than the font itself. */
 .hw-settled { display: block; }
+
+/* ---------- Eraser (the second intro line is rubbed out) ---------- */
+/* A block held at a slight angle. Everything is sized in em so it scales
+   with the line it is erasing rather than against it. */
+.hw-erasable { display: block; }
+.hw-eraser {
+  position: absolute; top: 50%; left: 0;
+  width: .8em; height: .42em; margin-top: -.21em;
+  border-radius: .07em;
+  /* a rubber: the worn pink body with its paper band under it */
+  background: linear-gradient(180deg, #f3cfd2 0 60%, #fbfbfa 60%);
+  box-shadow: 0 .02em .03em rgba(17, 17, 17, .18), inset 0 -.02em 0 rgba(17, 17, 17, .07);
+  pointer-events: none;
+  will-change: transform;
+}
+/* The rubbings it leaves behind */
+.hw-crumb {
+  position: absolute; top: 58%;
+  width: .05em; height: .05em; border-radius: 50%;
+  background: rgba(63, 63, 67, .35);
+  animation: hw-crumb .6s var(--ease, ease-out) forwards;
+  pointer-events: none;
+}
+@keyframes hw-crumb {
+  from { transform: translateY(0); opacity: .9; }
+  to   { transform: translateY(var(--fall, 12px)); opacity: 0; }
+}
 .hw-settled strong { font-weight: 700; }
 
 /* ---------- Back, from a reply to the intro ---------- */

@@ -1892,7 +1892,81 @@ function initBoard() {
 
   /* ---------- Intro ---------- */
   // The two lines the showreel used to play, written rather than filmed.
-  const INTRO = ["Hi, I'm Adi", "Ask me anything.."];
+  // The second one is then rubbed out and replaced: the claim gives way to
+  // the invitation, and the erasing is what tells you the board is writable.
+  const INTRO = ["Hi, I'm Adi", "I design for clarity"];
+  const INTRO_REWRITE = "Ask me anything";
+
+  // Rub a written line out, left to right, the ink going with the eraser's
+  // trailing edge. The clip sits on a wrapper rather than the host, or the
+  // eraser would be clipped along with the ink it is removing.
+  function eraseLine(host, token) {
+    return new Promise(resolve => {
+      if (REDUCED || !host.textContent.trim()) {
+        host.innerHTML = "";
+        resolve();
+        return;
+      }
+
+      const ink = document.createElement("span");
+      ink.className = "hw-erasable";
+      while (host.firstChild) ink.appendChild(host.firstChild);
+      host.appendChild(ink);
+      host.style.position = "relative";
+
+      const inkW = ink.getBoundingClientRect().width || host.clientWidth;
+      const em = parseFloat(getComputedStyle(host).fontSize) || 32;
+
+      const eraser = document.createElement("span");
+      eraser.className = "hw-eraser";
+      eraser.setAttribute("aria-hidden", "true");
+      host.appendChild(eraser);
+
+      const from = -em * 0.7;
+      const to = inkW + em * 0.5;
+      const DUR = 1000;
+      const t0 = performance.now();
+
+      const done = () => {
+        eraser.remove();
+        host.innerHTML = "";
+        host.style.position = "";
+        resolve();
+      };
+
+      (function frame(now) {
+        if (!token()) return done();
+        const t = Math.min(1, (now - t0) / DUR);
+        // Ease, then a little vertical scrub so the hand reads as a hand
+        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const x = from + (to - from) * e;
+        const wobble = Math.sin(t * Math.PI * 7) * em * 0.05;
+
+        eraser.style.transform = `translate(${x}px, ${wobble}px) rotate(-7deg)`;
+        // The ink is gone everywhere the eraser has already passed
+        ink.style.clipPath = `inset(-30% 0 -30% ${Math.max(0, x + em * 0.28)}px)`;
+
+        if (t < 1) return requestAnimationFrame(frame);
+        crumbs(host, inkW, em);
+        setTimeout(done, 260);
+      })(t0);
+    });
+  }
+
+  // What is left on the paper afterwards: a few rubbings that fall and fade.
+  function crumbs(host, width, em) {
+    for (let i = 0; i < 5; i++) {
+      const c = document.createElement("span");
+      c.className = "hw-crumb";
+      c.setAttribute("aria-hidden", "true");
+      c.style.left = `${width * (0.15 + Math.random() * 0.7)}px`;
+      c.style.animationDelay = `${i * 40}ms`;
+      c.style.setProperty("--fall", `${em * (0.3 + Math.random() * 0.35)}px`);
+      host.appendChild(c);
+      setTimeout(() => c.remove(), 900);
+    }
+  }
+
   let introRun = false;
 
   async function writeIntro() {
@@ -1911,6 +1985,10 @@ function initBoard() {
 
     await writeHand(l1, INTRO[0], live);
     if (live()) await writeHand(l2, INTRO[1], live);
+    // A beat to read the line before it is taken away
+    if (live()) await new Promise(r => setTimeout(r, 900));
+    if (live()) await eraseLine(l2, live);
+    if (live()) await writeHand(l2, INTRO_REWRITE, live);
   }
   initBoard.writeIntro = writeIntro;
 
