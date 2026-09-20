@@ -825,21 +825,13 @@ body.mode-video .hero-aside { display: none; }
 
 /* ---------- Contact ---------- */
 .contact { border-top: 1px solid var(--line); padding-block: var(--space-section) 64px; }
-/* The closing line is written in the same hand as the drawing screen's
-   "Hi, I'm Adi" — the site signs off in its own handwriting. Mynerve has one
-   weight and its own spacing, so the variable-weight and tight tracking the
-   typeset version needed both come off. */
 .contact-title {
-  font-family: "Mynerve", "Caveat", "Adi Hand", cursive;
   font-size: var(--font-size-2xl);
-  font-weight: 400; line-height: 1.25;
-  letter-spacing: normal;
-  max-width: 18ch;
-  font-variation-settings: normal;
+  font-weight: 300; line-height: 1.1;
+  letter-spacing: -2.5px;
+  max-width: 16ch;
+  font-variation-settings: "wght" 300;
 }
-/* The serif italic aside would read as a second hand inside the sentence. */
-.contact-title em { font-family: inherit; font-style: normal; }
-.contact-mail { font-family: "Mynerve", "Caveat", "Adi Hand", cursive; }
 .contact-mail {
   display: inline-block; margin-top: 32px;
   font-size: var(--font-size-xl); font-weight: 300;
