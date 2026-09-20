@@ -27,10 +27,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "..", "media", "rig", "pose-00.png")
 
 CUT = 322                # above this row the arm is clear of the head
-PIVOT = (418, 338)       # the elbow, a little below the cut so the joint
-                         # itself stays inside the solid upper arm
+PIVOT = (445, 326)       # the elbow — on the arm's OUTER edge, just under the
+                         # cut. Pivoting mid-arm swung the forearm's outer edge
+                         # away from the upper arm's and left a square corner
+                         # sticking out at every scratch angle. On the edge, the
+                         # outline stays continuous and simply bends there, the
+                         # way an elbow's silhouette does; the wedge opens on the
+                         # inner side instead, where the filler and the hair
+                         # take care of it.
 CAP_H = 20               # how far the upper arm is extruded over the joint
-REACH = 11               # how far that strip may spread from the forearm
+REACH = 19               # how far that strip may spread from the forearm
+CAP_SPREAD = 36          # how far the strip is widened past the upper arm
 
 STEP_DEG = 2.6           # how far the arm may turn between frames
 MIN_MS = 45              # ... and the shortest and longest a frame may hold
@@ -88,7 +95,23 @@ def parts(im):
     # only ever appears next to where the forearm actually is — extruding the
     # full width left a black bar sticking out past the arm at wide angles.
     cap = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    row = im.crop((0, CUT + 1, W, CUT + 2))
+    row = im.crop((0, CUT + 1, W, CUT + 2)).copy()
+    # Widen the row past the upper arm on both sides with its own edge colour.
+    # With the pivot on the outer edge, an outward swing opens the wedge
+    # inboard of the upper arm — outside the row's natural width — and the
+    # filler had nothing there to paint with. The strip is only ever painted
+    # into empty pixels beside the forearm, so the extra width costs nothing.
+    # Inboard only: with the pivot on the outer edge the wedge can only open
+    # on the inner side, and spreading outboard as well laid a black shelf
+    # past the cuff. The colour comes from a few pixels inside the sleeve, not
+    # its edge — the edge pixel is antialiased, and extruding it painted the
+    # fill grey.
+    rp = row.load()
+    xs = [x for x in range(W) if rp[x, 0][3] > 200]
+    if xs:
+        lo = min(xs)
+        solid = rp[min(lo + 6, max(xs)), 0]
+        for x in range(max(0, lo - CAP_SPREAD), lo): rp[x, 0] = solid
     cap.paste(row.resize((W, CAP_H)), (0, CUT + 1 - CAP_H))
     return base, arm, cap
 
@@ -103,11 +126,15 @@ def joint(frame, cap, rotated):
     """
     near = rotated.split()[3].point(lambda v: 255 if v > 40 else 0)
     near = near.filter(ImageFilter.MaxFilter(REACH)).filter(ImageFilter.GaussianBlur(1.5))
-    # Inverted alpha, not a threshold: the arm's edge is antialiased, and
-    # treating those half-covered pixels as "not empty" left an unpainted rim
-    # between the filler and the arm — a white hairline down the join.
-    empty = ImageChops.invert(frame.split()[3])
-    frame.paste(cap, (0, 0), ImageChops.multiply(near, empty))
+    layer = Image.new("RGBA", cap.size, (0, 0, 0, 0))
+    layer.paste(cap, (0, 0), near)
+    # Composited UNDER the frame, not pasted on top through a mask. A paste
+    # into the arm's antialiased edge left those pixels still half-transparent
+    # — a white hairline along the join at every angle. Under the frame, the
+    # edge blends onto solid sleeve and the seam disappears; and being
+    # underneath, it cannot cover the hand or the hair no matter how far it
+    # reaches.
+    return Image.alpha_composite(layer, frame)
 
 
 # The performance, as angles over time. 0 deg is the arm as drawn — raised,
@@ -183,7 +210,7 @@ def build(out_path):
         f = base.copy()
         turned = arm.rotate(angle_at(t0), resample=Image.BICUBIC, center=PIVOT)
         f.alpha_composite(turned)
-        joint(f, cap, turned)
+        f = joint(f, cap, turned)
         frames.append(f)
         times.append(max(MIN_MS, int(round((t1 - t0) * 1000))))
 
