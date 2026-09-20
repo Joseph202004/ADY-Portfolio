@@ -1894,7 +1894,7 @@ function initBoard() {
   // The two lines the showreel used to play, written rather than filmed.
   // The second one is then rubbed out and replaced: the claim gives way to
   // the invitation, and the erasing is what tells you the board is writable.
-  const INTRO = ["Hi, I'm Adi", "I design for clarity"];
+  const INTRO = ["Hi, I'm Adi", "I like to draw"];
   const INTRO_REWRITE = "Ask me anything";
 
   // Rub a written line out, left to right, the ink going with the eraser's
