@@ -260,6 +260,16 @@ body.mode-video .nav a { transition: color .2s var(--ease), transform .25s var(-
 body.mode-video .nav a:hover { transform: rotate(-2deg) translateY(-1px); }
 body.mode-video .nav a::after { bottom: -2px; }
 
+/* The wordmark joins them: on the drawing screen it is written rather than
+   set, at a size that holds its own against the handwritten nav beside it.
+   Mynerve reads small and needs no negative tracking. */
+body.mode-video .brand {
+  font-family: "Mynerve", "Caveat", "Adi Hand", cursive;
+  font-size: clamp(21px, 2vw, 27px);
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+
 /* Full mode: the drawing steps aside for the headline */
 body.mode-full .hero-video { display: none; }
 
