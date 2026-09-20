@@ -1587,8 +1587,23 @@ const AI_SYSTEM = [
   "Answer in at most two short sentences, under 240 characters total.",
   "Wrap two or three key words in **double asterisks**. No lists, no headings,",
   "no markdown other than that. If asked something unrelated to his work,",
-  "say briefly that it is outside what this board covers.",
+  "reply with one short sentence of ten words or fewer saying it is outside",
+  "what this board covers. Do not list what it does cover, do not apologise",
+  "twice, do not offer alternatives.",
 ].join(" ");
+
+/* A model told to decline briefly often declines at length anyway — an
+   apology, then the list of things it would rather talk about. The board has
+   one line of room for a no, so a long refusal is replaced with a short one
+   rather than written out and clipped. */
+const OFF_TOPIC = /outside what this board covers|not something (this board|i) (cover|can)|unrelated to (his|my) work|can(no|')t help with that/i;
+function trimRefusal(html) {
+  const words = html.replace(/<[^>]*>/g, " ").trim().split(/\s+/).length;
+  if (OFF_TOPIC.test(html) && words > 12) {
+    return "That's <strong>outside what this board covers</strong>.";
+  }
+  return html;
+}
 
 /* A service can answer 200 OK with its own notice — "out of credits", "sign
    in", a link to top up — and that is not an answer to the question. The
@@ -1650,8 +1665,15 @@ async function askModel(question) {
 }
 
 async function answerFor(question) {
+  // A question this board keeps its own answer to is answered here. The model
+  // used to speak first and overrule them, which made a stored reply one that
+  // never appeared — so the bank wins where it matches, and the model takes
+  // everything it does not.
+  const own = ANSWERS.find(a => a.match.test(question));
+  if (own) return own.reply;
+
   const live = await askModel(question);
-  return live || cannedAnswer(question);
+  return live ? trimRefusal(live) : cannedAnswer(question);
 }
 
 const ANSWERS = [
