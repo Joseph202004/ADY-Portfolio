@@ -28,6 +28,10 @@ Then `python3 tools/videowave.py`. What each step is for:
   creases are true black and run off the bottom edge, and a fill seeded there
   walks up them and cuts a white crescent through the shoulder.
 
+  Then close the crease between the torso and the raised arm, which the fill
+  still ran down. Brightness cannot separate it — see the note in key() — but
+  width can.
+
   UN-PREMULTIPLY THE SKIN EDGE. Every skin edge pixel is a blend toward black,
   which keys onto white as a dark rim. Alpha = brightness / skin-max and
   colour = C / alpha recover it. Restricted to within 2px of the background so
@@ -62,6 +66,8 @@ SRC_FRAMES = sorted(glob.glob("/tmp/ewfull/f*.png"))
 KEYED = "/tmp/wavekey"
 
 T = 12               # <= this in every channel is candidate background
+THIN = 11            # background channels narrower than this are fabric creases
+SKIN_KEEP = 14       # ... unless they run beside skin, which is a finger gap
 SKIN_MAX = 235.0     # brightest skin channel; the un-premultiply reference
 CRISP = 1.15         # keep frames within this multiple of the median blur
 START = 56           # the wave only. The raise before it (f42-49) is filmed on a
@@ -76,6 +82,11 @@ FPS = 30             # the source's own rate. Interpolating to 60 was tried and
                      # rejected: block matching blends the fingers and puts a
                      # second translucent hand back in, which is the artefact
                      # this whole pipeline exists to remove.
+
+
+def _disk(r):
+    y, x = np.ogrid[-r:r + 1, -r:r + 1]
+    return (x * x + y * y) <= r * r
 
 
 def blur_score(path):
@@ -97,6 +108,20 @@ def key(path):
     lab, _ = ndimage.label(mx <= T)
     seeds = np.unique(np.concatenate([lab[0], lab[:, 0], lab[:, -1]]))
     bg = np.isin(lab, seeds[seeds != 0])
+
+    # Close the crease between the torso and the raised arm. The sweater's
+    # shadow there is as black as the background — measured, every pixel the
+    # flood took is <= 12, while fabric kept right beside it goes down to 8 —
+    # so no threshold separates them and the fill ran down the crease, opening
+    # a white sliver 2-19px wide. Width does separate them: that sliver's half
+    # width is 3px against 27px for the gaps between the fingers. So any
+    # background channel too narrow for a disk of THIN is fabric, unless it
+    # runs beside skin, which is what a finger gap does.
+    rr, gg, bb2 = a[..., 0], a[..., 1], a[..., 2]
+    skin_for_gaps = (rr > gg) & (gg > bb2) & ((rr - bb2) > 25) & (mx >= 60) & ~bg
+    near_skin = ndimage.binary_dilation(skin_for_gaps, _disk(SKIN_KEEP))
+    crease = bg & ~ndimage.binary_opening(bg, _disk(THIN)) & ~near_skin
+    bg = bg & ~crease
 
     m = Image.fromarray(np.where(bg, 0, 255).astype(np.uint8))
     m = m.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
