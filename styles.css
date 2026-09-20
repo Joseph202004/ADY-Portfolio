@@ -740,6 +740,13 @@ body.mode-video .hero-aside { display: none; }
 .info-grid .link-more { margin-top: 20px; }
 
 /* ---------- Services ---------- */
+/* About hands over to Services directly. Two full section paddings stacked
+   left 285px of white between the last sentence and the next heading, which
+   read as the end of the page rather than a change of subject — so the
+   handover is half the space and a hairline. */
+#about { padding-bottom: 64px; border-bottom: 1px solid var(--line-soft); }
+.section-services { padding-top: 64px; }
+
 .services { border-top: 1px solid var(--line-soft); }
 .service {
   position: relative;
