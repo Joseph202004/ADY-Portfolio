@@ -1720,6 +1720,25 @@ body.mode-full .hero-stage { display: none; }
   transition: none;                  /* start below, then ease up */
 }
 
+/* The wordmark crosses over the same way the nav links do — only the hand
+   changes, so the two copies sit on the same spot while one leaves. */
+.brand { position: relative; display: inline-block; }
+.brand-label {
+  display: inline-block;
+  white-space: nowrap;
+  transform-origin: left center;
+  transition: transform .55s var(--soft-spring), opacity .34s var(--ease);
+}
+.brand-label.is-out { position: absolute; left: 0; top: 0; }
+.brand-label.is-out.is-gone { opacity: 0; transform: translateY(-.5em) scaleX(.97); }
+.brand-label.is-in {
+  opacity: 0; transform: translateY(.5em) scaleX(1.04);
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-label { transition: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nav a, .nav-label { transition: none; }
 }

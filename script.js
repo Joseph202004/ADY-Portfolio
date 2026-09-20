@@ -1000,9 +1000,71 @@ function initHeroMode() {
     });
   }
 
+  // The wordmark carries the same wording in both modes, so only the hand
+  // changes — a cut from one typeface to another at a different size reads as
+  // a glitch beside a nav that crossfades. Same treatment as a nav link: the
+  // old face lifts out while the new one springs up under it, and the box
+  // glides between the two widths.
+  function swapBrand(brand, was) {
+    if (!brand || !was) return;
+    const label = brand.querySelector(".brand-label");
+    if (!label) return;
+
+    brand.querySelectorAll(".brand-label.is-out").forEach(n => n.remove());
+
+    if (REDUCED || !document.body.classList.contains("is-ready")) {
+      brand.style.width = "";
+      brand.style.transition = "";
+      return;
+    }
+
+    const to = label.offsetWidth;
+    if (Math.abs(to - was.width) < 1) return;        // same face, nothing to do
+
+    // The outgoing copy keeps the face it was set in; the class has already
+    // moved the live one on.
+    const out = label.cloneNode(true);
+    out.className = "brand-label is-out";
+    out.setAttribute("aria-hidden", "true");
+    Object.assign(out.style, was.font);
+    brand.appendChild(out);
+
+    label.classList.add("is-in");
+    brand.style.transition = "width .55s cubic-bezier(.16, 1, .3, 1)";
+    brand.style.width = was.width + "px";
+    void brand.offsetWidth;                          // commit the start width
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        brand.style.width = to + "px";
+        out.classList.add("is-gone");
+        label.classList.remove("is-in");
+      });
+    });
+
+    setTimeout(() => {
+      out.remove();
+      brand.style.width = "";
+      brand.style.transition = "";
+    }, 620);
+  }
+
   function setMode(showText) {
     // Widths as they read now, before the mode class changes the nav typeface
     const pinned = navLinks.map(a => a.getBoundingClientRect().width);
+    // The wordmark changes hand too, so it needs the same snapshot: its width
+    // and the face it is wearing, both read before the class swaps them.
+    const brandEl = document.querySelector(".brand");
+    const brandWas = brandEl && (() => {
+      const cs = getComputedStyle(brandEl);
+      return {
+        width: brandEl.getBoundingClientRect().width,
+        font: {
+          fontFamily: cs.fontFamily, fontSize: cs.fontSize,
+          fontWeight: cs.fontWeight, letterSpacing: cs.letterSpacing,
+        },
+      };
+    })();
 
     hero.classList.toggle("hero--text", showText);
     hero.classList.toggle("hero--video", !showText);
@@ -1019,6 +1081,7 @@ function initHeroMode() {
 
     // Nav speaks in Adi's voice alongside the drawing, plain wording otherwise
     swapNav(showText, pinned);
+    swapBrand(brandEl, brandWas);
 
     const sub = document.querySelector(".hero-sub");
 
