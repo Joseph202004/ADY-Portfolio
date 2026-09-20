@@ -852,7 +852,9 @@ body.mode-video .hero { padding-top: 96px; }
    cubes come back into line every few seconds, the modules hold an
    arrangement before moving, and the form rises and settles in about 3s. */
 
-/* Rings: born at the rim, contracting to nothing */
+/* Rings: born at the rim, contracting to nothing. Left exactly as it was —
+   the ring is scaled, so its line thins as it closes in, and that thinning is
+   part of how the mark reads. */
 .svc-rings circle { transform-origin: 32px 32px; }
 .svc-rings .r1 { animation: svc-contract 2.4s linear infinite; }
 .svc-rings .r2 { animation: svc-contract 2.4s linear infinite -0.8s; }
@@ -870,11 +872,14 @@ body.mode-video .hero { padding-top: 96px; }
 @keyframes svc-turn-cw  { to { transform: rotate(360deg); } }
 @keyframes svc-turn-ccw { to { transform: rotate(-360deg); } }
 
-/* The form: the top face lifts, the walls grow under it. Non-scaling stroke,
-   or a wall at a fifth of its height would draw a fifth of the line weight. */
-.svc-extrude .top, .svc-extrude line { vector-effect: non-scaling-stroke; }
+/* The form: the top face lifts, the walls grow under it. No non-scaling
+   stroke here — that draws in screen pixels and would set this one mark at a
+   different weight from the other three. A vertical line's stroke runs across
+   it, so scaling its height leaves that weight alone; only the round caps
+   would squash, so the walls are cut square instead. */
 .svc-extrude .top { animation: svc-lift 3.2s var(--ease) infinite; }
 .svc-extrude line {
+  stroke-linecap: butt;
   transform-box: fill-box; transform-origin: 50% 100%;
   animation: svc-wall 3.2s var(--ease) infinite;
 }
