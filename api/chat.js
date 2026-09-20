@@ -49,7 +49,8 @@ export default async function handler(req, res) {
      Google says about it, with the key scrubbed out of the reply. A refusal
      that only ever reads "upstream 401" cannot be told apart from a wrong key,
      a restricted key, or a blocked caller — and those have different fixes. */
-  if (req.method === "GET" && req.query?.diag) {
+  const wantsDiag = /[?&]diag=/.test(req.url || "") || !!req.query?.diag;
+  if (req.method === "GET" && wantsDiag) {
     const hit2 = findKey();
     if (!hit2) return res.status(501).json({ error: "no API key is set" });
     try {
