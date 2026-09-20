@@ -40,7 +40,7 @@ const WORK = [
     // learned to read ?tabs and ?chrome, so it ignores both and opens on its
     // own Case Study tab behind an icon rail. Point this back once
     // swostiprasadnayak/eicore-onebuzz#embed-tab-filter is merged there.
-    href: "https://eicore-onebuzz.vercel.app/?tabs=prototype,design-system&chrome=0",
+    href: "https://eicore-onebuzz.vercel.app/?tabs=prototype,design-system&chrome=0&back=https%3A%2F%2Fady-portfolio-rust.vercel.app%2F",
     // The written case study, on its own page, in the portfolio's own design.
     // It opens with buttons through to the prototype and the design system —
     // the embed used to carry those as tabs, which meant the modal showed a
