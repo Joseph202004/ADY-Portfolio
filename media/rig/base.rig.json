@@ -1,0 +1,6 @@
+{
+  "note": "Joints measured from the art. The eye band is transplanted whole from the blink renders, so the closed eyes are the artist's curves, not a drawn-on lid.",
+  "eye_band": [70, 284, 356, 380],
+  "blink_art": [[0.45, "blink-half.png"], [1.0, "blink-shut.png"]],
+  "hand_x_frac": 0.63
+}

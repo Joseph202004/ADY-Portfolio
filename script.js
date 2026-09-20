@@ -31,9 +31,16 @@ const WORK = [
     title: "Insure-Tech",
     tags: "B2B InsurTech, AI Workflow, Enterprise UX",
     tone: "",
-    thumb: "media/insure-tech.webp",
+    // A 4:3 plate, matching the card's own ratio. The wide 1600x829 artwork is
+    // still the source, but cover-fitting it into a 4:3 card cropped a third
+    // of the width away — the phone and the laptop's right edge went with it.
+    thumb: "media/insure-tech-card.webp",
     href: "https://eicore.vercel.app/",
-    live: "https://eicore.vercel.app/",   // the product itself, not a portfolio page
+    // The product itself, not a portfolio page — and only the parts this modal
+    // has room for. The app reads ?tabs from its URL, so the embed asks for the
+    // prototype and the design system and drops its own Case Study tab: the
+    // written case study is already on this page, below the frame.
+    live: "https://eicore.vercel.app/?tabs=prototype,design-system&chrome=0",
     blurb: "Redesigning an AI-powered insurance Product Plan Builder \u2014 compressing " +
            "3\u20135 days of manual configuration into hours of intelligent, trustworthy review.",
     // The case study is told here rather than embedded: the source site is a
@@ -132,7 +139,11 @@ const WORK = [
       ],
     },
   },
-  { title: "Project 02", tags: "Product design",    tone: "alt",  href: "#" },
+  { title: "Oykot Money", tags: "Personal finance, 50/30/20 budgeting",
+    tone: "alt", href: "https://oykot-money.vercel.app",
+    // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
+    // ground, so the wordmark and the hands survive the card's scale-in.
+    thumb: "media/oykot-money-card.webp" },
   { title: "Project 03", tags: "Prototyping",       tone: "cool", href: "#" },
   { title: "Project 04", tags: "Interface systems", tone: "warm", href: "#" },
 ];
@@ -322,17 +333,19 @@ function initProjectPortal() {
     // it is a whole second application, and nobody should pay to download it
     // until they ask to see it. Closing tears it down again.
     frameBox.innerHTML = project.live
-      ? `<img class="portal-poster" src="${project.thumb}" alt="" />` +
-        `<iframe class="portal-iframe" src="${project.live}" title="${project.title}"` +
+      ? `<iframe class="portal-iframe" src="${project.live}" title="${project.title}"` +
         ` loading="lazy" referrerpolicy="no-referrer"` +
-        ` sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>` +
-        `<button class="portal-activate" type="button">Click to try it</button>`
+        ` sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`
       : "";
-    frameBox.classList.remove("is-live");
-    frameBox.querySelector("iframe")
-      ?.addEventListener("load", () => frameBox.classList.add("is-loaded"));
 
-    studyBox.innerHTML = project.study ? caseStudyHTML(project) : "";
+
+    // When the product itself runs here, it IS the case study — the written
+    // one underneath was the same argument told twice, and it pushed the
+    // running app into a letterbox at the top of a long scroll. So the embed
+    // takes the whole panel, and the written version is kept for projects
+    // that have nothing to run.
+    studyBox.innerHTML = !project.live && project.study ? caseStudyHTML(project) : "";
+    body.classList.toggle("is-embed", !!project.live);
     body.scrollTop = 0;
 
     // A live URL is optional; the link only shows when there is one
@@ -350,7 +363,6 @@ function initProjectPortal() {
     setTimeout(() => {
       portal.hidden = true;
       frameBox.innerHTML = "";          // stop the embedded product running
-      frameBox.classList.remove("is-loaded");
       studyBox.innerHTML = "";
     }, 260);
     lastFocus?.focus();
@@ -367,14 +379,7 @@ function initProjectPortal() {
     if (e.target.closest(".portal-close") || e.target === portal ||
         e.target.classList.contains("portal-backdrop")) return close();
 
-    // The embed ignores the pointer until asked for. Otherwise a scroll that
-    // happens to cross it drives the embedded product instead of this panel,
-    // and the case study underneath feels unreachable.
-    if (e.target.closest(".portal-activate")) frameBox.classList.add("is-live");
   });
-
-  // Scrolling the panel hands the embed back: the reader has moved on
-  body.addEventListener("scroll", () => frameBox.classList.remove("is-live"), { passive: true });
 
   document.addEventListener("keydown", e => {
     if (e.key === "Escape" && !portal.hidden) close();
@@ -501,12 +506,17 @@ function resetTypewriter(el) {
   el.querySelectorAll(".caret").forEach(c => c.remove());
 }
 
-function typewrite(el, { speed = 38, jitter = 26 } = {}) {
+/* onTyped fires the moment the last character lands, which is not the same as
+   the promise: that waits out the caret's closing blink as well. Anything that
+   should follow the sentence — the paragraph under the headline — wants the
+   former, or it sits dark for another second and a half. */
+function typewrite(el, { speed = 38, jitter = 26, onTyped } = {}) {
   const chars = [...el.querySelectorAll(".char")];
-  if (!chars.length) return Promise.resolve();
+  if (!chars.length) { onTyped?.(); return Promise.resolve(); }
 
   if (REDUCED) {
     el.classList.add("is-revealed", "is-in");
+    onTyped?.();
     return Promise.resolve();
   }
 
@@ -531,6 +541,7 @@ function typewrite(el, { speed = 38, jitter = 26 } = {}) {
     (function next() {
       if (mine !== typewriteToken) return;
       if (i >= chars.length) {
+        onTyped?.();
         caret.classList.remove("is-active");   // start blinking
         setTimeout(() => {
           if (mine !== typewriteToken) return;
@@ -615,9 +626,13 @@ const revealIO = new IntersectionObserver(entries => {
 }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
 
 function observeAll() {
-  // [data-typewriter] is driven by typewrite() after the preloader, not by scroll.
+  // [data-typewriter] is driven by typewrite() after the preloader, not by
+  // scroll — and nor is .hero-sub, which waits for that typing to finish.
+  // Left in the observer it revealed itself the moment it intersected, which
+  // is immediately: it is in view at the top of the page.
   document.querySelectorAll(
-    ".reveal, .frame, .eyebrow, [data-split]:not([data-typewriter]), [data-split-lines], .info-grid, .explore-grid"
+    ".reveal, .frame, .eyebrow, [data-split]:not([data-typewriter]), " +
+    "[data-split-lines]:not(.hero-sub), .info-grid, .explore-grid"
   ).forEach(el => revealIO.observe(el));
 }
 
@@ -716,7 +731,13 @@ function initScrolly() {
       const clip = el.querySelector("video");
       if (!clip) return;
       if (on) { clip.currentTime = 0; clip.play?.().catch(() => {}); }
-      else clip.pause?.();
+      else {
+        clip.pause?.();
+        // Park it on the finished screen, not frame 0 — the clips open on a
+        // near-black brand card, which on a black panel looks like a plate
+        // that failed to load.
+        if (clip.duration) clip.currentTime = Math.max(0, clip.duration - 0.25);
+      }
     });
     if (caption) {
       caption.classList.add("is-swapping");
@@ -915,16 +936,25 @@ function initHeroMode() {
     document.body.classList.toggle("mode-video", !showText);
 
     btn.setAttribute("aria-pressed", String(showText));
-    if (label) label.textContent = showText ? "Show video" : "Show headline";
+    const next = showText ? "Show video" : "Show headline";
+    if (label) label.textContent = next;
+    btn.title = next;                  // the face alone does not say what it does
 
     // Nav speaks in Adi's voice alongside the drawing, plain wording otherwise
     swapNav(showText, pinned);
 
+    const sub = document.querySelector(".hero-sub");
+
     if (showText) {
       resetTypewriter(title);        // rewind, then replay the typing
+      sub?.classList.remove("is-revealed", "is-in");   // it follows the headline
       // While the preloader is still up, the curtain callback starts the
       // run instead — two overlapping runs fight over the same chars.
-      if (document.body.classList.contains("is-ready")) typewrite(title);
+      if (document.body.classList.contains("is-ready")) {
+        typewrite(title, {
+          onTyped: () => setTimeout(() => sub?.classList.add("is-revealed", "is-in"), 160),
+        });
+      }
     } else {
       resetTypewriter(title);        // stop typing into the hidden heading
       // The showreel is a typeface now: write the intro instead of playing it
@@ -1272,17 +1302,24 @@ function boot() {
     const hero = document.querySelector(".hero .display");
     const sub = document.querySelector(".hero-sub");
 
+    const showSub = () => sub && sub.classList.add("is-revealed", "is-in");
+
     const inVideoMode = document.querySelector(".hero").classList.contains("hero--video");
     if (hero && hero.hasAttribute("data-typewriter") && !inVideoMode) {
-      typewrite(hero);
+      // The paragraph waits for the sentence above it to finish writing —
+      // running both at once had the reader's eye in two places, and the
+      // paragraph arriving under a half-typed headline read as a glitch.
+      typewrite(hero, { onTyped: () => setTimeout(showSub, 160) });
     } else if (hero && !inVideoMode) {
       hero.classList.add("is-revealed", "is-in");
+      setTimeout(showSub, 260);
+    } else {
+      setTimeout(showSub, 260);
     }
 
     // Starting in video mode: write the intro once the curtain is up
     if (inVideoMode) setTimeout(() => initBoard.writeIntro?.(), 260);
 
-    setTimeout(() => sub && sub.classList.add("is-revealed", "is-in"), 260);
     document.querySelectorAll(".hero .frame").forEach((f, i) =>
       setTimeout(() => f.classList.add("is-in"), 420 + i * 120));
   });

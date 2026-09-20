@@ -125,7 +125,7 @@ B = {
     menu=(255,255,255), menu_txt=(24,24,26), menu_dim=(110,110,118), pill=(234,234,238),
     ask="a toolkit list that reveals one row at a time", subtitle="Product designer, Delhi"),
  "chatgpt": dict(
-    logo=None, word="ChatGPT", word_face=UI, serif=False,
+    logo="chatgpt_logo.png", word="ChatGPT", word_face=UI, serif=False,
     page=(13,13,13), bar=(13,13,13), rule=(42,42,42),
     txt=(236,236,236), dim=(142,142,142), light_ui=False,
     nav=["About", "Features", "Learn", "Codex", "Business", "Pricing"],

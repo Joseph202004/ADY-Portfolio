@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=143" />
+  <link rel="stylesheet" href="styles.css?v=216" />
 </head>
 <body class="is-loading mode-full">
 
@@ -30,11 +30,25 @@
   <!-- ===== Header ===== -->
   <header class="site-header" id="header">
     <div class="wrap">
-      <a class="brand magnetic" href="#top">Aditya Joseph.</a>
-      <div class="meta">
-        <span id="date"></span>
-        <span><span id="clock"></span> &nbsp;Delhi, India</span>
+      <div class="brand-block">
+        <a class="brand magnetic" href="#top">Aditya Joseph.</a>
+        <div class="meta">
+          <span id="date"></span>
+          <span><span id="clock"></span> &nbsp;Delhi, India</span>
+        </div>
       </div>
+      <button class="mode-toggle" id="hero-mode" type="button" aria-pressed="true" title="Show video">
+        <img class="mode-avatar" src="media/avatar.png" alt="" aria-hidden="true" />
+        <svg class="mode-ring" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+          <defs>
+            <!-- an arc bulging downward, walked left to right, so the letters
+                 stand upright and read normally under the face -->
+            <path id="press-arc" d="M 9 50 A 41 41 0 0 0 91 50" fill="none" />
+          </defs>
+          <text><textPath href="#press-arc" startOffset="50%" text-anchor="middle">press me</textPath></text>
+        </svg>
+        <span id="hero-mode-label">Show video</span>
+      </button>
       <nav class="nav">
         <a class="magnetic" href="#top"     data-full="Home"    data-hand="home">Home</a>
         <a class="magnetic" href="#about"   data-full="About"   data-hand="about me">About</a>
@@ -56,10 +70,6 @@
             <span class="hero-back-arrow" aria-hidden="true"></span>
             Back
           </button>
-          <button class="mode-toggle" id="hero-mode" type="button" aria-pressed="true">
-            <span class="mode-dot" aria-hidden="true"></span>
-            <span id="hero-mode-label">Show video</span>
-          </button>
         </div>
 
         <!-- One h1 for both modes: in video mode it is visually hidden but still
@@ -71,6 +81,13 @@
           I’m a product designer who turns complex workflows into intuitive user
           flows, thoughtful interfaces, and scalable design systems.
         </p>
+
+        <!-- Adi, waving, beside the headline. Primary screen only: the
+             drawing screen has the board and the handwriting instead.
+             Decorative — the h1 already says who this is. -->
+        <figure class="hero-wave" aria-hidden="true">
+          <img src="media/hero-wave.webp" alt="" width="460" height="640" />
+        </figure>
       </div>
 
       <!-- Video mode splits into two panes: the showreel, and a small sticky
@@ -180,11 +197,11 @@
           </div>
 
           <div class="scrolly-visual" id="scrolly-visual">
-            <figure class="scrolly-media is-active"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/figma-tools.mp4" poster="media/figma-tools.webp" autoplay muted loop playsinline preload="metadata" aria-label="Figma: a prompt into Make, then the file it built"></video></div></figure>
-            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/cursor-tools.mp4" poster="media/cursor-tools.webp" muted loop playsinline preload="metadata" aria-label="Cursor: writing code alongside the design"></video></div></figure>
-            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/photoshop-tools.mp4" poster="media/photoshop-tools.webp" muted loop playsinline preload="metadata" aria-label="Photoshop: a generative fill, from selection to finished layer"></video></div></figure>
-            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/claude-tools.mp4" poster="media/claude-tools.webp" muted loop playsinline preload="metadata" aria-label="Claude: a prompt, then the list it built"></video></div></figure>
-            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/chatgpt-tools.mp4" poster="media/chatgpt-tools.webp" muted loop playsinline preload="metadata" aria-label="ChatGPT: notes summarised into themes"></video></div></figure>
+            <figure class="scrolly-media is-active"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/figma-tools.mp4" poster="media/figma-tools.webp" autoplay muted loop playsinline preload="auto" aria-label="Figma: a prompt into Make, then the file it built"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/cursor-tools.mp4" poster="media/cursor-tools.webp" muted loop playsinline preload="auto" aria-label="Cursor: writing code alongside the design"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/photoshop-tools.mp4" poster="media/photoshop-tools.webp" muted loop playsinline preload="auto" aria-label="Photoshop: a generative fill, from selection to finished layer"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/claude-tools.mp4" poster="media/claude-tools.webp" muted loop playsinline preload="auto" aria-label="Claude: a prompt, then the list it built"></video></div></figure>
+            <figure class="scrolly-media"><div class="ph tool-plate is-clip"><video class="tool-clip" src="media/chatgpt-tools.mp4" poster="media/chatgpt-tools.webp" muted loop playsinline preload="auto" aria-label="ChatGPT: notes summarised into themes"></video></div></figure>
           </div>
 
         </div>
@@ -307,7 +324,7 @@
     </div>
   </footer>
 
-  <script src="hand.js?v=143"></script>
-  <script src="script.js?v=143"></script>
+  <script src="hand.js?v=216"></script>
+  <script src="script.js?v=216"></script>
 </body>
 </html>
