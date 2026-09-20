@@ -1657,7 +1657,7 @@ async function answerFor(question) {
 const ANSWERS = [
   {
     match: /who|about (you|adi|aditya)|tell me about|yourself/i,
-    reply: "I'm <strong>Aditya Joseph</strong>, a product designer based in Delhi. I design digital experiences that bring clarity to complex information, workflows and decisions.",
+    reply: "I'm <strong>Aditya Joseph</strong>, a product designer based out of Delhi. I design digital experiences that bring clarity to complex information, workflows and decisions.",
   },
   {
     match: /design skill|skills|what can|capab|do you do|services/i,
@@ -1682,6 +1682,11 @@ const ANSWERS = [
   {
     match: /contact|hire|available|work together|email|reach/i,
     reply: "Say hello at <strong>adijosantony@gmail.com</strong> — let's create something clear, useful and memorable.",
+  },
+  // Asked often enough, and answered honestly.
+  {
+    match: /single|girlfriend|relationship|dating|taken|boyfriend/i,
+    reply: "Hmmm, he hasn't talked to his girlfriend in two days, and he misses her a lot, and she's out there partying without him — <strong>full mazeee mere bina..</strong>",
   },
 ];
 
