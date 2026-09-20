@@ -112,57 +112,59 @@ export default async function handler(req, res) {
   };
   if (system) body.systemInstruction = { parts: [{ text: system }] };
 
+  /* One call to Google. Kept as a function because the same request is made
+     more than once below, against different models. */
+  const call = model => fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
+    }
+  );
+  const textOf = data =>
+    data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("").trim() || "";
+
   try {
-    const stop = AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined;
-    const r = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-        body: JSON.stringify(body),
-        signal: stop,
-      }
-    );
+    /* The free tier allows twenty requests a day per model, so a board that
+       gets any traffic at all will run one dry — and an exhausted quota is a
+       property of the model, not the key. The lighter models have their own
+       allowance, so an answer is still there after the first runs out. */
+    const chain = [...new Set([MODEL, "gemini-3.5-flash-lite", "gemini-flash-lite-latest"])];
+    let last = null;
 
-    let data = await r.json();
+    for (const model of chain) {
+      const r = await call(model);
+      const data = await r.json().catch(() => ({}));
 
-    /* Google retires a model and says which one replaces it. Rather than
-       failing until someone redeploys, take that hint once — the board is a
-       page on a portfolio, and a dead model name should not silence it. */
-    const swap = !r.ok && r.status === 404 &&
-      /no longer available/i.test(data?.error?.message || "") &&
-      (data.error.message.match(/use models\/([\w.-]+)/) || [])[1];
-    if (swap) {
-      const r2 = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${swap}:generateContent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-          body: JSON.stringify(body),
-          signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined,
-        }
-      );
-      if (r2.ok) {
-        data = await r2.json();
-        const reply = data.candidates?.[0]?.content?.parts?.map(p => p.text).join("").trim();
+      if (r.ok) {
+        const reply = textOf(data);
         if (reply) {
           res.setHeader("Cache-Control", "no-store");
-          return res.status(200).json({ reply, model: swap });
+          return res.status(200).json({ reply, model });
         }
       }
+
+      /* Google retires a model and names its replacement in the error. Take
+         that hint once rather than staying dead until someone redeploys. */
+      const swap = r.status === 404 &&
+        /no longer available/i.test(data?.error?.message || "") &&
+        (data.error.message.match(/use models\/([\w.-]+)/) || [])[1];
+      if (swap && !chain.includes(swap)) chain.push(swap);
+
+      last = r.status;
+      // A quota or a dead model is worth trying the next one for; anything
+      // else (a bad key, a malformed request) will fail the same way again.
+      if (r.status !== 429 && r.status !== 404) break;
     }
 
-    if (!r.ok) {
-      // Pass the status through but not the provider's message, which can
-      // echo the key back in some error shapes.
-      return res.status(r.status).json({ error: "upstream " + r.status });
-    }
-
-    const reply = data.candidates?.[0]?.content?.parts?.map(p => p.text).join("").trim();
-    if (!reply) return res.status(502).json({ error: "empty reply" });
-
-    res.setHeader("Cache-Control", "no-store");
-    return res.status(200).json({ reply });
+    // Pass the status through but not the provider's message, which can echo
+    // the key back in some error shapes.
+    return res.status(last || 502).json({
+      error: "upstream " + last,
+      ...(last === 429 ? { reason: "quota" } : {}),
+    });
   } catch (err) {
     return res.status(504).json({ error: "upstream timeout" });
   }
