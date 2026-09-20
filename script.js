@@ -1838,12 +1838,16 @@ const ANSWERS = [
   },
 ];
 
+/* Reached only when no model could be: the network is down, or the day's
+   quota is spent. Say that, rather than "I don't know" — the board can answer
+   this question, just not this minute, and the two read very differently to
+   someone who has just typed it. */
 function cannedAnswer(question) {
   const hit = ANSWERS.find(a => a.match.test(question));
   if (hit) return hit.reply;
-  return `I don't have a note on that yet — try asking about the ` +
-         `<strong>process</strong>, <strong>design skills</strong>, ` +
-         `<strong>design systems</strong> or <strong>getting in touch</strong>.`;
+  return `I can't reach my notes this minute — ask again shortly. ` +
+         `Meanwhile: the <strong>work</strong>, the <strong>process</strong>, ` +
+         `or <strong>getting in touch</strong>.`;
 }
 
 /* Three words that say what a turn was about — the rail is too small for
