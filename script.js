@@ -22,8 +22,6 @@ const SERVICES = [
     desc: "Clickable prototypes that help teams test ideas early, communicate behaviour, and make decisions faster." },
   { num: "004", title: "Design Systems", lede: "Consistency that scales.",
     desc: "Reusable components and design foundations that create consistency across product teams and platforms." },
-  { num: "005", title: "Accessibility", lede: "Design for everyone.",
-    desc: "Inclusive design choices that make digital experiences easier to understand and use for more people." },
 ];
 
 const WORK = [
@@ -208,13 +206,6 @@ const SERVICE_ICONS = {
       <rect class="b3" x="10" y="30" width="16" height="12" rx="2" />
       <rect class="b4" x="30" y="30" width="24" height="12" rx="2" />
       <rect class="b5" x="18" y="46" width="28" height="12" rx="2" />
-    </svg>`,
-  // Reach: one shape, opened out so more people fit inside it
-  "Accessibility": `
-    <svg class="svc-icon svc-reach" viewBox="0 0 64 64" aria-hidden="true">
-      <circle cx="32" cy="17" r="6" />
-      <path class="arms" d="M16 29 H48" />
-      <path class="legs" d="M32 29 V41 M32 41 L23 53 M32 41 L41 53" />
     </svg>`,
 };
 
