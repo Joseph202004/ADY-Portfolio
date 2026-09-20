@@ -666,15 +666,56 @@ const revealIO = new IntersectionObserver(entries => {
   });
 }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
 
+const REVEAL_SELECTOR =
+  ".reveal, .frame, .eyebrow, [data-split]:not([data-typewriter]), " +
+  "[data-split-lines]:not(.hero-sub), .info-grid, .explore-grid";
+
 function observeAll() {
   // [data-typewriter] is driven by typewrite() after the preloader, not by
   // scroll — and nor is .hero-sub, which waits for that typing to finish.
   // Left in the observer it revealed itself the moment it intersected, which
   // is immediately: it is in view at the top of the page.
-  document.querySelectorAll(
-    ".reveal, .frame, .eyebrow, [data-split]:not([data-typewriter]), " +
-    "[data-split-lines]:not(.hero-sub), .info-grid, .explore-grid"
-  ).forEach(el => revealIO.observe(el));
+  document.querySelectorAll(REVEAL_SELECTOR).forEach(el => revealIO.observe(el));
+}
+
+// A safety net for the observer.
+//
+// The project thumbnails in #work-grid never revealed: their .frame starts
+// clipped to nothing and only opens on .is-in, so all four cards showed a
+// caption over empty space while the images themselves had loaded fine. The
+// observer fires for whatever is on screen when it starts — the hero cards —
+// and then this page's scrolling, which runs on a scroll container rather
+// than the document, does not reliably deliver later entries. Rather than
+// depend on that, sweep on scroll: anything in view is revealed, the sweep
+// costs one rect per unrevealed element, and it stops running once the page
+// is fully revealed.
+function revealSweep() {
+  const left = [...document.querySelectorAll(REVEAL_SELECTOR)].filter(
+    el => !el.classList.contains("is-in")
+  );
+  left.forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < innerHeight * 0.92 && r.bottom > 0) {
+      el.classList.add("is-in", "is-revealed");
+      revealIO.unobserve(el);
+    }
+  });
+  return left.length;
+}
+
+function watchReveals() {
+  let raf = null;
+  const tick = () => {
+    raf = null;
+    if (revealSweep() === 0) {
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onScroll);
+    }
+  };
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", onScroll, { passive: true });
+  tick();
 }
 
 /* ============================================================
@@ -1360,6 +1401,7 @@ function boot() {
 
   collectParallax();
   observeAll();
+  watchReveals();
   initCursor();
   initMagnetic();
   initMarquee();
