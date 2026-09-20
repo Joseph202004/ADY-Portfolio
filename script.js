@@ -2473,9 +2473,10 @@ function initBoard() {
   canvas.addEventListener("pointercancel", endDrag);
 
   /* ---------- Asking ---------- */
-  // Enter sends the question; Shift+Enter is still a line break, so a note can
-  // hold more than one line. Blurring asks too, so a question typed and then
-  // clicked away from is never lost.
+  // Enter sends the question, and only Enter: clicking away used to send too,
+  // so moving a note or tidying the wording rewrote the answer on the left
+  // without anyone asking for it. Shift+Enter is still a line break, so a note
+  // can hold more than one line.
   canvas.addEventListener("keydown", e => {
     if (!e.target.closest(".note-text")) return;
     if (e.key === "Enter" && !e.shiftKey) {
@@ -2483,11 +2484,6 @@ function initBoard() {
       ask(e.target.closest(".note"));
     }
   });
-
-  canvas.addEventListener("focusout", e => {
-    const note = e.target.closest(".note");
-    if (note && e.target.classList.contains("note-text")) ask(note);
-  }, true);
 
   /* ---------- Hover bubble ---------- */
   /* ---------- Dismissal ---------- */
