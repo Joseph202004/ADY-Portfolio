@@ -566,8 +566,21 @@ body.mode-video .hero-aside { display: none; }
   margin-inline: auto; padding-inline: var(--gutter);
   display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center;
 }
+@media (min-width: 700px) {
+  /* The clip holds the right column from here up, rather than dropping below
+     the list at 900. Between 700 and 900 the two columns are ~300px each, so
+     the names and the row height come down to match — at the desktop sizes
+     "Photoshop" alone would be wider than its column. */
+  .scrolly-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
 @media (min-width: 900px) {
-  .scrolly-grid { grid-template-columns: 1fr 1fr; gap: 72px; }
+  .scrolly-grid { gap: 72px; }
+}
+@media (min-width: 700px) and (max-width: 1023px) {
+  .scrolly { --item-h: 56px; }
+  .scrolly-word { font-size: clamp(24px, 3.6vw, 40px); }
+  .scrolly-item { gap: 12px; }
+  .scrolly-head { font-size: var(--font-size-lg); }
 }
 
 .scrolly-head {
@@ -652,8 +665,8 @@ body.mode-video .hero-aside { display: none; }
 .scrolly-media.is-active { opacity: 1; transform: scale(1); }
 .scrolly-media .ph { width: 100%; height: 100%; font-size: var(--font-size-lg); }
 
-/* Mobile: don't pin — stack the steps so the page scrolls normally */
-@media (max-width: 899px) {
+/* Phones: don't pin — stack the steps so the page scrolls normally */
+@media (max-width: 699px) {
   .scrolly { height: auto; }
   .scrolly-sticky { position: static; height: auto; padding-block: 72px; }
   .scrolly-viewport { height: auto; -webkit-mask-image: none; mask-image: none; }
@@ -1737,12 +1750,14 @@ body.mode-full .hero-stage { display: none; }
    the handwritten reply, so the cartoon would be competing for the same room.
    Below 1024px it goes away either way — the headline wants the width. */
 .hero-wave { display: none; margin: 0; }
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   body.mode-full .hero-wave {
     display: block;
     grid-column: 2; grid-row: 2 / -1;
     align-self: center; justify-self: end;
-    width: min(420px, 32vw);
+    /* 32vw is the desktop share; the floor keeps it from shrinking to a
+       thumbnail between 768 and 1100, where 32vw is only 245-350px. */
+    width: clamp(220px, 32vw, 420px);
     /* Nudged up off the shared centre line. The figure's weight sits low —
        the torso is a solid block and the raised arm is thin — so centring it
        by its box reads as sitting slightly too low. A transform, not a
@@ -1756,9 +1771,18 @@ body.mode-full .hero-stage { display: none; }
      and the two of them centre on the drawing rather than hanging from its top.
      Rows: switch, filler, headline, paragraph, filler. */
   body.mode-full .hero-head {
+    /* display:grid lives in the 1024px block below; declare it here too or
+       every column rule in this block is inert between 768 and 1023, which
+       let the headline run under the portrait by 76px. */
+    display: grid;
+    align-items: start;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto 1fr auto auto 1fr;
+    column-gap: 32px;
   }
+  /* The headline's 20ch cap is wider than its column at these sizes. */
+  body.mode-full .hero-head .display,
+  body.mode-full .hero-head .hero-sub { max-width: 100%; }
   body.mode-full .hero-head .display { grid-row: 3; }
   body.mode-full .hero-head .hero-sub { grid-row: 4; }
   .hero-head { grid-template-columns: 1fr; }
@@ -1932,4 +1956,30 @@ body.mode-video .doodles { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .doodle:hover .frame,
   .doodle:nth-child(even):hover .frame { transform: none; }
+}
+
+/* ---------- Small screens ---------- */
+/* The portrait was desktop-only, so a phone opened on a headline with an
+   empty column beside it — a greeting with nobody doing the greeting. Below
+   the two-column breakpoint it moves under the paragraph and centres, at a
+   size that leaves the project cards their peek above the fold. */
+@media (max-width: 767px) {
+  body.mode-full .hero-wave {
+    display: block;
+    width: min(260px, 62vw);
+    margin: 24px auto 0;
+  }
+}
+
+/* The header ran off the edge: at 375px the nav ended 79px past the viewport,
+   so "Contact" was simply not on screen. The wordmark, the avatar and four
+   links do fit — but only once the row stops being sized for a desktop. */
+@media (max-width: 600px) {
+  .nav { gap: 10px; font-size: 12px; }
+  .brand { white-space: nowrap; }
+  .mode-avatar { width: 40px; height: 40px; }
+  .site-header .wrap { gap: 10px; }
+  /* Title over tags, rather than side by side: in two columns each card's
+     name broke mid-word ("Insure-" / "Tech"). */
+  .work-meta { flex-direction: column; align-items: flex-start; gap: 4px; }
 }

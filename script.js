@@ -488,6 +488,10 @@ function splitChars(el) {
 const escapeHTML = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 
 function splitLines(el) {
+  // Keep the source markup: the split bakes today's line breaks into <span>s,
+  // and the only way to re-flow for a different width is to start over from
+  // the original.
+  if (el.dataset.source === undefined) el.dataset.source = el.innerHTML;
   const label = el.textContent.replace(/\s+/g, " ").trim();
   const words = splitChars(el);
   if (!words.length) return;
@@ -1327,9 +1331,31 @@ function boot() {
   document.querySelectorAll("[data-split]").forEach(el => {
     try { splitChars(el); } catch (e) { console.error("splitChars failed", el, e); }
   });
-  document.querySelectorAll("[data-split-lines]").forEach(el => {
+  const lineEls = [...document.querySelectorAll("[data-split-lines]")];
+  lineEls.forEach(el => {
     try { splitLines(el); } catch (e) { console.error("splitLines failed", el, e); }
   });
+
+  // Re-flow those paragraphs when the width changes. Each measured line became
+  // its own block, so at a narrower width every one of them wrapped again on
+  // its own and the copy broke mid-phrase — "I'm a product designer who turns"
+  // then "complex workflows into intuitive user". Only width matters: a phone
+  // hiding its address bar changes the height constantly and re-splitting on
+  // that would rebuild the paragraph mid-scroll.
+  let lastW = innerWidth, resplit = null;
+  addEventListener("resize", () => {
+    if (innerWidth === lastW) return;
+    lastW = innerWidth;
+    clearTimeout(resplit);
+    resplit = setTimeout(() => {
+      lineEls.forEach(el => {
+        const shown = el.classList.contains("is-in");
+        el.innerHTML = el.dataset.source;
+        try { splitLines(el); } catch (e) { console.error("re-split failed", el, e); }
+        if (shown) el.classList.add("is-in", "is-revealed");
+      });
+    }, 180);
+  }, { passive: true });
   document.querySelectorAll("[data-kinetic]").forEach(initKinetic);
 
   collectParallax();
