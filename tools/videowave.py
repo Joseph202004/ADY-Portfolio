@@ -50,15 +50,18 @@ Then `python3 tools/videowave.py`. What each step is for:
   Smoother motion needs a re-render with more sampled poses and motion blur
   off, not more processing here.
 
-  ENCODE. An h264 <video> composited on the page's white (#ffffff): ~10x
-  smaller than animated WebP and decoded on the GPU. Not alpha video — the
-  VP9/HEVC pair was built and rejected because Chrome on macOS advertises
-  HEVC, takes the .mov, and drops its alpha onto a black square.
+  ENCODE as an animated WebP with alpha, not a <video>. The h264 version was
+  a tenth the size and played correctly — the element reported readyState 4,
+  no error, and drawing it into a canvas produced the character — but the
+  video layer did not composite into the page: the hero simply read as empty
+  white. An image has no such layer, loops on its own with no autoplay policy
+  or JS, and keeps the transparency, so it sits on whatever background the
+  hero has rather than a baked-in white rectangle.
 """
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 import numpy as np
 from scipy import ndimage
-import glob, os, statistics, subprocess
+import glob, os, statistics, subprocess, tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MEDIA = os.path.join(HERE, "..", "media")
@@ -79,7 +82,8 @@ START = 56           # the wave only. The raise before it (f42-49) is filmed on 
                      # nothing. Starting here also means the loop needs no
                      # ping-pong: the wave opens and closes on the same pose.
 TAIL = 8             # the clip ends on a long hold; keep a beat of it, not 17
-OUT_W = 640          # rendered at ~405 CSS px; 640 stays crisp on 2x displays
+OUT_W = 640          # working size for the keyed frames
+WEBP_W = 560         # shipped size; the hero renders it at ~411 CSS px
 FPS = 30             # the source's own rate. Interpolating to 60 was tried and
                      # rejected: block matching blends the fingers and puts a
                      # second translucent hand back in, which is the artefact
@@ -201,11 +205,32 @@ def main():
     fwd[0].save(os.path.join(MEDIA, "hero-wave-poster.webp"), quality=88)
     print(f"sequence {len(seq)} frames at {FPS}fps = {len(seq)/FPS:.2f}s, canvas {seq[0].size}")
 
-    out = os.path.join(MEDIA, "hero-wave.mp4")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", str(FPS), "-i", f"{KEYED}/f%04d.png",
-                    "-filter_complex", f"color=white:s={OUT_W}x{h}:r={FPS}[bg];[bg][0:v]overlay=shortest=1,format=yuv420p",
-                    "-c:v", "libx264", "-crf", "20", "-preset", "slow", "-movflags", "+faststart", out], check=True)
-    print(f"hero-wave.mp4: {os.path.getsize(out)//1024} KB")
+    # Only the hand changes between frames, so each one encodes as a small
+    # rectangle of difference over the last; that is what keeps 28 frames of a
+    # 560px figure under half a megabyte.
+    web = [f.resize((WEBP_W, int(round(f.height * WEBP_W / f.width)) // 2 * 2), Image.LANCZOS) for f in seq]
+    times = [int(round(1000 / FPS))] * len(web)
+    tmp = tempfile.mkdtemp()
+    args = []
+    for i, f in enumerate(web):
+        if i == 0:
+            part, off, q = f, (0, 0), "86"
+        else:
+            d = ImageChops.difference(f, web[i - 1]).getbbox()
+            if d is None:
+                times[i - 1] += times[i]
+                continue
+            x0 = max(0, d[0] - 2) // 2 * 2
+            y0 = max(0, d[1] - 2) // 2 * 2
+            part = f.crop((x0, y0, min(f.width, d[2] + 2), min(f.height, d[3] + 2)))
+            off, q = (x0, y0), "72"
+        png, webp = f"{tmp}/f{i}.png", f"{tmp}/f{i}.webp"
+        part.save(png)
+        subprocess.run(["cwebp", "-quiet", "-q", q, "-alpha_q", "90", "-m", "6", png, "-o", webp], check=True)
+        args += ["-frame", webp, f"+{times[i]}+{off[0]}+{off[1]}+0-b"]
+    out = os.path.join(MEDIA, "hero-wave.webp")
+    subprocess.run(["webpmux", *args, "-loop", "0", "-bgcolor", "0,0,0,0", "-o", out], check=True)
+    print(f"hero-wave.webp: {os.path.getsize(out)//1024} KB, canvas {web[0].size}")
 
 
 if __name__ == "__main__":

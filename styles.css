@@ -1765,8 +1765,7 @@ body.mode-full .hero-stage { display: none; }
   .hero-head .display,
   .hero-head .hero-sub { grid-column: 1; }
 }
-.hero-wave img,
-.hero-wave video { display: block; width: 100%; height: auto; }
+.hero-wave img { display: block; width: 100%; height: auto; }
 
 /* ---------- Toolkit panel ---------- */
 /* A light card with a fine dot grid, the way the reference sets it: text on
