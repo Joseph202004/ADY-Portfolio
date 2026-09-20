@@ -392,7 +392,7 @@ body.mode-full .hero-video { display: none; }
    and a media query turns it into a row aligned to its end, so a single-class
    rule here loses on both the margin and the alignment. */
 .section-head.hero-media-head {
-  margin-bottom: 84px;
+  margin-bottom: 64px;
   justify-content: center; align-items: center; text-align: center;
 }
 body.mode-video .hero-media-head { display: none; }
