@@ -1358,15 +1358,6 @@ body.mode-full .hero-stage { display: none; }
 
 .portal-actions { display: flex; align-items: center; gap: 10px; flex: none; }
 
-.portal-open {
-  display: inline-flex; align-items: center; height: 34px;
-  padding: 0 16px; border-radius: 999px;
-  border: 1px solid var(--line);
-  font-size: var(--font-size-xs); color: var(--muted); text-decoration: none;
-  transition: color .2s var(--ease), border-color .2s var(--ease);
-}
-.portal-open:hover { color: var(--foreground); border-color: var(--foreground); }
-
 .portal-close {
   position: relative;
   width: 34px; height: 34px; padding: 0;
@@ -1382,7 +1373,7 @@ body.mode-full .hero-stage { display: none; }
 }
 .portal-close span { transform: rotate(45deg); }
 .portal-close span::before { margin: 0 0 0 -6px; transform: rotate(90deg); }
-.portal-close:focus-visible, .portal-open:focus-visible {
+.portal-close:focus-visible {
   outline: 2px solid var(--foreground); outline-offset: 2px;
 }
 

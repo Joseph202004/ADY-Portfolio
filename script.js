@@ -35,12 +35,6 @@ const WORK = [
     // still the source, but cover-fitting it into a 4:3 card cropped a third
     // of the width away — the phone and the laptop's right edge went with it.
     thumb: "media/insure-tech-card.webp",
-    // "Open live" goes to the prototype and design system, not to
-    // eicore.vercel.app: that project still serves a build from before the app
-    // learned to read ?tabs and ?chrome, so it ignores both and opens on its
-    // own Case Study tab behind an icon rail. Point this back once
-    // swostiprasadnayak/eicore-onebuzz#embed-tab-filter is merged there.
-    href: "https://eicore-onebuzz.vercel.app/?tabs=prototype,design-system&chrome=0&back=https%3A%2F%2Fady-portfolio-rust.vercel.app%2F",
     // The written case study, on its own page, in the portfolio's own design.
     // It opens with buttons through to the prototype and the design system —
     // the embed used to carry those as tabs, which meant the modal showed a
@@ -145,16 +139,15 @@ const WORK = [
     },
   },
   { title: "Oykot Money", tags: "Personal finance, 50/30/20 budgeting",
-    tone: "alt", href: "https://oykot-money.vercel.app",
+    tone: "alt",
     // The written case study, on its own page. It loads in the modal the same
-    // way the Insure-Tech prototype does — the panel is the case study, and
-    // "Open live" still goes to the product itself.
+    // way the Insure-Tech one does: the panel is the case study.
     live: "oykot-case-study.html",
     // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
     // ground, so the wordmark and the hands survive the card's scale-in.
     thumb: "media/oykot-money-card.webp" },
-  { title: "Project 03", tags: "Prototyping",       tone: "cool", href: "#" },
-  { title: "Project 04", tags: "Interface systems", tone: "warm", href: "#" },
+  { title: "Project 03", tags: "Prototyping",       tone: "cool" },
+  { title: "Project 04", tags: "Interface systems", tone: "warm" },
 ];
 
 /* The drawing screen's own shelf: sketchbook pages, lettering, whatever else
@@ -257,7 +250,6 @@ function initProjectPortal() {
   const titleEl = portal.querySelector(".portal-title");
   const tagsEl = portal.querySelector(".portal-tags");
   const blurbEl = portal.querySelector(".portal-blurb");
-  const openEl = portal.querySelector(".portal-open");
   let lastFocus = null;
 
   // The case study, in this site's own type and spacing.
@@ -364,7 +356,6 @@ function initProjectPortal() {
     titleEl.textContent = project.title;
     tagsEl.textContent = project.tags;
     blurbEl.textContent = project.blurb || "";
-    openEl.href = project.href;
 
     // The product runs here, live. Built on open rather than at page load:
     // it is a whole second application, and nobody should pay to download it
@@ -384,9 +375,6 @@ function initProjectPortal() {
     studyBox.innerHTML = !project.live && project.study ? caseStudyHTML(project) : "";
     body.classList.toggle("is-embed", !!project.live);
     body.scrollTop = 0;
-
-    // A live URL is optional; the link only shows when there is one
-    openEl.hidden = !project.href;
 
     portal.hidden = false;
     requestAnimationFrame(() => portal.classList.add("is-on"));
