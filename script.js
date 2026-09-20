@@ -1051,6 +1051,21 @@ function initHeroMode() {
     scrollTo({ top: 0, behavior: REDUCED || wasVideo ? "auto" : "smooth" });
   });
 
+  // The waving portrait is a <video>. Muted autoplay is allowed everywhere,
+  // but a tab that loads in the background may come back paused, and
+  // reduced-motion should stop it altogether — the page honours that
+  // preference for every other animation, so the loop cannot be the one
+  // exception.
+  const wave = document.querySelector(".hero-wave video");
+  if (wave) {
+    const settle = () => {
+      if (REDUCED) { wave.pause(); return; }
+      if (!document.hidden) wave.play().catch(() => {});
+    };
+    settle();
+    document.addEventListener("visibilitychange", settle);
+  }
+
   // Expose so the preloader can start the right mode
   initHeroMode.setMode = setMode;
 }

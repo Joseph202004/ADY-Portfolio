@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=232" />
+  <link rel="stylesheet" href="styles.css?v=234" />
 </head>
 <body class="is-loading mode-full">
 
@@ -86,7 +86,16 @@
              drawing screen has the board and the handwriting instead.
              Decorative — the h1 already says who this is. -->
         <figure class="hero-wave" aria-hidden="true">
-          <img src="media/hero-wave.webp?v=232" alt="" width="460" height="650" />
+          <!-- A <video>, not an animated image: 60fps over a 7s loop is 420
+               frames, which h264 compresses to 359KB where animated WebP
+               needed ~4MB. Composited on the page's own white rather than
+               carrying alpha — Chrome on macOS claims HEVC but drops its
+               alpha layer, so a transparent .mov would land on a black
+               square there. On #ffffff the two are identical. -->
+          <video autoplay muted loop playsinline preload="auto"
+                 poster="media/hero-wave-poster.webp?v=234" width="640" height="666">
+            <source src="media/hero-wave.mp4?v=234" type="video/mp4" />
+          </video>
         </figure>
       </div>
 
@@ -338,7 +347,7 @@
     </div>
   </footer>
 
-  <script src="hand.js?v=232"></script>
-  <script src="script.js?v=232"></script>
+  <script src="hand.js?v=234"></script>
+  <script src="script.js?v=234"></script>
 </body>
 </html>
