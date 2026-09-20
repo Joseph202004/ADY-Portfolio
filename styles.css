@@ -400,10 +400,11 @@ body.mode-full .hero-video { display: none; }
 .hero-media-head { margin-top: 52px; }
 /* Two classes deep on purpose: .section-head is declared later in this file
    and a media query turns it into a row aligned to its end, so a single-class
-   rule here loses on both the margin and the alignment. */
+   rule here loses on the margin. The heading sits on the left margin like
+   every other section label. */
 .section-head.hero-media-head {
   margin-bottom: 64px;
-  justify-content: center; align-items: center; text-align: center;
+  justify-content: flex-start; align-items: flex-start; text-align: left;
 }
 body.mode-video .hero-media-head { display: none; }
 
