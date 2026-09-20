@@ -8,6 +8,8 @@
 // Set GEMINI_API_KEY in your host's environment (Vercel: Project → Settings →
 // Environment Variables). Never commit it.
 
+import { createHash } from "node:crypto";
+
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
 /* The key has been set under more than one name on this project, so the proxy
@@ -42,6 +44,13 @@ export default async function handler(req, res) {
       // and nothing that could be used as a key.
       keyPrefix: hit ? hit[1].slice(0, 3) : null,
       keyLength: hit ? hit[1].length : 0,
+      /* Every key of this type is 53 characters starting "AQ.", so a prefix
+         and a length cannot tell one from another — and "the key that works"
+         and "an older key that was replaced" look identical from outside.
+         Eight hex characters of a digest settle it, and are no use as a key. */
+      keyFingerprint: hit
+        ? createHash("sha256").update(hit[1]).digest("hex").slice(0, 8)
+        : null,
     });
   }
 
