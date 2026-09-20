@@ -10,14 +10,47 @@
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
+/* The key has been set under more than one name on this project, so the
+   proxy looks under each of them rather than insisting on one. A Google API
+   key begins "AIza" — anything else in these slots is something other than a
+   Gemini key (an OAuth token, say), so a well-formed one is preferred over
+   whatever happens to be first. */
+const KEY_NAMES = [
+  "GEMINI_API_KEY", "GOOGLE_API_KEY", "GEMINI_KEY",
+  "PORTFOLIO", "portfolio", "Portfolio",
+];
+
+function findKey() {
+  const found = KEY_NAMES
+    .map(n => [n, (process.env[n] || "").trim()])
+    .filter(([, v]) => v);
+  const wellFormed = found.find(([, v]) => v.startsWith("AIza"));
+  return wellFormed || found[0] || null;
+}
+
 export default async function handler(req, res) {
+  /* A status probe: which names hold something, and whether any of them looks
+     like a Google key. Names and shapes only — never a value, and no call to
+     the provider, so this cannot spend anyone's quota. */
+  if (req.method === "GET") {
+    const hit = findKey();
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({
+      model: MODEL,
+      namesSet: KEY_NAMES.filter(n => (process.env[n] || "").trim()),
+      using: hit ? hit[0] : null,
+      looksLikeGoogleKey: hit ? hit[1].startsWith("AIza") : false,
+    });
+  }
+
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "POST only" });
   }
 
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) return res.status(501).json({ error: "GEMINI_API_KEY is not set" });
+  const hit = findKey();
+  if (!hit) return res.status(501).json({ error: "no API key is set" });
+  const key = hit[1];
 
   const messages = Array.isArray(req.body?.messages) ? req.body.messages : [];
   const system = messages.find(m => m.role === "system")?.content || "";
