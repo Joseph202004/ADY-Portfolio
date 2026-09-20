@@ -228,8 +228,8 @@ body.is-ready .site-header .nav a:nth-child(4) { transition-delay: .40s; }
 /* Video mode: strip the page back to nav + drawing */
 body.mode-video .hero-sub,
 body.mode-video .hero-media,
-/* #doodles is the exception: it belongs to this screen and only this one */
-body.mode-video main > section:not(#top):not(#doodles),
+/* #doodles belongs to this screen and only this one; #contact closes both. */
+body.mode-video main > section:not(#top):not(#doodles):not(#contact),
 /* The wordmark stays in video mode: it is the only thing on screen naming
    whose portfolio this is. Only the clock and location step back. */
 body.mode-video .meta { display: none; }

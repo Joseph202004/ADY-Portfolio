@@ -796,8 +796,10 @@ function initScrolly() {
     ease.last = now;
 
     // Frame-rate independent: the same fraction of the remaining distance per
-    // millisecond, whatever the display is doing.
-    const k = 1 - Math.pow(0.0022, dt / 1000);
+    // millisecond, whatever the display is doing. Fast, because this is now a
+    // snap between rows rather than a glide along with the scroll — it should
+    // land, not drift.
+    const k = 1 - Math.pow(0.000004, dt / 1000);
     shown += (wanted - shown) * k;
 
     if (Math.abs(wanted - shown) < 0.1) shown = wanted;
@@ -832,8 +834,12 @@ function initScrolly() {
     // column by i rows and the current name always lands mid-window. The range
     // works out to exactly the scroll available, so there is no stretch of
     // scrolling where the column has nothing left to do.
+    //
+    // Whole rows, not the exact fraction: the column holds a tool while the
+    // scroll crosses its band and then clicks to the next, instead of sliding
+    // continuously and leaving every name half-way between two positions.
     const maxShift = Math.max(0, list.offsetHeight - list.parentElement.clientHeight);
-    wanted = Math.min(maxShift, Math.max(0, exact * itemH));
+    wanted = Math.min(maxShift, Math.max(0, Math.round(exact) * itemH));
 
     if (shown === null || REDUCED) {        // first paint, or motion turned off
       shown = wanted;

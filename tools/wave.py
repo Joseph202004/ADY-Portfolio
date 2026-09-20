@@ -29,7 +29,8 @@ SRC = os.path.join(HERE, "..", "media", "rig", "pose-00.png")
 CUT = 322                # above this row the arm is clear of the head
 PIVOT = (418, 338)       # the elbow, a little below the cut so the joint
                          # itself stays inside the solid upper arm
-CAP = (40, 42)           # radii of the sleeve disc that covers the joint
+CAP_H = 20               # how far the upper arm is extruded over the joint
+REACH = 11               # how far that strip may spread from the forearm
 
 STEP_DEG = 2.6           # how far the arm may turn between frames
 MIN_MS = 45              # ... and the shortest and longest a frame may hold
@@ -74,13 +75,39 @@ def parts(im):
     clear = ImageChops.subtract(clear, head)
     base.paste((0, 0, 0, 0), (0, 0), clear)
 
-    cm = Image.new("L", (W, H), 0)
-    ImageDraw.Draw(cm).ellipse([PIVOT[0] - CAP[0], PIVOT[1] - CAP[1],
-                                PIVOT[0] + CAP[0], PIVOT[1] + CAP[1]], fill=255)
-    cm = cm.filter(ImageFilter.GaussianBlur(3))
+    # The joint filler. Rotating the forearm about a pivot below the cut opens
+    # a wedge between it and the upper arm — about 13px at the widest angle.
+    # This used to be covered by a disc of sleeve centred on the pivot, but a
+    # disc is fixed while the arm is not: swung inward to scratch, the arm left
+    # the disc behind as a dark blob floating beside the head. That was the
+    # "shadow" in the recording.
+    #
+    # Instead the upper arm is extruded straight up: the row just below the cut
+    # is repeated over the rows above it, giving a strip of the sleeve's own
+    # colour to fill the wedge with. It is clipped per frame in joint() so it
+    # only ever appears next to where the forearm actually is — extruding the
+    # full width left a black bar sticking out past the arm at wide angles.
     cap = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    cap.paste(im, (0, 0), cm)
+    row = im.crop((0, CUT + 1, W, CUT + 2))
+    cap.paste(row.resize((W, CAP_H)), (0, CUT + 1 - CAP_H))
     return base, arm, cap
+
+
+def joint(frame, cap, rotated):
+    """Fill the wedge at the elbow — and only the wedge.
+
+    The strip is painted into whatever is still empty next to the forearm,
+    never over it. Pasted on top instead, it crossed the hand once the arm
+    swung inward far enough to bring the fingers into these rows: a black bar
+    over the palm, which read as the hand being behind the jacket.
+    """
+    near = rotated.split()[3].point(lambda v: 255 if v > 40 else 0)
+    near = near.filter(ImageFilter.MaxFilter(REACH)).filter(ImageFilter.GaussianBlur(1.5))
+    # Inverted alpha, not a threshold: the arm's edge is antialiased, and
+    # treating those half-covered pixels as "not empty" left an unpainted rim
+    # between the filler and the arm — a white hairline down the join.
+    empty = ImageChops.invert(frame.split()[3])
+    frame.paste(cap, (0, 0), ImageChops.multiply(near, empty))
 
 
 # The performance, as angles over time. 0 deg is the arm as drawn — raised,
@@ -90,7 +117,11 @@ def parts(im):
 # swing with a held beat at each end, which is what stops it looking like a
 # metronome. The two are the same joint, so the move between them is just the
 # angle travelling — no cut, nothing to mismatch.
-SCRATCH = 52.0              # hand on the crown
+SCRATCH = 32.0              # hand in the hair. Not further: past about 35 the
+                            # forearm has swung far enough that it no longer
+                            # meets the upper arm, and the elbow shows a step.
+                            # A rigid part cannot bend, so the pose stops where
+                            # the drawing still holds together.
 WAVE = 1.0                  # arm raised, palm out — the drawing as rendered
 KEYS = [
     (0.00, SCRATCH),
@@ -150,8 +181,9 @@ def build(out_path):
     for i, t0 in enumerate(times_s):
         t1 = times_s[i + 1] if i + 1 < len(times_s) else dur + MIN_MS / 1000.0
         f = base.copy()
-        f.alpha_composite(arm.rotate(angle_at(t0), resample=Image.BICUBIC, center=PIVOT))
-        f.alpha_composite(cap)
+        turned = arm.rotate(angle_at(t0), resample=Image.BICUBIC, center=PIVOT)
+        f.alpha_composite(turned)
+        joint(f, cap, turned)
         frames.append(f)
         times.append(max(MIN_MS, int(round((t1 - t0) * 1000))))
 
@@ -183,7 +215,7 @@ def build(out_path):
             x0 = max(0, d[0] - 2) // 2 * 2
             y0 = max(0, d[1] - 2) // 2 * 2
             part = f.crop((x0, y0, min(f.width, d[2] + 2), min(f.height, d[3] + 2)))
-            off, q = (x0, y0), "72"
+            off, q = (x0, y0), "68"
         png, webp = f"{tmp}/f{i}.png", f"{tmp}/f{i}.webp"
         part.save(png)
         subprocess.run(["cwebp", "-quiet", "-q", q, "-alpha_q", "92", "-m", "6",
