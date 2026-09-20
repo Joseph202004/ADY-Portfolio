@@ -848,6 +848,26 @@ body.mode-video .hero-aside { display: none; }
 .socials a { color: var(--muted); transition: color .2s var(--ease); }
 .socials a:hover { color: var(--foreground); }
 
+/* On the drawing screen the sign-off is written in the same hand as
+   "Hi, I'm Adi" at the top of it, so that screen opens and closes in one
+   voice. The portfolio screen keeps Geist — this is scoped to mode-video
+   on purpose, not applied to both.
+
+   Mynerve has a single weight and its own fitting, so the variable weight
+   and the -2.5px tracking come off and the line height opens up. */
+body.mode-video .contact-title,
+body.mode-video .contact-mail {
+  font-family: "Mynerve", "Caveat", "Adi Hand", cursive;
+}
+body.mode-video .contact-title {
+  font-weight: 400; line-height: 1.25;
+  letter-spacing: normal;
+  max-width: 18ch;
+  font-variation-settings: normal;
+}
+/* A serif italic inside a handwritten line reads as a second hand. */
+body.mode-video .contact-title em { font-family: inherit; font-style: normal; }
+
 .site-footer { border-top: 1px solid var(--line-soft); padding-block: 24px; font-size: var(--font-size-xs); color: var(--faint); }
 .site-footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 
