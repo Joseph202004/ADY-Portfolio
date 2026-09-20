@@ -45,6 +45,30 @@ export default async function handler(req, res) {
     });
   }
 
+  /* ?diag=1 asks upstream the smallest question there is and returns what
+     Google says about it, with the key scrubbed out of the reply. A refusal
+     that only ever reads "upstream 401" cannot be told apart from a wrong key,
+     a restricted key, or a blocked caller — and those have different fixes. */
+  if (req.method === "GET" && req.query?.diag) {
+    const hit2 = findKey();
+    if (!hit2) return res.status(501).json({ error: "no API key is set" });
+    try {
+      const r = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": hit2[1] },
+          body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: "hi" }] }] }),
+        }
+      );
+      const text = (await r.text()).split(hit2[1]).join("[key]");
+      res.setHeader("Cache-Control", "no-store");
+      return res.status(200).json({ upstreamStatus: r.status, upstreamBody: text.slice(0, 900) });
+    } catch (err) {
+      return res.status(200).json({ upstreamStatus: "fetch failed", upstreamBody: String(err).slice(0, 300) });
+    }
+  }
+
   if (req.method !== "POST") {
     res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "POST only" });
