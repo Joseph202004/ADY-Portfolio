@@ -1,59 +1,90 @@
-"""Turns the rendered wave video into the hero's transparent 60fps loop.
+"""Turns the rendered wave video into the hero's 60fps loop.
 
-Source: media/src/excited-wave-animation.mp4 — 1024x1024, 30fps, h264, the
-character on a pure black background. Pipeline:
+Source: media/src/excited-wave-animation-smooth-v2.mp4 — 1024x1024, native
+60fps, h264, the character on pure black. Extract it first:
 
-  1. ffmpeg minterpolate doubles it to 60fps with motion-compensated
-     in-betweens (real intermediate frames, not blends). Run separately:
-       ffmpeg -i SRC -vf "minterpolate=fps=60:mi_mode=mci:mc_mode=aobmc:\\
-              me_mode=bidir:vsbmc=1" /tmp/ew60/f%04d.png
-  2. Key the black away. Not a chroma key — the hair and sweater are black
-     too. Measured: the sweater's darkest pixel is 15-18 and the hair's true
-     blacks are interior, so "<= 12 in every channel AND connected to the
-     frame border" is exactly the background and nothing else.
-  3. Ping-pong. The clip opens on a calm smile, hand down, and ends mid-wave;
-     played straight it would cut. Forward then back closes the loop with no
-     crossfade (a crossfade shows two half-hands).
-  4. Encode as an h264 <video> composited on the page's white (#ffffff).
-     Video compresses this motion ~10x better than animated WebP and decodes
-     on the GPU, which is what 60fps actually needs. Not alpha video: the
-     VP9 .webm + HEVC .mov pair was built and rejected — Chrome on macOS
-     advertises HEVC and takes the .mov first, but drops its alpha layer and
-     paints the figure on a black square. On a white page the composite is
-     indistinguishable from transparency and plays everywhere.
+    ffmpeg -i media/src/excited-wave-animation-smooth-v2.mp4 /tmp/v2full/f%04d.png
 
-    python3 tools/videowave.py
+Then `python3 tools/videowave.py`. What it does, and why each step exists:
+
+  KEY. Not a chroma key — the hair and sweater are black too. Measured, the
+  sweater's darkest pixel is 15-18 and the hair's true blacks are interior, so
+  "<= 12 in every channel and connected to the frame border" is the
+  background. Seeded from the top and side borders only: the sweater's creases
+  are true black and run off the bottom edge, and a fill seeded there walked up
+  them and cut a white crescent through the shoulder.
+
+  UN-PREMULTIPLY THE SKIN. The fast strokes carry multi-exposure ghosting —
+  several half-transparent hands blended toward black. On black that read as
+  motion blur; keyed onto white it was brown silhouettes. A ghost pixel is
+  skin at partial alpha over black, so alpha = brightness / skin-max and
+  colour = C / alpha recover a translucent, correctly coloured trail. Applied
+  only to skin that is dark (< 140) or within 2px of the background, so lit
+  shading on the ear and jaw is left alone; that 2px band is also what takes
+  the dark rim off every skin edge.
+
+  TRIM. The first ~62 frames are a literal still. Kept to a short hold so the
+  loop's seam does not sit on two seconds of frozen face.
+
+  PING-PONG. The clip opens hand-down and ends mid-wave; played straight it
+  would cut. Forward then back closes the loop with no crossfade.
+
+  ENCODE. An h264 <video> composited on the page's white (#ffffff): ~10x
+  smaller than animated WebP for this many frames, and decoded on the GPU.
+  Not alpha video — the VP9/HEVC alpha pair was built and rejected because
+  Chrome on macOS advertises HEVC, takes the .mov, and drops its alpha layer
+  onto a black square. On a white page the composite is indistinguishable.
 """
 from PIL import Image, ImageFilter
 import numpy as np
 from scipy import ndimage
-import glob, os, subprocess, sys
+import glob, os, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MEDIA = os.path.join(HERE, "..", "media")
-SRC_FRAMES = sorted(glob.glob("/tmp/ew60/f*.png"))
-KEYED = "/tmp/ewkey"
+SRC_FRAMES = sorted(glob.glob("/tmp/v2full/f*.png"))
+KEYED = "/tmp/v2key"
 
-T = 12            # <= this in every channel counts as candidate background
-OUT_W = 640       # rendered at ~405 CSS px; 640 keeps it crisp on 2x displays
+T = 12               # <= this in every channel is candidate background
+SKIN_MAX = 235.0     # brightest skin channel; the reference for un-premultiply
+LEAD_HOLD = 12       # frames of the opening still to keep
+OUT_W = 640          # rendered at ~405 CSS px; 640 stays crisp on 2x displays
 FPS = 60
 
 
 def key(path):
-    im = Image.open(path).convert("RGB")
-    a = np.asarray(im)
-    dark = a.max(axis=2) <= T
-    lab, n = ndimage.label(dark)
-    border = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
-    border = border[border != 0]
-    bg = np.isin(lab, border)
-    m = Image.fromarray(np.where(bg, 0, 255).astype(np.uint8), "L")
-    # Erode a pixel and feather: edge pixels are blends toward black, and left
-    # as-is they draw a dark rim once the ground is white.
+    a = np.asarray(Image.open(path).convert("RGB")).astype(np.float32)
+    mx = a.max(axis=2)
+
+    lab, _ = ndimage.label(mx <= T)
+    seeds = np.unique(np.concatenate([lab[0], lab[:, 0], lab[:, -1]]))
+    bg = np.isin(lab, seeds[seeds != 0])
+
+    m = Image.fromarray(np.where(bg, 0, 255).astype(np.uint8))
     m = m.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
-    out = im.convert("RGBA")
-    out.putalpha(m)
-    return out
+    alpha = np.asarray(m).astype(np.float32) / 255.0
+
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    skin = (r > g) & (g > b) & ((r - b) > 25) & (mx >= 20) & ~bg
+    dist = ndimage.distance_transform_edt(~bg)
+    fix = skin & (((mx < 140) & (dist <= 50)) | (dist <= 2))
+    al = np.clip(mx / SKIN_MAX, 0.04, 1.0)
+    rgb = a.copy()
+    rgb[fix] = np.clip(rgb[fix] / al[fix][:, None], 0, 255)
+    alpha = np.where(fix, np.minimum(alpha, al), alpha)
+
+    out = np.dstack([rgb, alpha * 255]).astype(np.uint8)
+    return Image.fromarray(out, "RGBA")
+
+
+def first_motion(frames):
+    """Index of the first frame that differs from the opening still."""
+    ref = np.asarray(Image.open(frames[0]).convert("RGB")).astype(np.int16)
+    for i, f in enumerate(frames[1:], 1):
+        a = np.asarray(Image.open(f).convert("RGB")).astype(np.int16)
+        if (np.abs(a - ref).max(axis=2) > 40).sum() > 50:
+            return i
+    return 0
 
 
 def main():
@@ -61,10 +92,12 @@ def main():
     for f in glob.glob(f"{KEYED}/*.png"):
         os.remove(f)
 
-    fwd = [key(p) for p in SRC_FRAMES]
-    print(f"keyed {len(fwd)} frames")
+    start = max(0, first_motion(SRC_FRAMES) - LEAD_HOLD)
+    src = SRC_FRAMES[start:]
+    print(f"motion starts at frame {start + LEAD_HOLD}; keeping {len(src)} of {len(SRC_FRAMES)}")
 
-    # Crop to the union of the figure across the whole clip, then scale.
+    fwd = [key(p) for p in src]
+
     bb = None
     for f in fwd:
         b = f.getbbox()
@@ -74,21 +107,17 @@ def main():
     h = int(round((bb[3] - bb[1]) * OUT_W / (bb[2] - bb[0]))) // 2 * 2
     fwd = [f.crop(bb).resize((OUT_W, h), Image.LANCZOS) for f in fwd]
 
-    seq = fwd + fwd[-2:0:-1]                     # ping-pong; both ends once
+    seq = fwd + fwd[-2:0:-1]
     for i, f in enumerate(seq):
         f.save(f"{KEYED}/f{i:04d}.png")
     fwd[0].save(os.path.join(MEDIA, "hero-wave-poster.webp"), quality=88)
     print(f"sequence {len(seq)} frames at {FPS}fps = {len(seq)/FPS:.2f}s, canvas {seq[0].size}")
 
-    inp = ["-framerate", str(FPS), "-i", f"{KEYED}/f%04d.png"]
-    runs = {
-        "hero-wave.mp4": inp + ["-filter_complex", f"color=white:s={OUT_W}x{h}:r={FPS}[bg];[bg][0:v]overlay=shortest=1,format=yuv420p",
-                                "-c:v", "libx264", "-crf", "22", "-preset", "slow", "-movflags", "+faststart"],
-    }
-    for name, args in runs.items():
-        out = os.path.join(MEDIA, name)
-        subprocess.run(["ffmpeg", "-v", "error", "-y", *args, out], check=True)
-        print(f"{name}: {os.path.getsize(out)//1024} KB")
+    out = os.path.join(MEDIA, "hero-wave.mp4")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", str(FPS), "-i", f"{KEYED}/f%04d.png",
+                    "-filter_complex", f"color=white:s={OUT_W}x{h}:r={FPS}[bg];[bg][0:v]overlay=shortest=1,format=yuv420p",
+                    "-c:v", "libx264", "-crf", "22", "-preset", "slow", "-movflags", "+faststart", out], check=True)
+    print(f"hero-wave.mp4: {os.path.getsize(out)//1024} KB")
 
 
 if __name__ == "__main__":
