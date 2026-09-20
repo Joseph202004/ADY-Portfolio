@@ -418,3 +418,26 @@ footer {
   .header-meta { display: none; }
   .film { height: 460px; }
 }
+
+/* ---------- In-section figures ---------- */
+/* Screens from the product itself, placed where the argument needs them
+   rather than in a gallery. The plate is the page's faint surface so a
+   dark UI shot has something to sit on, the way the toolkit panel holds
+   its clip on the portfolio. */
+.case-figure {
+  margin: var(--space-block) 0 0;
+}
+.case-figure img {
+  display: block;
+  width: 100%; height: auto;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.case-figure .caption { margin-top: 14px; }
+.case-figure.wide img { border-radius: 12px; }
+@media (min-width: 900px) {
+  /* The full screen is portrait-ish and reads better with a measure on it;
+     the two detail strips are wide by nature and take the column. */
+  .case-figure:not(.wide) img { max-width: 720px; }
+}
