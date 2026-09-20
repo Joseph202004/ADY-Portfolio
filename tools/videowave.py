@@ -33,8 +33,18 @@ Then `python3 tools/videowave.py`. What each step is for:
   colour = C / alpha recover it. Restricted to within 2px of the background so
   lit shading on the ear and jaw is untouched.
 
-  PING-PONG. The clip opens hand-down and ends hand-up, so forward-then-back
-  closes the loop without a crossfade (a crossfade shows two half-hands).
+  LOOP. No ping-pong and no crossfade: the wave starts and ends on the same
+  pose, so it cycles on its own.
+
+  WHAT THIS CANNOT DO. The wave is two hand poses toggling. They are not
+  related by any rotation, scale or translation — the best similarity
+  transform between them is the identity, at 0.695 IoU, because the fingers
+  articulate. So in-betweens cannot be synthesised: warping cannot align them
+  and blending doubles the hand, which is what ffmpeg's minterpolate produced.
+  The source's own in-between frames are all heavily blurred (20,000+ against
+  a crisp 4,000; even the mildest, 7,300, shows dark duplicate fingers).
+  Smoother motion needs a re-render with more sampled poses and motion blur
+  off, not more processing here.
 
   ENCODE. An h264 <video> composited on the page's white (#ffffff): ~10x
   smaller than animated WebP and decoded on the GPU. Not alpha video — the
@@ -54,7 +64,13 @@ KEYED = "/tmp/wavekey"
 T = 12               # <= this in every channel is candidate background
 SKIN_MAX = 235.0     # brightest skin channel; the un-premultiply reference
 CRISP = 1.15         # keep frames within this multiple of the median blur
-START = 36           # the clip opens on a still; the raise begins here
+START = 56           # the wave only. The raise before it (f42-49) is filmed on a
+                     # wider camera, so cutting from it into the wave shifts the
+                     # torso by 17,802 px — the shirt visibly jumps. Inside the
+                     # wave the body moves ~900 px between poses, which is
+                     # nothing. Starting here also means the loop needs no
+                     # ping-pong: the wave opens and closes on the same pose.
+TAIL = 8             # the clip ends on a long hold; keep a beat of it, not 17
 OUT_W = 640          # rendered at ~405 CSS px; 640 stays crisp on 2x displays
 FPS = 30             # the source's own rate. Interpolating to 60 was tried and
                      # rejected: block matching blends the fingers and puts a
@@ -105,6 +121,9 @@ def main():
     scores = {i: blur_score(SRC_FRAMES[i]) for i in range(START, len(SRC_FRAMES))}
     med = statistics.median(scores.values())
     crisp = [i for i in sorted(scores) if scores[i] <= med * CRISP]
+    # the closing hold runs 17 frames; trim it so the cycle does not sit still
+    while len(crisp) > 2 and crisp[-1] - crisp[-TAIL] == TAIL - 1 and crisp[-TAIL] - crisp[-TAIL - 1] == 1:
+        crisp.pop()
     print(f"blur floor {min(scores.values())}, median {int(med)}, peak {max(scores.values())}")
     print(f"keeping {len(crisp)} crisp frames, dropping {len(scores) - len(crisp)} blurred")
 
@@ -119,7 +138,7 @@ def main():
     h = int(round((bb[3] - bb[1]) * OUT_W / (bb[2] - bb[0]))) // 2 * 2
     fwd = [f.crop(bb).resize((OUT_W, h), Image.LANCZOS) for f in fwd]
 
-    seq = fwd + fwd[-2:0:-1]
+    seq = fwd
     for i, f in enumerate(seq):
         f.save(f"{KEYED}/f{i:04d}.png")
     fwd[0].save(os.path.join(MEDIA, "hero-wave-poster.webp"), quality=88)
