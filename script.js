@@ -146,6 +146,10 @@ const WORK = [
   },
   { title: "Oykot Money", tags: "Personal finance, 50/30/20 budgeting",
     tone: "alt", href: "https://oykot-money.vercel.app",
+    // The written case study, on its own page. It loads in the modal the same
+    // way the Insure-Tech prototype does — the panel is the case study, and
+    // "Open live" still goes to the product itself.
+    live: "oykot-case-study.html",
     // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
     // ground, so the wordmark and the hands survive the card's scale-in.
     thumb: "media/oykot-money-card.webp" },
