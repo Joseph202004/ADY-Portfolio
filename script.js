@@ -40,7 +40,12 @@ const WORK = [
     // has room for. The app reads ?tabs from its URL, so the embed asks for the
     // prototype and the design system and drops its own Case Study tab: the
     // written case study is already on this page, below the frame.
-    live: "https://eicore.vercel.app/?tabs=prototype,design-system&chrome=0",
+    // Not eicore.vercel.app: that project is still serving a build from before
+    // the app learned to read ?tabs and ?chrome, so it ignores both and shows
+    // all three views with its icon rail. This deployment carries the branch.
+    // Point it back once swostiprasadnayak/eicore-onebuzz#embed-tab-filter
+    // is merged and eicore.vercel.app rebuilds.
+    live: "https://eicore-onebuzz.vercel.app/?tabs=prototype,design-system&chrome=0",
     blurb: "Redesigning an AI-powered insurance Product Plan Builder \u2014 compressing " +
            "3\u20135 days of manual configuration into hours of intelligent, trustworthy review.",
     // The case study is told here rather than embedded: the source site is a
