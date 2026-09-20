@@ -568,8 +568,14 @@ body.mode-video .hero-aside { display: none; }
 .scrolly-sticky {
   position: sticky; top: 0;
   height: 100vh;
-  display: flex; align-items: center;
+  display: flex; flex-direction: column; justify-content: center;
   overflow: hidden;
+}
+/* The label lines up with the panel's own left edge, on the page's grid. */
+.section-head.scrolly-label {
+  width: 100%; max-width: var(--maxw);
+  margin-inline: auto; margin-bottom: 20px;
+  padding-inline: var(--gutter);
 }
 .scrolly-grid {
   width: 100%; max-width: var(--maxw);
@@ -715,7 +721,7 @@ body.mode-video .hero-aside { display: none; }
 .section-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; }
 /* A section label is the first thing read in its section, so it carries the
    size of a heading rather than of a tag. */
-.section-head .eyebrow, .scrolly-text .eyebrow { font-size: var(--font-size-lg); }
+.section-head .eyebrow { font-size: var(--font-size-lg); }
 @media (min-width: 768px) {
   .section-head { flex-direction: row; align-items: flex-end; justify-content: space-between; }
 }
@@ -834,6 +840,10 @@ body.mode-video .hero-aside { display: none; }
   transition: color .2s var(--ease), letter-spacing .4s var(--ease-out-expo);
 }
 .contact-mail:hover { color: var(--muted); letter-spacing: 0.01em; }
+/* The number is the second way to reach him, so it sits under the address on
+   its own line, in the same type at a closer interval. Two classes deep
+   because .magnetic is declared later and sets display back to inline-block. */
+.contact-mail.contact-tel { display: block; width: fit-content; margin-top: 12px; }
 .socials { display: flex; gap: 24px; margin-top: 40px; font-size: var(--font-size-xs); }
 .socials a { color: var(--muted); transition: color .2s var(--ease); }
 .socials a:hover { color: var(--foreground); }
@@ -1688,7 +1698,7 @@ body.mode-full .hero-stage { display: none; }
    length from one tool to the next. The rows centre inside it instead. */
 @media (min-width: 900px) {
   .scrolly-grid {
-    height: min(600px, calc(100vh - 72px));
+    height: min(600px, calc(100vh - 140px));
     align-content: center;
   }
 }
