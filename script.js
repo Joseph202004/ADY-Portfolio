@@ -2030,16 +2030,25 @@ function initBoard() {
     }
   }
 
-  let introRun = false;
-
+  // Runs again every time the drawing screen is shown. Switching away mid-way
+  // abandons the run where it stood, and a one-shot guard meant coming back
+  // left the line half written for good — so each arrival starts from a clean
+  // board rather than resuming a run nobody watched.
   async function writeIntro() {
     const l1 = document.getElementById("hero-intro-1");
     const l2 = document.getElementById("hero-intro-2");
-    if (!l1 || !l2 || introRun) return;
-    introRun = true;
+    if (!l1 || !l2) return;
 
     const mine = ++writeToken;
     const live = () => mine === writeToken;
+
+    // Whatever the abandoned run left behind — half a line, an eraser
+    // mid-sweep, the inline position and line-height the writer sets.
+    [l1, l2].forEach(el => {
+      el.innerHTML = "";
+      el.style.position = "";
+      el.style.lineHeight = "";
+    });
 
     // Wait for the pen strokes, or the intro is written once in the fallback
     // style and never redrawn
