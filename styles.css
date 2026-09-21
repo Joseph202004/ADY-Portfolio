@@ -748,14 +748,12 @@ body.mode-video .hero { padding-top: 96px; }
    pointer, deepening to black as the weight comes up. */
 .section-head .eyebrow {
   font-size: var(--font-size-lg);
-  color: var(--muted);
-  font-variation-settings: "wght" 500;
-  transition: color .3s var(--ease), font-variation-settings .45s var(--ease);
-}
-.section-head:hover .eyebrow {
   color: var(--foreground);
-  font-variation-settings: "wght" 700;
+  font-variation-settings: "wght" 500;
+  transition: font-variation-settings .45s var(--ease);
 }
+/* Black at rest, so the hover is carried by the weight alone. */
+.section-head:hover .eyebrow { font-variation-settings: "wght" 700; }
 @media (prefers-reduced-motion: reduce) {
   .section-head .eyebrow { transition: none; }
 }
