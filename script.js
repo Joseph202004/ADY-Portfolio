@@ -483,7 +483,11 @@ function splitChars(el) {
   (function walk(node, emTag) {
     [...node.childNodes].forEach(child => {
       if (child.nodeType === Node.TEXT_NODE) {
-        const parts = child.textContent.split(/(\s+)/).filter(Boolean);
+        /* ASCII whitespace only, so a non-breaking space in the source binds
+           the words either side of it into one unbreakable span — which is
+           the only way to control where a headline wraps once every word is
+           its own element. */
+        const parts = child.textContent.split(/([ \t\n\r\f]+)/).filter(Boolean);
         const frag = document.createDocumentFragment();
         parts.forEach(part => {
           if (/^\s+$/.test(part)) {
