@@ -1814,6 +1814,26 @@ body.mode-full .hero-stage { display: none; }
 
 .portal-actions { display: flex; align-items: center; gap: 10px; flex: none; }
 
+/* The one action beside Close: takes the file rather than reading it here. */
+.portal-download {
+  font-size: var(--font-size-xs);
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--foreground);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, .22);
+  transition: background .2s var(--ease), color .2s var(--ease),
+              box-shadow .2s var(--ease);
+}
+.portal-download:hover {
+  background: var(--foreground); color: var(--background, #fff);
+  box-shadow: inset 0 0 0 1px var(--foreground);
+}
+.portal-download[hidden] { display: none; }
+
+/* The browser's own PDF viewer fills the panel, the way an embedded product
+   does — a page of A4 in a letterbox is unreadable. */
+.portal-pdf { width: 100%; height: 100%; border: 0; background: var(--surface); }
+
 .portal-close {
   position: relative;
   width: 34px; height: 34px; padding: 0;
@@ -1860,7 +1880,27 @@ body.mode-full .hero-stage { display: none; }
   .portal-head { flex-direction: column; gap: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .portal, .portal-panel, .portal-close { transition: none; }
+  .portal, .portal-panel, /* The one action beside Close: takes the file rather than reading it here. */
+.portal-download {
+  font-size: var(--font-size-xs);
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--foreground);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, .22);
+  transition: background .2s var(--ease), color .2s var(--ease),
+              box-shadow .2s var(--ease);
+}
+.portal-download:hover {
+  background: var(--foreground); color: var(--background, #fff);
+  box-shadow: inset 0 0 0 1px var(--foreground);
+}
+.portal-download[hidden] { display: none; }
+
+/* The browser's own PDF viewer fills the panel, the way an embedded product
+   does — a page of A4 in a letterbox is unreadable. */
+.portal-pdf { width: 100%; height: 100%; border: 0; background: var(--surface); }
+
+.portal-close { transition: none; }
 }
 
 /* ---------- Case study, in the home page's own conventions ---------- */

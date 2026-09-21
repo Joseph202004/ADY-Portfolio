@@ -404,6 +404,8 @@ function initProjectPortal() {
       </article>`;
   }
 
+  const downloadEl = portal.querySelector(".portal-download");
+
   function open(project) {
     lastFocus = document.activeElement;
     titleEl.textContent = project.title;
@@ -413,7 +415,16 @@ function initProjectPortal() {
     // The product runs here, live. Built on open rather than at page load:
     // it is a whole second application, and nobody should pay to download it
     // until they ask to see it. Closing tears it down again.
-    frameBox.innerHTML = project.live
+    // A PDF is not an application: it goes to the browser's own viewer, which
+    // needs no sandbox and would be broken by one — several browsers refuse to
+    // run the built-in viewer inside a sandboxed frame at all.
+    downloadEl.hidden = !project.pdf;
+    if (project.pdf) downloadEl.href = project.pdf;
+
+    frameBox.innerHTML = project.pdf
+      ? `<iframe class="portal-iframe portal-pdf" src="${project.pdf}#view=FitH"` +
+        ` title="${project.title}"></iframe>`
+      : project.live
       ? `<iframe class="portal-iframe" src="${project.live}" title="${project.title}"` +
         ` loading="lazy" referrerpolicy="no-referrer"` +
         /* allow-popups lets the case study open a window at all; without
@@ -430,8 +441,8 @@ function initProjectPortal() {
     // running app into a letterbox at the top of a long scroll. So the embed
     // takes the whole panel, and the written version is kept for projects
     // that have nothing to run.
-    studyBox.innerHTML = !project.live && project.study ? caseStudyHTML(project) : "";
-    body.classList.toggle("is-embed", !!project.live);
+    studyBox.innerHTML = !project.live && !project.pdf && project.study ? caseStudyHTML(project) : "";
+    body.classList.toggle("is-embed", !!(project.live || project.pdf));
     body.scrollTop = 0;
 
     portal.hidden = false;
@@ -450,6 +461,17 @@ function initProjectPortal() {
     }, 260);
     lastFocus?.focus();
   }
+
+  // The resume opens here too. A new tab for a one-page PDF costs the visitor
+  // their place on this one, and they have to come back to it by hand.
+  document.addEventListener("click", e => {
+    const link = e.target.closest("#resume-link");
+    if (!link || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    document.body.classList.remove("nav-open");        // close the phone drawer
+    open({ title: "Resume", tags: "Aditya Joseph — product designer, Delhi",
+           pdf: link.getAttribute("href") });
+  });
 
   document.addEventListener("click", e => {
     const card = e.target.closest("[data-project]");
