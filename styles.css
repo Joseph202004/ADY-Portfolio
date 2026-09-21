@@ -173,6 +173,10 @@ figure { margin: 0; }
   }
   .cursor.has-label .cursor-label { opacity: 1; }
 }
+/* Out of sight while the pointer is inside a frame this page cannot hear
+   from: a dot parked mid-screen reads as a freeze. */
+.cursor.is-away { opacity: 0; }
+
 @media (pointer: coarse) { .cursor { display: none; } }
 
 /* ---------- Skip link ---------- */

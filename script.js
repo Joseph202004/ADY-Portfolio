@@ -1320,7 +1320,53 @@ function initCursor() {
     requestAnimationFrame(loop);
   })();
 
+  /* An iframe swallows pointer events: the page stops hearing mousemove the
+     moment the pointer crosses into one, and the dot stays where it last was
+     — which is what it looks like when the cursor "freezes" over a case study
+     in the portal.
+
+     Where the frame is same-origin its own document can be listened to and
+     the coordinates shifted by the frame's position, so the dot keeps
+     tracking inside it. Where it is not — the prototype on another domain —
+     nothing can be heard from inside, so the dot is hidden while the pointer
+     is in there and the frame's own cursor takes over. */
+  function followInto(frame) {
+    if (frame.dataset.cursorBound) return;
+    frame.dataset.cursorBound = "1";
+
+    const bind = () => {
+      let doc = null;
+      try { doc = frame.contentDocument; } catch { doc = null; }
+      if (!doc) {                                  // cross-origin: hide instead
+        frame.dataset.cursorForeign = "1";
+        return;
+      }
+      doc.addEventListener("mousemove", e => {
+        const r = frame.getBoundingClientRect();
+        tx = r.left + e.clientX;
+        ty = r.top + e.clientY;
+        cursor.classList.remove("is-away", "is-hover", "has-label");
+        label.textContent = "";
+      }, { passive: true });
+    };
+
+    frame.addEventListener("load", bind);
+    bind();                                        // in case it is already up
+  }
+
+  const scanFrames = () => document.querySelectorAll("iframe").forEach(followInto);
+  scanFrames();
+  new MutationObserver(scanFrames).observe(document.body, { childList: true, subtree: true });
+
+  // Back on the page proper, the dot is wanted again.
+  addEventListener("mousemove", () => cursor.classList.remove("is-away"), { passive: true });
+
   document.addEventListener("mouseover", e => {
+    // The last event the page gets before the pointer disappears into a frame
+    if (e.target.tagName === "IFRAME" && e.target.dataset.cursorForeign) {
+      cursor.classList.add("is-away");
+      return;
+    }
     const labelled = e.target.closest("[data-cursor]");
     const hoverable = e.target.closest("a, button, .frame, .marquee-item, .service");
     if (labelled) {
