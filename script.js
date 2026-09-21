@@ -2060,6 +2060,10 @@ function aiToSafeHtml(text) {
    and "unanswered" when a server replied but the reply was unusable. Worth
    telling apart — one is the board being down, the other is your wifi. */
 let lastReach = "offline";
+/* Whether the last answer was the one written when nothing could be reached.
+   The card's status dot turns red on it, so a question that went nowhere
+   looks different from one that was answered. */
+let aiOffline = false;
 
 async function askModel(question) {
   lastReach = "offline";
@@ -2114,12 +2118,14 @@ async function answerFor(question) {
   if (pinned) return pinned.reply;
 
   const live = await askModel(question);
+  aiOffline = false;
   if (live) return trimRefusal(live);
 
   // Say which kind of quiet this is. Answering from the bank as though
   // nothing had happened is how a question gets a confident reply to a
   // question nobody asked.
   if (!navigator.onLine || lastReach === "offline") {
+    aiOffline = true;
     return "I can't get online just now, so that one didn't reach me.\n" +
            "Try again when the connection is back.";
   }
@@ -2699,10 +2705,12 @@ function initBoard() {
     // Enter does — grey while you are writing, green while the answer is being
     // worked out. In a corner of its own it was either unnoticed or, in the
     // corner it had, hidden behind the close button.
+    note.classList.remove("is-offline");
     note.classList.add("is-thinking");
 
     const a = await answerFor(q);
     note.classList.remove("is-thinking");
+    note.classList.toggle("is-offline", aiOffline);
 
     turns.push({ q, a });
     history.set(note, turns);
@@ -2945,7 +2953,9 @@ function initBoard() {
     const x = e.clientX - drag.cv.left - drag.dx + canvas.scrollLeft;
     const y = e.clientY - drag.cv.top - drag.dy + canvas.scrollTop;
     drag.note.style.left = `${Math.max(RAIL_GUTTER, x)}px`;
-    drag.note.style.top = `${Math.max(0, y)}px`;
+    // 12px of headroom: the close button hangs 9px above the card, and the
+    // canvas scrolls, so a card dropped flush to the top loses its corner.
+    drag.note.style.top = `${Math.max(12, y)}px`;
   });
 
   const endDrag = () => {

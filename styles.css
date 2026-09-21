@@ -1095,7 +1095,6 @@ body.mode-video .hero-media-more { display: none; }
   font-variation-settings: "wght" 400;
   transition: font-variation-settings .4s var(--ease);
 }
-.work-card:hover .work-title { font-variation-settings: "wght" 650; }
 .work-tags { font-size: var(--font-size-xs); color: var(--muted); }
 
 /* ---------- Explorations ---------- */
@@ -1409,11 +1408,17 @@ body.mode-full .hero-stage { display: none; }
 /* The close control. Out of the way until the card is under the pointer or
    selected, so a wall of cards is not a wall of buttons. */
 .note-close {
-  position: absolute; top: 7px; right: 7px;
+  /* On the corner rather than inside it: at 7px in, the cross sat on the end
+     of the first line of the question and the two read as one smudge. Half
+     outside the card there is nothing for it to collide with. */
+  position: absolute; top: -9px; right: -9px;
   width: 20px; height: 20px; padding: 0;
   display: flex; align-items: center; justify-content: center;
   border: 0; border-radius: 999px;
-  background: rgba(17, 17, 17, .06);
+  /* Opaque now: it hangs over the board, not over the card, so a translucent
+     fill would take the dot grid through it. */
+  background: #f4f5f7;                  /* the board, which is what it sits on */
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, .12), 0 1px 3px rgba(17, 17, 17, .12);
   color: rgba(17, 17, 17, .55);
   cursor: pointer;
   opacity: 0; transform: scale(.85);
@@ -1423,7 +1428,11 @@ body.mode-full .hero-stage { display: none; }
 .note:hover .note-close,
 .note.is-selected .note-close,
 .note-close:focus-visible { opacity: 1; transform: none; }
-.note-close:hover { background: rgba(17, 17, 17, .12); color: var(--foreground); }
+.note-close:hover {
+  background: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--foreground), 0 1px 3px rgba(17, 17, 17, .18);
+  color: #fff;
+}
 .note-close::before,
 .note-close::after {
   content: ""; position: absolute;
@@ -1454,23 +1463,32 @@ body.mode-full .hero-stage { display: none; }
   color: rgba(0, 0, 0, .5);
 }
 
-/* The dot in front of the byline: grey while the card is yours to write,
-   green while its answer is being worked out. */
+/* The dot in front of the byline. It reports on a card you are working in —
+   grey while the question is yours to write, green while the answer is being
+   worked out — so on the other cards, which are doing nothing, there is
+   nothing for it to say and it keeps quiet. The space stays reserved either
+   way, so the name does not shift when it appears. */
 .note-by::before {
   content: "";
   position: absolute; left: 0; top: 50%;
   width: 7px; height: 7px; margin-top: -3.5px;
   border-radius: 999px;
-  background: rgba(17, 17, 17, .3);
+  background: transparent;
   transition: background .2s var(--ease);
 }
-.note.is-thinking .note-by::before {
+.note.is-selected .note-by::before,
+.note:focus-within .note-by::before { background: rgba(17, 17, 17, .3); }
+.note.is-thinking .note-by::before,
+.note.is-thinking.is-selected .note-by::before {
   background: #1f9d55;
   animation: caret-blink 1s steps(1) infinite;
 }
 @media (prefers-reduced-motion: reduce) {
   .note.is-thinking .note-by::before { animation: none; }
 }
+/* Red when the question never got out: a card that was answered and a card
+   that could not be sent should not look the same afterwards. */
+.note.is-offline .note-by::before { background: #d64545; }
 
 /* ---------- Add a note ---------- */
 .board-add {
