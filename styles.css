@@ -797,9 +797,13 @@ body.mode-video .hero { padding-top: 96px; }
 /* Phones: don't pin — stack the steps so the page scrolls normally */
 @media (max-width: 699px) {
   .scrolly { height: auto; }
-  .scrolly-sticky { position: static; height: auto; padding-block: 72px; }
+  .scrolly-sticky { position: static; height: auto; padding-block: 40px; }
   .scrolly-viewport { height: auto; -webkit-mask-image: none; mask-image: none; }
-  .scrolly-list { transform: none !important; }
+  /* The list carries an empty row at each end so the active name can sit in
+     the middle of the window while the column steps. Stacked, there is no
+     window and nothing steps, so those rows are 72px of nothing above and
+     below the tools. */
+  .scrolly-list { transform: none !important; padding-block: 0; }
   .scrolly-item { opacity: 1; filter: none; height: auto; padding-block: 10px; }
   /* No second column to sit in at this width, and stacked under the list the
      clip was a screen recording of a desktop app shown two inches wide — it
@@ -2094,6 +2098,9 @@ body.mode-full .hero-stage { display: none; }
 
 @media (max-width: 899px) {
   .scrolly-grid { border-radius: 16px; padding-block: 40px; padding-inline: 24px; }
+}
+@media (max-width: 699px) {
+  .scrolly-grid { padding-block: 28px; }
 }
 
 /* A plate that holds a clip rather than a mark: it runs to the plate's own
