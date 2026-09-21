@@ -449,73 +449,7 @@ body.mode-full .hero-video { display: none; }
   margin-bottom: 64px;
   justify-content: flex-start; align-items: flex-start; text-align: left;
 }
-/* Highlighted, and lit: a neon halo that travels the spectrum, so the one
-   heading standing alone above the work reads as lit rather than set.
 
-   The hue is a registered custom property — declaring its type is what lets
-   it animate at all; an unregistered property would jump from red to red
-   once a cycle instead of travelling through. */
-@property --glow-hue {
-  syntax: "<number>";
-  initial-value: 280;
-  inherits: false;
-}
-/* And how hard it is lit. Two animations rather than one, on periods that do
-   not divide into each other, so the colour and the brightness never fall
-   into step and the heading never looks like it is on a timer. */
-@property --glow-power {
-  syntax: "<number>";
-  initial-value: 1;
-  inherits: false;
-}
-.hero-media-head .eyebrow {
-  position: relative;
-  --glow-hue: 280;
-  --glow-power: 1;
-  /* Three shadows, tight to wide, so the light falls off rather than ending
-     at an edge. On a white page the glow goes around dark letters instead of
-     behind bright ones. */
-  /* Four layers reaching much further out: the light should leave the words
-     and fall away into the page, not stop an inch from them. The near ones
-     stay faint, or the spread would read as a coloured shadow again. */
-  text-shadow:
-    0 0 calc(10px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.09 * var(--glow-power))),
-    0 0 calc(40px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.08 * var(--glow-power))),
-    0 0 calc(105px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.06 * var(--glow-power))),
-    0 0 calc(200px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.04 * var(--glow-power)));
-  /* Slow enough that the colour is never seen to change — look away and back
-     and it has moved, watch it and it appears still. */
-  animation: glow-cycle 48s linear infinite,
-             glow-pulse 14s var(--ease) infinite;
-}
-/* Two classes deep: .section-head .eyebrow is declared later in this file and
-   its transition covers the weight only, so a single-class rule here loses
-   and the light would snap on rather than come up. */
-.section-head.hero-media-head .eyebrow {
-  transition: text-shadow .6s var(--ease-out-expo),
-              font-variation-settings .45s var(--ease);
-}
-@keyframes glow-cycle {
-  from { --glow-hue: 280; }            /* violet, where it started */
-  to   { --glow-hue: 640; }            /* one full turn back to violet */
-}
-@keyframes glow-pulse {
-  0%, 100% { --glow-power: .9; }
-  50%      { --glow-power: 1.12; }
-}
-/* Under the pointer it comes up to full brightness without losing the cycle. */
-/* Under the pointer the light both brightens and travels further — a lamp
-   turned up rather than a colour turned on. */
-.hero-media-head:hover .eyebrow {
-  text-shadow:
-    0 0 14px  hsl(var(--glow-hue) 88% 58% / .18),
-    0 0 64px  hsl(var(--glow-hue) 88% 58% / .15),
-    0 0 170px hsl(var(--glow-hue) 88% 58% / .11),
-    0 0 320px hsl(var(--glow-hue) 88% 58% / .08);
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-media-head .eyebrow { animation: none; }
-}
 
 body.mode-video .hero-media-head { display: none; }
 

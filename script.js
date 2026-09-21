@@ -747,12 +747,46 @@ function initKinetic(el) {
   measure();
   addEventListener("resize", measure, { passive: true });
 
+  let lit = false;                       // is any character currently thickened?
+  const weights = new Array(chars.length).fill(-1);   // last value written to each
+
   function update() {
     raf = null;
+
+    /* Sixty characters, each a style write that re-shapes a variable font, on
+       every frame of every scroll — and the headline is off screen for most
+       of the page. Bail when the pointer cannot reach it, and only after
+       putting the letters back to rest once. */
+    const box = document.querySelector(".display")?.getBoundingClientRect();
+    const reachable = box && box.bottom > -RADIUS && box.top < innerHeight + RADIUS;
+    if (!reachable) {
+      if (lit) {
+        for (let i = 0; i < chars.length; i++) {
+          if (weights[i] === MIN_W) continue;
+          weights[i] = MIN_W;
+          chars[i].style.setProperty("--w", MIN_W);
+        }
+        lit = false;
+      }
+      return;
+    }
+
+    lit = true;
+    /* Only the characters whose weight actually changed. The pointer's page
+       position moves with the scroll even when the hand is still, so every
+       character is recomputed each frame — but the ones out of reach all
+       compute to the same resting weight, and writing that again costs a
+       variable-font re-shape for nothing. Measured: this is the difference
+       between a scroll that drops frames while the headline is on screen and
+       one that does not. */
     for (let i = 0; i < chars.length; i++) {
       const [cx, cy] = centres[i];
       const t = Math.max(0, 1 - Math.hypot(mx - cx, my - cy) / RADIUS);
-      chars[i].style.setProperty("--w", Math.round(MIN_W + t * t * (MAX_W - MIN_W)));
+      const w = Math.round(MIN_W + t * t * (MAX_W - MIN_W));
+      if (w !== weights[i]) {
+        weights[i] = w;
+        chars[i].style.setProperty("--w", w);
+      }
     }
   }
 
@@ -847,13 +881,20 @@ let parallaxRaf = null;
 function runParallax() {
   parallaxRaf = null;
   const vh = innerHeight;
-  parallaxEls.forEach(({ el, amount }) => {
+
+  /* Read every rect, then write every transform. Interleaved — measure one,
+     move one, measure the next — each write invalidates the layout the next
+     read needs, so the browser recomputes it once per element instead of once
+     for the frame. */
+  const moves = [];
+  for (const { el, amount } of parallaxEls) {
     const r = el.getBoundingClientRect();
-    if (r.bottom < -200 || r.top > vh + 200) return;
-    const progress = (r.top + r.height / 2 - vh / 2) / vh; // -1 … 1
+    if (r.bottom < -200 || r.top > vh + 200) continue;
     const inner = el.firstElementChild;
-    if (inner) inner.style.translate = `0 ${(progress * amount).toFixed(2)}px`;
-  });
+    if (!inner) continue;
+    moves.push([inner, ((r.top + r.height / 2 - vh / 2) / vh) * amount]);
+  }
+  for (const [inner, y] of moves) inner.style.translate = `0 ${y.toFixed(2)}px`;
 }
 
 /* ============================================================
