@@ -2290,7 +2290,9 @@ function initBoard() {
     shut.type = "button";
     shut.className = "note-close";
     shut.setAttribute("aria-label", "Close this card");
-    shut.innerHTML = "<span aria-hidden='true'></span>";
+    // The cross is drawn in CSS on the button itself — two bars crossing at
+    // its centre. An inner element made them rotate about their own corner,
+    // which read as a chevron rather than an x.
 
     note.append(body, by, shut);
     canvas.appendChild(note);
@@ -2460,7 +2462,9 @@ function initBoard() {
     select(null);
     initHeroMode.setMode?.(true);
   }
-  document.getElementById("hero-back")?.addEventListener("click", goHome);
+  /* No Back control on the drawing screen: a click anywhere off the board
+     already closes the reply and brings the intro back, and Escape does the
+     same, so a button for it was a third way to do what two already did. */
   document.addEventListener("keydown", e => {
     if (e.key === "Escape" && reply?.classList.contains("is-on")) goHome();
   });

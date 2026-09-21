@@ -1373,6 +1373,23 @@ body.mode-full .hero-stage { display: none; }
   font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
   color: var(--muted-2);
 }
+/* The mark that says an answer came from the model rather than from a page of
+   copy: a sparkle, in the line the rest of the page is drawn in, taking its
+   colour from the question it sits beside.
+
+   A mask rather than an <img> or an inline SVG, because the question line is
+   written with textContent on every reply — anything inside the element would
+   be wiped with it, where a background survives. */
+.hero-reply-q::before {
+  content: "";
+  display: inline-block;
+  width: 13px; height: 13px;
+  margin-right: 8px;
+  vertical-align: -1px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M10%204%20L12.6%209.4%20L18%2012%20L12.6%2014.6%20L10%2020%20L7.4%2014.6%20L2%2012%20L7.4%209.4%20Z%27%2F%3E%3Cpath%20d%3D%27M19.5%201.5%20L20.6%203.9%20L23%205%20L20.6%206.1%20L19.5%208.5%20L18.4%206.1%20L16%205%20L18.4%203.9%20Z%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M10%204%20L12.6%209.4%20L18%2012%20L12.6%2014.6%20L10%2020%20L7.4%2014.6%20L2%2012%20L7.4%209.4%20Z%27%2F%3E%3Cpath%20d%3D%27M19.5%201.5%20L20.6%203.9%20L23%205%20L20.6%206.1%20L19.5%208.5%20L18.4%206.1%20L16%205%20L18.4%203.9%20Z%27%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
 .hero-reply-a {
   margin-top: 10px;
   /* Smaller than the intro: an answer is a paragraph, not a greeting, and at
@@ -1387,8 +1404,8 @@ body.mode-full .hero-stage { display: none; }
 /* The close control. Out of the way until the card is under the pointer or
    selected, so a wall of cards is not a wall of buttons. */
 .note-close {
-  position: absolute; top: 6px; right: 6px;
-  width: 22px; height: 22px; padding: 0;
+  position: absolute; top: 7px; right: 7px;
+  width: 20px; height: 20px; padding: 0;
   display: flex; align-items: center; justify-content: center;
   border: 0; border-radius: 999px;
   background: rgba(17, 17, 17, .06);
@@ -1402,13 +1419,17 @@ body.mode-full .hero-stage { display: none; }
 .note.is-selected .note-close,
 .note-close:focus-visible { opacity: 1; transform: none; }
 .note-close:hover { background: rgba(17, 17, 17, .12); color: var(--foreground); }
-.note-close span, .note-close span::before {
-  position: absolute; content: "";
-  width: 9px; height: 1.4px; border-radius: 1px;
+.note-close::before,
+.note-close::after {
+  content: ""; position: absolute;
+  left: 50%; top: 50%;
+  width: 10px; height: 1.5px;
+  margin: -.75px 0 0 -5px;              /* centred on the button, then turned */
+  border-radius: 1px;
   background: currentColor;
 }
-.note-close span { transform: rotate(45deg); }
-.note-close span::before { transform: rotate(90deg); }
+.note-close::before { transform: rotate(45deg); }
+.note-close::after  { transform: rotate(-45deg); }
 
 .note-by {
   position: absolute; left: 14px; right: 14px; bottom: 10px;
@@ -1642,37 +1663,7 @@ body.mode-full .hero-stage { display: none; }
 /* ---------- Back, from a reply to the intro ---------- */
 /* The same pill as the mode toggle, on the same line, at the other end of
    the row — so the hero reads as one control bar rather than two. */
-.hero-back {
-  display: none;                       /* only while a reply is open */
-  align-items: center; justify-content: center; gap: 8px;
-  min-width: 118px; height: 34px;
-  padding: 8px 16px 8px 13px;
-  border: 1px solid var(--line); border-radius: 999px;
-  background: var(--background);
-  font: inherit; font-size: var(--font-size-xs); color: var(--muted);
-  cursor: pointer;
-  transition: color .2s var(--ease), border-color .2s var(--ease),
-              box-shadow .25s var(--ease), transform .25s var(--ease-out-expo);
-}
-.hero--video.has-reply .hero-back { display: inline-flex; }
 
-.hero-back:hover {
-  color: var(--foreground); border-color: var(--foreground);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .07);
-  transform: translateY(-1px);
-}
-.hero-back:active { transform: translateY(0); }
-.hero-back:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-
-/* Chevron drawn, not typed, so its weight matches the pill's border */
-.hero-back-arrow {
-  width: 9px; height: 9px;
-  border-left: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg);
-  transition: transform .25s var(--ease-out-expo);
-}
-.hero-back:hover .hero-back-arrow { transform: rotate(45deg) translate(-2px, 2px); }
 
 /* Back sits opposite the toggle on the switch row. The toggle pushes itself
    right rather than relying on space-between, which would park it on the
