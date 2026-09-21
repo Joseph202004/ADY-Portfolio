@@ -2056,15 +2056,15 @@ body.mode-full .hero-stage { display: none; }
      drawn within the box it already has. Barely there — 7% black on a grey
      ground — enough to close the edge where the shadow fades out. */
   box-shadow: inset 0 0 0 1px rgba(17, 17, 17, .07),
-              0 0 140px 32px rgba(17, 17, 17, .07),
-              0 0 48px 8px rgba(17, 17, 17, .042);
+              0 0 140px 32px rgba(17, 17, 17, .10),
+              0 0 48px 8px rgba(17, 17, 17, .06);
   width: calc(100% - var(--gutter) * 2);
 }
 /* A definite height, so the panel does not breathe as the captions change
    length from one tool to the next. The rows centre inside it instead. */
 @media (min-width: 900px) {
   .scrolly-grid {
-    height: min(600px, calc(100vh - 140px));
+    height: min(600px, calc(100vh - 72px));
     align-content: center;
   }
 }
