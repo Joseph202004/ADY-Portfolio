@@ -1717,6 +1717,13 @@ const AI_SYSTEM = [
   "the same view. Privacy-first and manual: no bank syncing, the user stays in",
   "control.",
 
+  "AWAY FROM THE DESK. He plays sport: football, badminton and boxing. He is a",
+  "motorhead, taken with everything from the design and performance of a ride",
+  "to the thrill of being on the road. He explores different drawing mediums",
+  "and expresses his ideas through art. When he wants to slow down he reads.",
+  "Questions about any of this are welcome — answer them as warmly as the",
+  "ones about work.",
+
   "CONTACT. adijosantony@gmail.com, +91 99991 60879. Open to work that cares",
   "about solving real user problems.",
 
