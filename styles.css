@@ -958,7 +958,16 @@ body.mode-video .hero-media-more { display: none; }
   font-size: var(--font-size-md);
   color: var(--foreground); font-weight: 600;
 }
-.info-exp-name strong { color: inherit; font-weight: inherit; }
+/* The company name goes to the company. Underlined on hover only: a rule
+   under it at rest would make the line read as a link entire, prefix and
+   all. */
+.info-exp-link {
+  color: inherit; font-weight: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s var(--ease);
+}
+.info-exp-link:hover { border-bottom-color: currentColor; }
 .info-exp-logo { height: 20px; width: auto; display: block; }
 .info-aside { color: var(--muted); font-size: var(--font-size-sm); line-height: 1.625; }
 /* The few words worth catching an eye in a paragraph of grey: darker and a
