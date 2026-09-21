@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=355" />
+  <link rel="stylesheet" href="styles.css?v=358" />
 </head>
 <body class="is-loading mode-full">
 
@@ -49,7 +49,15 @@
         </svg>
         <span id="hero-mode-label">Show video</span>
       </button>
-      <nav class="nav">
+      <!-- On a phone the four links do not fit beside the wordmark and the
+           face, so they move behind this. Same nav element either way: the
+           labels swap wording with the screen, and duplicating it would mean
+           two sets to keep in step. -->
+      <button class="nav-toggle" id="nav-toggle" type="button"
+              aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <nav class="nav" id="site-nav">
         <a class="magnetic" href="#top"     data-full="Home"    data-hand="home">Home</a>
         <a class="magnetic" href="#about"   data-full="About"   data-hand="about me">About</a>
         <a class="magnetic" href="#work"    data-full="Work"    data-hand="my drawings">Work</a>
@@ -365,6 +373,6 @@
   </footer>
 
   <script src="hand.js?v=253"></script>
-  <script src="script.js?v=355"></script>
+  <script src="script.js?v=358"></script>
 </body>
 </html>

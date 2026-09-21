@@ -655,6 +655,47 @@ function typewrite(el, { speed = 38, jitter = 26, onTyped } = {}) {
 }
 
 /* ============================================================
+   MENU (phone)
+   The four links live behind a button once they no longer fit
+   beside the wordmark. Same nav element, shown as a sheet.
+   ============================================================ */
+function initMenu() {
+  const btn = document.getElementById("nav-toggle");
+  const nav = document.getElementById("site-nav");
+  if (!btn || !nav) return;
+
+  const set = open => {
+    document.body.classList.toggle("nav-open", open);
+    btn.setAttribute("aria-expanded", String(open));
+  };
+
+  btn.addEventListener("click", () => set(!document.body.classList.contains("nav-open")));
+
+  // Following a link is the end of the menu's job.
+  nav.addEventListener("click", e => { if (e.target.closest("a")) set(false); });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && document.body.classList.contains("nav-open")) {
+      set(false);
+      btn.focus();
+    }
+  });
+
+  // A tap anywhere else closes it, the way a menu should.
+  document.addEventListener("pointerdown", e => {
+    if (!document.body.classList.contains("nav-open")) return;
+    if (e.target.closest("#site-nav") || e.target.closest("#nav-toggle")) return;
+    set(false);
+  });
+
+  // Widening past the breakpoint puts the links back in the header; a stale
+  // open state would leave them styled as a sheet that nothing can close.
+  matchMedia("(max-width: 600px)").addEventListener("change", e => {
+    if (!e.matches) set(false);
+  });
+}
+
+/* ============================================================
    3. KINETIC WEIGHT — chars thicken near the cursor
    ============================================================ */
 function initKinetic(el) {
@@ -1621,6 +1662,7 @@ function boot() {
   initMarquee();
   initScrolly();
   initHeroMode();
+  initMenu();
   initHeader();
   initSmoothScroll();
   initProjectPortal();
