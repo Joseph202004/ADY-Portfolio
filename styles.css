@@ -476,6 +476,10 @@ body.mode-video .hero-media-head { display: none; }
 }
 .frame.is-in > :not(button) { transform: scale(1); }
 .frame:hover > :not(button) { transform: scale(1.04); }
+/* except the reply: it is text being read, and text that grows under the
+   pointer is text you have to stop reading */
+.frame:hover > #hero-reply,
+.frame[data-parallax]:hover > #hero-reply { transform: none; }
 
 /* Parallaxed media is translated inside a frame it would otherwise fill
    exactly, which exposes a sliver at the leading edge. Keep it slightly
@@ -1398,6 +1402,7 @@ body.mode-full .hero-stage { display: none; }
   /* colour comes from .hand (pencil grey) */
 }
 .hero-reply-a strong { font-weight: 400; }
+.hero-reply-a .hw-settled { white-space: pre-line; }
 
 @media (prefers-reduced-motion: reduce) { .hero-reply { transition: none; } }
 
@@ -1678,9 +1683,11 @@ body.mode-full .hero-stage { display: none; }
 
 /* The dot that pulses on a note while its answer is being worked out */
 .note-thinking {
-  position: absolute; right: 8px; top: 8px;
-  width: 6px; height: 6px; border-radius: 999px;
-  background: rgba(0, 0, 0, .35);
+  /* Bottom left, clear of the close button in the opposite corner — behind it
+     the dot was invisible for exactly as long as it had something to say. */
+  position: absolute; left: 14px; bottom: 13px;
+  width: 7px; height: 7px; border-radius: 999px;
+  background: #1f9d55;
   animation: caret-blink 1s steps(1) infinite;
 }
 @media (prefers-reduced-motion: reduce) { .note-thinking { animation: none; } }

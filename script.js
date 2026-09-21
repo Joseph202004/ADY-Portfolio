@@ -1999,9 +1999,13 @@ const AI_SYSTEM = [
   "CONTACT. adijosantony@gmail.com, +91 99991 60879. Open to work that cares",
   "about solving real user problems.",
 
-  "HOW TO ANSWER. At most two short sentences, under 240 characters total.",
-  "Wrap two or three key words in **double asterisks**. No lists, no headings,",
-  "no other markdown. Never deny something stated above.",
+  "HOW TO ANSWER. Answer in one to four short lines, each on its own line,",
+  "one point per line, under 240 characters in total. A line is a phrase or a",
+  "very short sentence — never a paragraph, and never one long line holding",
+  "several points. Separate the lines with a newline and nothing else: no",
+  "bullet characters, no dashes at the start, no numbering, no headings.",
+  "Wrap two or three key words in **double asterisks**. Never deny something",
+  "stated above.",
 
   "Answer whatever is asked, not only questions about him. General questions —",
   "a fact, a definition, advice, something in the news, a joke — get a real",
@@ -2041,7 +2045,14 @@ function aiToSafeHtml(text) {
   const esc = String(text)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-  return esc.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").trim();
+  // The answer comes back as a few short lines. Keep the breaks — they are
+  // what makes it a list of points rather than a wall — but tidy what a model
+  // tends to put in front of a line even when told not to: a bullet, a dash,
+  // a number. The hand draws letters, not glyphs it has no strokes for.
+  const lines = esc.split(/\n+/)
+    .map(line => line.replace(/^\s*(?:[-–—•*]|\d+[.)])\s+/, "").trim())
+    .filter(Boolean);
+  return lines.join("\n").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").trim();
 }
 
 async function askModel(question) {
@@ -2407,7 +2418,10 @@ function initBoard() {
 
         const { ch, bold } = chars[i++];
 
-        if (ch === " ") {
+        if (ch === "\n") {
+          word = null;
+          host.insertBefore(document.createElement("br"), pen);
+        } else if (ch === " ") {
           word = null;
           host.insertBefore(document.createTextNode(" "), pen);
         } else {
@@ -2873,6 +2887,11 @@ function initBoard() {
   let drag = null;
 
   canvas.addEventListener("pointerdown", e => {
+    // Leave the close button alone. Taking pointer capture for the drag on the
+    // way down retargets the click that follows to the card, so the button's
+    // own click never fired and the cross did nothing.
+    if (e.target.closest(".note-close")) return;
+
     const note = e.target.closest(".note");
     select(note || null);
 

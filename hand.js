@@ -99,10 +99,15 @@
     const G = data.glyphs;
     const adv = ch => (G[ch] || G["?"] || { adv: 500 }).adv;
 
+    // A newline is a word of its own: an answer that arrives as a few short
+    // points should be written as a few short lines, not reflowed into one
+    // paragraph the moment it fits.
+    const BREAK = "\n";
     const words = [];
     let cur = [];
     for (const c of chars) {
-      if (c.ch === " ") { if (cur.length) words.push(cur); cur = []; }
+      if (c.ch === "\n") { if (cur.length) words.push(cur); cur = []; words.push(BREAK); }
+      else if (c.ch === " ") { if (cur.length) words.push(cur); cur = []; }
       else cur.push(c);
     }
     if (cur.length) words.push(cur);
@@ -112,6 +117,7 @@
     const space = adv(" ");
 
     for (const w of words) {
+      if (w === BREAK) { lines.push(line); line = []; x = 0; continue; }
       const wUnits = w.reduce((s, c) => s + adv(c.ch), 0);
       if (line.length && x + space + wUnits > maxUnits) {
         lines.push(line); line = []; x = 0;
