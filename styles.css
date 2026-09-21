@@ -820,8 +820,9 @@ body.mode-video .hero { padding-top: 96px; }
 /* Down, not right: the work it points at is further down the page, not off
    to the side. It steps down on hover, in the direction it is sending you. */
 .hero-media-more::after {
-  content: " \2193";
+  content: "\2193";
   display: inline-block;
+  margin-left: .4em;                  /* a word space is too tight at 600 */
   transition: transform .4s var(--ease-out-expo);
 }
 .hero-media-more:hover::after { transform: translateY(4px); }
@@ -829,8 +830,9 @@ body.mode-video .hero { padding-top: 96px; }
 /* The underline is drawn rather than inherited, so it can stay under the
    words while the arrow moves. */
 .hero-media-more::before {
-  content: ""; position: absolute; left: 0; bottom: -4px;
-  width: calc(100% - 1.1em); height: 1px;
+  content: ""; position: absolute; left: 0; bottom: -1px;
+  /* under the words only: the arrow keeps clear of it so it can move */
+  width: calc(100% - 1.3em); height: 1px;
   background: currentColor; opacity: .5;
   transition: opacity .25s var(--ease);
 }
