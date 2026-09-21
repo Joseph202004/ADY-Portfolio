@@ -70,3 +70,17 @@
 
   blocks.forEach(el => io.observe(el));
 })();
+
+/* target="_blank" is a request, not a guarantee — some browsers navigate the
+   current tab regardless. Open the window from the click so the case study
+   stays put behind it. */
+(function () {
+  document.addEventListener("click", e => {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest?.('a[target="_blank"]');
+    if (!a || !/^https?:/i.test(a.href)) return;
+    e.preventDefault();
+    window.open(a.href, "_blank", "noopener");
+  });
+})();

@@ -655,6 +655,30 @@ function typewrite(el, { speed = 38, jitter = 26, onTyped } = {}) {
 }
 
 /* ============================================================
+   EXTERNAL LINKS
+   target="_blank" is a request, not a guarantee: some browsers
+   and some settings navigate the current tab anyway. Opening
+   the window from the click itself leaves this page where it
+   is. Modified clicks are left alone — those are the reader
+   asking for a particular behaviour.
+   ============================================================ */
+function initExternalLinks() {
+  document.addEventListener("click", e => {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    const a = e.target.closest?.('a[target="_blank"]');
+    if (!a) return;
+
+    const href = a.href;
+    if (!/^https?:/i.test(href)) return;
+
+    e.preventDefault();
+    window.open(href, "_blank", "noopener");
+  });
+}
+
+/* ============================================================
    MENU (phone)
    The four links live behind a button once they no longer fit
    beside the wordmark. Same nav element, shown as a sheet.
@@ -1740,6 +1764,7 @@ function boot() {
   initScrolly();
   initHeroMode();
   initMenu();
+  initExternalLinks();
   initHeader();
   initSmoothScroll();
   initProjectPortal();
