@@ -406,6 +406,32 @@ body.mode-full .hero-video { display: none; }
   margin-bottom: 64px;
   justify-content: center; align-items: center; text-align: center;
 }
+/* Darker than the other section labels, and it answers the pointer: the
+   weight comes up and a hairline draws out from the middle, the way the work
+   titles thicken under the cursor further down the page. */
+.hero-media-head .eyebrow {
+  position: relative;
+  color: var(--muted);
+  font-variation-settings: "wght" 400;
+  transition: color .3s var(--ease), font-variation-settings .45s var(--ease);
+}
+.hero-media-head .eyebrow::after {
+  content: "";
+  position: absolute; left: 50%; bottom: -10px;
+  width: 0; height: 1px;
+  background: currentColor;
+  transform: translateX(-50%);
+  transition: width .55s var(--ease-out-expo);
+}
+.hero-media-head:hover .eyebrow {
+  color: var(--foreground);
+  font-variation-settings: "wght" 600;
+}
+.hero-media-head:hover .eyebrow::after { width: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-media-head .eyebrow,
+  .hero-media-head .eyebrow::after { transition: none; }
+}
 body.mode-video .hero-media-head { display: none; }
 
 .hero-media {
