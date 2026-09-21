@@ -165,13 +165,53 @@ def key(path):
 
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     skin = (r > g) & (g > b) & ((r - b) > 25) & (mx >= 20) & ~bg
-    edge = skin & (ndimage.distance_transform_edt(~bg) <= 2)
+
+    # The rim the skin test misses. A skin pixel blended toward black keeps
+    # its hue as it darkens, but not its distance from it: at the very edge
+    # of a finger the blend is so far along that r-b falls under 25 and the
+    # test lets the pixel through at full alpha and full darkness. Measured,
+    # that is 1,554 pixels a frame at a mean brightness of 27 — the dotted
+    # black fringe along the fingers and the gaps between them.
+    #
+    # They can be told from hair, which is legitimately black at full alpha,
+    # by hue: blended skin stays warm (r-b of 7 to 22 in the samples), where
+    # black hair sits within 4 of neutral. So the band beside skin is taken
+    # as skin too when it is warm at all.
+    band = (ndimage.distance_transform_edt(~bg) <= 3) & ~bg
+    warm = (r >= g) & (g >= b) & ((r - b) >= 5)
+    beside_skin = ndimage.binary_dilation(skin, _disk(4))
+    edge = band & (skin | (beside_skin & warm))
     al = np.clip(mx / SKIN_MAX, 0.04, 1.0)
     rgb = a.copy()
     rgb[edge] = np.clip(rgb[edge] / al[edge][:, None], 0, 255)
     alpha = np.where(edge, np.minimum(alpha, al), alpha)
 
     return Image.fromarray(np.dstack([rgb, alpha * 255]).astype(np.uint8), "RGBA")
+
+
+def rgba_resize(img, size):
+    """Resize without letting the background back in.
+
+    A keyed frame still carries the original colour under every transparent
+    pixel — black, because that is what the character was rendered on. PIL
+    resamples the four channels independently, so a LANCZOS pass averages that
+    black into every edge pixel it touches and lays a dotted dark rim along
+    the fingers and the gaps between them. Multiplying colour by alpha first
+    makes the transparent pixels contribute nothing, which is what "the
+    background is not there" should mean; dividing it back out afterwards
+    restores the colour of what survived.
+    """
+    a = np.asarray(img).astype(np.float32)
+    al = a[..., 3:4] / 255.0
+    pm = Image.fromarray(
+        np.dstack([a[..., :3] * al, a[..., 3]]).astype(np.uint8), "RGBA"
+    ).resize(size, Image.LANCZOS)
+    o = np.asarray(pm).astype(np.float32)
+    oa = o[..., 3:4] / 255.0
+    rgb = np.where(oa > 0.002, o[..., :3] / np.maximum(oa, 0.002), 0.0)
+    return Image.fromarray(
+        np.dstack([np.clip(rgb, 0, 255), o[..., 3]]).astype(np.uint8), "RGBA"
+    )
 
 
 def main():
@@ -197,7 +237,7 @@ def main():
     W, H = fwd[0].size
     bb = (max(0, bb[0] - 6) // 2 * 2, max(0, bb[1] - 6) // 2 * 2, min(W, bb[2] + 6), min(H, bb[3] + 6))
     h = int(round((bb[3] - bb[1]) * OUT_W / (bb[2] - bb[0]))) // 2 * 2
-    fwd = [f.crop(bb).resize((OUT_W, h), Image.LANCZOS) for f in fwd]
+    fwd = [rgba_resize(f.crop(bb), (OUT_W, h)) for f in fwd]
 
     seq = fwd
     for i, f in enumerate(seq):
@@ -208,13 +248,13 @@ def main():
     # Only the hand changes between frames, so each one encodes as a small
     # rectangle of difference over the last; that is what keeps 28 frames of a
     # 560px figure under half a megabyte.
-    web = [f.resize((WEBP_W, int(round(f.height * WEBP_W / f.width)) // 2 * 2), Image.LANCZOS) for f in seq]
+    web = [rgba_resize(f, (WEBP_W, int(round(f.height * WEBP_W / f.width)) // 2 * 2)) for f in seq]
     times = [int(round(1000 / FPS))] * len(web)
     tmp = tempfile.mkdtemp()
     args = []
     for i, f in enumerate(web):
         if i == 0:
-            part, off, q = f, (0, 0), "86"
+            part, off, q = f, (0, 0), "84"
         else:
             d = ImageChops.difference(f, web[i - 1]).getbbox()
             if d is None:
@@ -223,10 +263,10 @@ def main():
             x0 = max(0, d[0] - 2) // 2 * 2
             y0 = max(0, d[1] - 2) // 2 * 2
             part = f.crop((x0, y0, min(f.width, d[2] + 2), min(f.height, d[3] + 2)))
-            off, q = (x0, y0), "72"
+            off, q = (x0, y0), "68"
         png, webp = f"{tmp}/f{i}.png", f"{tmp}/f{i}.webp"
         part.save(png)
-        subprocess.run(["cwebp", "-quiet", "-q", q, "-alpha_q", "90", "-m", "6", png, "-o", webp], check=True)
+        subprocess.run(["cwebp", "-quiet", "-q", q, "-alpha_q", "88", "-m", "6", png, "-o", webp], check=True)
         args += ["-frame", webp, f"+{times[i]}+{off[0]}+{off[1]}+0-b"]
     out = os.path.join(MEDIA, "hero-wave.webp")
     subprocess.run(["webpmux", *args, "-loop", "0", "-bgcolor", "0,0,0,0", "-o", out], check=True)

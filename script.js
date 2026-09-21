@@ -416,7 +416,12 @@ function initProjectPortal() {
     frameBox.innerHTML = project.live
       ? `<iframe class="portal-iframe" src="${project.live}" title="${project.title}"` +
         ` loading="lazy" referrerpolicy="no-referrer"` +
-        ` sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`
+        /* allow-popups lets the case study open a window at all; without
+           -to-escape-sandbox that window inherits this frame's sandbox,
+           which browsers treat inconsistently — Safari among them keeps it
+           in the frame. The escape flag makes it an ordinary tab. */
+        ` sandbox="allow-scripts allow-same-origin allow-forms allow-popups` +
+        ` allow-popups-to-escape-sandbox"></iframe>`
       : "";
 
 
