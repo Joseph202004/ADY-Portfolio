@@ -112,9 +112,14 @@ figure { margin: 0; }
   transition: opacity .4s var(--ease), transform .6s var(--ease-out-expo);
 }
 .preloader.is-done .pre-inner { opacity: 0; transform: translateY(-24px); }
+/* The name, bottom left, against the count bottom right — the two corners
+   the .pre-inner flex row already holds them in. Larger than the wordmark it
+   becomes, because on a black screen with nothing else on it, it can be. */
 .pre-label {
-  font-size: var(--font-size-sm); font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 34px);
+  font-weight: 500;
   letter-spacing: -0.02em; opacity: .55;
+  line-height: 1;
 }
 .pre-count {
   font-size: clamp(64px, 14vw, 200px);
