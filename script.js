@@ -1103,7 +1103,9 @@ function initHeroMode() {
   const title = document.querySelector(".hero .display");
   if (!hero || !btn || !title) return;
 
-  const navLinks = [...document.querySelectorAll(".nav a")];
+  // Only the links that have a second wording swap: the resume is a file with
+  // one name, and it should not turn into a handwritten phrase with the rest.
+  const navLinks = [...document.querySelectorAll(".nav a[data-hand]")];
 
   // The label moves on its own; the link keeps the hit area and the underline
   navLinks.forEach(a => {
@@ -1514,7 +1516,7 @@ function initHeader() {
     if (!parallaxRaf) parallaxRaf = requestAnimationFrame(runParallax);
   }, { passive: true });
 
-  const navLinks = [...document.querySelectorAll(".nav a")];
+  const navLinks = [...document.querySelectorAll('.nav a[href^="#"]')];
   const sections = ["top", "about", "work", "contact"]
     .map(id => document.getElementById(id)).filter(Boolean);
   const spy = new IntersectionObserver(entries => {

@@ -233,7 +233,7 @@ figure { margin: 0; }
   font-variant-numeric: tabular-nums;
 }
 @media (min-width: 768px) { .meta { display: flex; } }
-.nav { display: flex; gap: 36px; font-size: var(--font-size-xs); }
+.nav { display: flex; align-items: center; gap: 36px; font-size: var(--font-size-xs); }
 .nav a { position: relative; color: var(--muted); transition: color .2s var(--ease); }
 .nav a::after {
   content: ""; position: absolute; left: 0; bottom: -4px;
@@ -242,6 +242,25 @@ figure { margin: 0; }
   transition: transform .4s var(--ease-out-expo);
 }
 .nav a:hover, .nav a.is-active { color: var(--foreground); }
+
+/* The resume: the only thing in the row that leaves the site, so it is drawn
+   as a control and not as a fifth section. No sliding underline — it has an
+   outline of its own, and the two together would be two hover states. */
+.nav-cta {
+  margin-left: 4px;
+  padding: 4px 12px 5px;
+  border-radius: 999px;
+  color: var(--foreground);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, .22);
+  transition: background .22s var(--ease), color .22s var(--ease),
+              box-shadow .22s var(--ease);
+}
+.nav a.nav-cta::after { display: none; }
+.nav a.nav-cta:hover {
+  background: var(--foreground);
+  color: var(--background, #fff);
+  box-shadow: inset 0 0 0 1px var(--foreground);
+}
 .nav a:hover::after, .nav a.is-active::after { transform: scaleX(1); transform-origin: left; }
 
 /* Header children stagger in after preload */
