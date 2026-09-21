@@ -52,11 +52,13 @@ html { -webkit-text-size-adjust: 100%; }
    snap settles a scroll that ends anywhere near Info onto its top edge.
    Proximity, not mandatory, and only this one section carries an alignment —
    everywhere else, including the pinned panel itself, scrolls untouched. */
-html { scroll-snap-type: y proximity; }
-#about {
-  scroll-snap-align: start;
-  /* clear of the fixed header, so the label is not tucked under it */
-  scroll-margin-top: 72px;
+/* Settling on Info is done in the scroller in script.js on a fine pointer,
+   where the page drives its own easing and a CSS snap would land as a jump.
+   This is the same behaviour for touch, which keeps native momentum: a
+   proximity snap, so a scroll that ends near Info rests on it. */
+@media (pointer: coarse) {
+  html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+  #about { scroll-snap-align: start; scroll-margin-top: 72px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-snap-type: none; }
@@ -733,7 +735,12 @@ body.mode-video .hero { padding-top: 96px; }
 /* ============================================================
    MARQUEE
    ============================================================ */
-.marquee-section { padding-block: 40px; border-block: 1px solid var(--line); overflow: hidden; }
+/* The band is two hairlines with a moving row between them: at 40px the
+   rules sat close enough to the words to read as a table. */
+.marquee-section { padding-block: 64px; border-block: 1px solid var(--line); overflow: hidden; }
+/* And room either side of the band itself, so it is not pressed against the
+   toolkit panel above or the Info label below. */
+.marquee-section { margin-block: 40px; }
 .marquee {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
@@ -807,14 +814,17 @@ body.mode-video .hero { padding-top: 96px; }
   display: block; width: fit-content;
   margin: 36px 0 0;
   font-size: var(--font-size-sm);
+  font-weight: 600;
   text-decoration: none;
 }
+/* Down, not right: the work it points at is further down the page, not off
+   to the side. It steps down on hover, in the direction it is sending you. */
 .hero-media-more::after {
-  content: " \2192";
+  content: " \2193";
   display: inline-block;
   transition: transform .4s var(--ease-out-expo);
 }
-.hero-media-more:hover::after { transform: translateX(5px); }
+.hero-media-more:hover::after { transform: translateY(4px); }
 .hero-media-more span, .hero-media-more { position: relative; }
 /* The underline is drawn rather than inherited, so it can stay under the
    words while the arrow moves. */
@@ -881,10 +891,10 @@ body.mode-video .hero-media-more { display: none; }
 /* The mark sits in its own air above the words, as the reference has it */
 .service-mark {
   display: flex; align-items: center;
-  height: 104px; margin: 6px 0 18px;
+  height: 140px; margin: 6px 0 18px;
 }
 .svc-icon {
-  width: 72px; height: 72px; overflow: visible;
+  width: 108px; height: 108px; overflow: visible;
   fill: none; stroke: var(--foreground); stroke-width: 1.25;
   stroke-linecap: round; stroke-linejoin: round;
 }
@@ -909,12 +919,12 @@ body.mode-video .hero-media-more { display: none; }
   .service { flex-direction: row; gap: 16px; align-items: flex-start; padding: 18px; }
   .service .num { position: absolute; top: 18px; right: 18px; }
   .service-mark { height: auto; margin: 2px 0 0; flex: 0 0 auto; }
-  .svc-icon { width: 48px; height: 48px; }
+  .svc-icon { width: 72px; height: 72px; }
   .service-body { padding-right: 34px; }   /* clear of the number */
 }
 /* Between phone and desktop the mark can lose some of its air too */
 @media (min-width: 560px) and (max-width: 1199px) {
-  .service-mark { height: 84px; margin-bottom: 14px; }
+  .service-mark { height: 120px; margin-bottom: 14px; }
 }
 
 /* ---------- The marks, moving ---------- */

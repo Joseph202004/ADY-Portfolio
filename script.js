@@ -1365,12 +1365,66 @@ function initSmoothScroll() {
     requestAnimationFrame(loop);
   }
 
-  function glideTo(y) {
+  /* The scroll the user asks for, measured from where the page actually is.
+     While the loop is running the target is ahead of the position and that is
+     the point of it; while it is not, the position may have been moved by
+     something else — a jump to the top when the screens switch, a browser
+     restoring a position, the settle below — and a target left over from the
+     last flick would make the next one leap back to it. */
+  function glideBy(delta) {
+    if (!running) target = window.scrollY;
+    glideTo(target + delta);
+  }
+
+  function glideTo(y, fromSettle = false) {
+    if (!fromSettle) settling = false;       // the user asked for something else
     target = clamp(y);
     if (running) return;
     running = true;
     requestAnimationFrame(loop);
   }
+
+  /* ---------- Settling on Info ---------- */
+  /* The toolkit releases the page after several pinned screens, and Info
+     would otherwise go by in whatever position that release happened to
+     leave. When a downward scroll goes quiet just short of Info, the same
+     easing loop carries it the rest of the way.
+
+     Driven by the scroll going quiet rather than by the loop above reaching
+     its target: with a geometric ease the last fraction of a pixel can take
+     longer to land than anyone waits, and a settle hung off that never fires.
+
+     Downward only, and only from above: someone who has scrolled up from
+     Info to read what sits over it is going somewhere, and pulling them back
+     would be the page arguing with them. */
+  const SETTLE_WITHIN = 170;                 // how short of Info still counts
+  let settling = false;
+  let lastDir = 0;
+  let quiet = 0;
+
+  function settlePoint() {
+    const about = document.getElementById("about");
+    if (!about) return null;
+    let y = 0;
+    for (let n = about; n; n = n.offsetParent) y += n.offsetTop;
+    return clamp(y - 72);                    // clear of the fixed header
+  }
+
+  function maybeSettle() {
+    if (settling || lastDir <= 0) return;
+    const point = settlePoint();
+    if (point === null) return;
+    const short = point - window.scrollY;     // positive: Info is still below
+    if (short > 4 && short < SETTLE_WITHIN) {
+      settling = true;
+      glideTo(point, true);
+    }
+  }
+
+  addEventListener("scroll", () => {
+    clearTimeout(quiet);
+    quiet = setTimeout(maybeSettle, 140);
+  }, { passive: true });
 
   // While a modal is open the page behind it is locked, so hijacking the
   // wheel would swallow the scroll entirely — the modal must keep it.
@@ -1383,7 +1437,8 @@ function initSmoothScroll() {
     if (e.target.closest?.("[data-native-scroll]")) return;
 
     e.preventDefault();
-    glideTo(target + e.deltaY);
+    lastDir = Math.sign(e.deltaY) || lastDir;
+    glideBy(e.deltaY);
   }, { passive: false });
 
   addEventListener("keydown", e => {
@@ -1404,7 +1459,8 @@ function initSmoothScroll() {
 
     if (step !== undefined) {
       e.preventDefault();
-      glideTo(target + step);
+      lastDir = Math.sign(step) || lastDir;
+      glideBy(step);
     } else if (e.key === "Home") {
       e.preventDefault();
       glideTo(0);
