@@ -863,38 +863,38 @@ body.mode-video .hero { padding-top: 96px; }
 }
 .link-more:hover { color: var(--foreground); }
 
-/* Under the featured pair, on the left margin with the heading above them and
-   the cards' own edge. The arrow walks out on hover, the way a link that goes
-   somewhere ought to. Two classes deep: .magnetic is declared later in this
-   file and sets display back to inline-block, which would put the underline
-   under the arrow as well. */
+/* Under the featured pair, in the middle of the column: it is not a link in
+   a sentence, it is the invitation to keep going, and the thing it points at
+   is straight below it. So it is built as a scroll cue — the words with the
+   arrow under them rather than beside them, no underline, and a slow bob that
+   says the page continues. Two classes deep: .magnetic is declared later in
+   this file and would otherwise set display back to inline-block.
+   The words darken and the arrow takes a step down on hover; the bob stops
+   while it does, so the two motions do not fight. */
 .link-more.hero-media-more {
   display: block; width: fit-content;
-  margin: 36px 0 0;
+  margin: 44px auto 0;
+  text-align: center;
   font-size: var(--font-size-sm);
   font-weight: 600;
   text-decoration: none;
 }
-/* Down, not right: the work it points at is further down the page, not off
-   to the side. It steps down on hover, in the direction it is sending you. */
 .hero-media-more::after {
   content: "\2193";
-  display: inline-block;
-  margin-left: .4em;                  /* a word space is too tight at 600 */
+  display: block;
+  margin: 6px auto 0;
+  font-weight: 400;
+  animation: more-bob 2.4s var(--ease) infinite;
   transition: transform .4s var(--ease-out-expo);
 }
-.hero-media-more:hover::after { transform: translateY(4px); }
-.hero-media-more span, .hero-media-more { position: relative; }
-/* The underline is drawn rather than inherited, so it can stay under the
-   words while the arrow moves. */
-.hero-media-more::before {
-  content: ""; position: absolute; left: 0; bottom: -1px;
-  /* under the words only: the arrow keeps clear of it so it can move */
-  width: calc(100% - 1.3em); height: 1px;
-  background: currentColor; opacity: .5;
-  transition: opacity .25s var(--ease);
+.hero-media-more:hover::after { animation: none; transform: translateY(5px); }
+@keyframes more-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(5px); }
 }
-.hero-media-more:hover::before { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-media-more::after { animation: none; }
+}
 body.mode-video .hero-media-more { display: none; }
 
 /* ---------- Info ---------- */
