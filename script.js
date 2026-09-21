@@ -1480,7 +1480,13 @@ function tick() {
 function initSmoothScroll() {
   if (REDUCED || !FINE_POINTER) return;
 
-  const EASE = 0.1;          // fraction of the remaining gap eaten per frame
+  /* Fraction of the remaining gap eaten per frame. Lower is a longer glide:
+     .075 carries a flick about twice as far past the last wheel tick as .1
+     did, which is what reads as smooth. It changes nothing about where the
+     scroll ends up, so the pinned toolkit — which reads the position every
+     frame and maps it to a step — steps exactly as it did, just arriving
+     under a hand that has already stopped moving. */
+  const EASE = 0.075;
   const KEY_STEP = 120;
   let target = window.scrollY;
   let running = false;
