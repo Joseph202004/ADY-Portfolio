@@ -873,7 +873,9 @@ body.mode-video .hero { padding-top: 96px; }
    while it does, so the two motions do not fight. */
 .link-more.hero-media-more {
   display: block; width: fit-content;
-  margin: 44px auto 0;
+  /* Room either side of it: it is the pause between the two featured cards
+     and the rest of the page, and a pause needs the space to be one. */
+  margin: 88px auto 72px;
   text-align: center;
   font-size: var(--font-size-sm);
   font-weight: 600;
