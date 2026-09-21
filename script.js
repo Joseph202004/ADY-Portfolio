@@ -1238,6 +1238,28 @@ function initHeroMode() {
 
   // Expose so the preloader can start the right mode
   initHeroMode.setMode = setMode;
+
+  /* "View drawings" sends someone to the shelf of drawings, which lives on
+     the other screen — hidden here, so a plain anchor would glide to where a
+     display:none section claims to be, which is nowhere. Cross first, then
+     go: the frame after the swap is when the section has a position. */
+  document.querySelector("[data-view-drawings]")?.addEventListener("click", e => {
+    e.preventDefault();
+
+    const wasFull = !document.body.classList.contains("mode-video");
+    if (wasFull && !switching) btn.click();      // cross over the same way the
+                                                 // toggle does, fade and all
+    /* Measured after the crossfade, not on the next frame: the screens swap
+       whole sections in and out and the shelf has no useful position until
+       that has settled. */
+    setTimeout(() => {
+      const shelf = document.getElementById("doodles");
+      if (!shelf) return;
+      const y = shelf.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({ top: Math.max(0, y), behavior: REDUCED ? "auto" : "smooth" });
+      history.pushState(null, "", "#doodles");
+    }, wasFull ? 620 : 40);
+  });
 }
 
 /* ============================================================
@@ -1475,7 +1497,7 @@ function initSmoothScroll() {
   });
 
   // In-page links ease through the same loop instead of jumping
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
+  document.querySelectorAll('a[href^="#"]:not([data-view-drawings])').forEach(a => {
     a.addEventListener("click", e => {
       const hash = a.getAttribute("href");
       const el = hash.length > 1 ? document.getElementById(hash.slice(1)) : document.body;
