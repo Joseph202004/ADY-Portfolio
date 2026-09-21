@@ -822,6 +822,9 @@ body.mode-video .hero-media-more { display: none; }
 /* A second paragraph in the same voice and size; only the gap is new. */
 .info-body-2 { margin-top: 24px; }
 .info-aside { color: var(--muted); font-size: var(--font-size-sm); line-height: 1.625; }
+/* The few words worth catching an eye in a paragraph of grey: darker and a
+   notch heavier, the same lift the introduction gives his name. */
+.info-aside strong { color: var(--foreground); font-weight: 500; }
 .info-grid .link-more { margin-top: 20px; }
 
 /* ---------- Services ---------- */
