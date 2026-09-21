@@ -631,7 +631,11 @@ function typewrite(el, { speed = 38, jitter = 26, onTyped } = {}) {
         caret.classList.remove("is-active");   // start blinking
         setTimeout(() => {
           if (mine !== typewriteToken) return;
-          caret.remove();
+          /* The caret stays. It used to be cleared a second and a half after
+             the last character, which left the sentence looking finished and
+             the page silent; blinking on, it reads as a line still being
+             written. resetTypewriter() clears it before any new run, so a
+             screen switch does not leave two behind. */
           el.classList.remove("is-typing");
           el.classList.add("is-revealed", "is-in");
           resolve();
