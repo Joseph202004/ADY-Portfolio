@@ -954,6 +954,7 @@ body.mode-video .hero-media-more { display: none; }
 .info-exp-name {
   display: inline-flex; align-items: center; gap: 10px;
   font-size: var(--font-size-md); color: var(--muted);
+  font-weight: 500;                 /* "Ex-" carries the same weight as the name */
 }
 .info-exp-name strong { color: var(--foreground); font-weight: 500; }
 .info-exp-logo { height: 20px; width: auto; display: block; }
