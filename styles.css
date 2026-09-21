@@ -406,20 +406,7 @@ body.mode-full .hero-video { display: none; }
   margin-bottom: 64px;
   justify-content: center; align-items: center; text-align: center;
 }
-/* Darker than the other section labels, and it answers the pointer: the
-   weight comes up, and that is the whole move — no rule under it. */
-.hero-media-head .eyebrow {
-  color: var(--muted);
-  font-variation-settings: "wght" 400;
-  transition: color .3s var(--ease), font-variation-settings .45s var(--ease);
-}
-.hero-media-head:hover .eyebrow {
-  color: var(--foreground);
-  font-variation-settings: "wght" 600;
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-media-head .eyebrow { transition: none; }
-}
+
 body.mode-video .hero-media-head { display: none; }
 
 .hero-media {
@@ -757,8 +744,21 @@ body.mode-video .hero { padding-top: 96px; }
 
 .section-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; }
 /* A section label is the first thing read in its section, so it carries the
-   size of a heading rather than of a tag. */
-.section-head .eyebrow { font-size: var(--font-size-lg); }
+   size and the weight of a heading rather than of a tag — and it answers the
+   pointer, deepening to black as the weight comes up. */
+.section-head .eyebrow {
+  font-size: var(--font-size-lg);
+  color: var(--muted);
+  font-variation-settings: "wght" 500;
+  transition: color .3s var(--ease), font-variation-settings .45s var(--ease);
+}
+.section-head:hover .eyebrow {
+  color: var(--foreground);
+  font-variation-settings: "wght" 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-head .eyebrow { transition: none; }
+}
 @media (min-width: 768px) {
   .section-head { flex-direction: row; align-items: flex-end; justify-content: space-between; }
 }
