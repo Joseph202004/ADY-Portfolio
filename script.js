@@ -820,7 +820,7 @@ function initMarquee() {
    while the text moves.
    ============================================================ */
 /* How fast the toolkit clips run against the speed they were recorded at. */
-const CLIP_RATE = 0.65;
+const CLIP_RATE = 0.5;
 
 const SCROLLY_CAPTIONS = [
   "Where the design work happens \u2014 interfaces, components, variants and prototypes, and the file the team actually builds from.",
