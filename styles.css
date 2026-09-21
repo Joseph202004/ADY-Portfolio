@@ -922,8 +922,10 @@ body.mode-video .hero-media-more { display: none; }
 
 /* Cubes: one turn each way, meeting square halfway through */
 .svc-cubes g { transform-origin: 32px 32px; }
-.svc-cubes .outer { animation: svc-turn-cw 9s linear infinite; }
-.svc-cubes .inner { animation: svc-turn-ccw 9s linear infinite; }
+/* 10.8s a turn, which is 33 degrees a second — the rate read off the
+   recording, where the outer hexagon returns to flat-topped every .9s. */
+.svc-cubes .outer { animation: svc-turn-cw 10.8s linear infinite; }
+.svc-cubes .inner { animation: svc-turn-ccw 10.8s linear infinite; }
 @keyframes svc-turn-cw  { to { transform: rotate(360deg); } }
 @keyframes svc-turn-ccw { to { transform: rotate(-360deg); } }
 
@@ -2034,7 +2036,12 @@ body.mode-full .hero-stage { display: none; }
 .mode-ring text {
   font-family: "Mynerve", "Caveat", "Adi Hand", cursive;
   font-size: 16px;
-  fill: var(--muted-2);
+  /* Mynerve ships one weight, so this is the browser's synthetic bold. No
+     stroke here on purpose: the rule above paints a transparent 10px one to
+     give thin handwriting a clickable target, and a visible stroke would
+     replace it and shrink the hit area to the ink. */
+  font-weight: 700;
+  fill: var(--muted);
   letter-spacing: .04em;
   transition: fill .25s var(--ease);
 }
@@ -2193,45 +2200,6 @@ body.mode-full .hero-stage { display: none; }
   border-radius: inherit;
 }
 
-/* The avatar rides the mode toggle in place of the dot. */
-.mode-avatar {
-  width: 54px; height: 54px; flex: 0 0 auto;
-  border-radius: 999px; display: block;
-  transition: transform .3s var(--spring);
-}
-.mode-toggle:hover .mode-avatar { transform: scale(1.08) rotate(-6deg); }
-.mode-toggle:active .mode-avatar { transform: scale(.96); }
-
-/* "press me", curved under the avatar, in the same hand as the replies. It
-   sits outside the button's box so the header keeps its height. */
-.mode-toggle { position: relative; }
-.mode-ring {
-  position: absolute; left: 50%; top: 50%;
-  /* the global `img, svg, video { max-width: 100% }` would otherwise squeeze
-     this to the 54px button it hangs off */
-  width: 104px; height: 104px; max-width: none;
-  margin: -52px 0 0 -52px;
-  overflow: visible;
-  /* the box is a 104px square over the header, so only the glyphs take
-     clicks — the empty corners must not swallow anything behind them */
-  pointer-events: none;
-}
-/* `all`, not `visiblePainted`: the glyph cells take the click, not just the
-   ink, so a thin handwritten stroke is still an easy target. The transparent
-   stroke fattens it further. */
-.mode-ring text {
-  pointer-events: all; cursor: pointer;
-  stroke: transparent; stroke-width: 10px; paint-order: stroke fill;
-}
-.mode-ring text {
-  font-family: "Mynerve", "Caveat", "Adi Hand", cursive;
-  font-size: 16px;
-  fill: var(--muted-2);
-  letter-spacing: .04em;
-  transition: fill .25s var(--ease);
-}
-.mode-toggle:hover .mode-ring text { fill: var(--foreground); }
-@media (max-width: 767px) { .mode-ring { display: none; } }
 
 
 
