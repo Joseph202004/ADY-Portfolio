@@ -434,8 +434,8 @@ body.mode-full .hero-video { display: none; }
   initial-value: 280;
   inherits: false;
 }
-/* And how hard it is lit. Two animations rather than one: the colour travels
-   at its own pace while the light breathes at another, so the two never fall
+/* And how hard it is lit. Two animations rather than one, on periods that do
+   not divide into each other, so the colour and the brightness never fall
    into step and the heading never looks like it is on a timer. */
 @property --glow-power {
   syntax: "<number>";
@@ -450,11 +450,13 @@ body.mode-full .hero-video { display: none; }
      at an edge. On a white page the glow goes around dark letters instead of
      behind bright ones. */
   text-shadow:
-    0 0 calc(5px  * var(--glow-power)) hsl(var(--glow-hue) 95% 58% / calc(.45 * var(--glow-power))),
-    0 0 calc(16px * var(--glow-power)) hsl(var(--glow-hue) 95% 58% / calc(.38 * var(--glow-power))),
-    0 0 calc(38px * var(--glow-power)) hsl(var(--glow-hue) 95% 58% / calc(.26 * var(--glow-power)));
-  animation: glow-cycle 9s linear infinite,
-             glow-pulse 2.6s var(--ease) infinite;
+    0 0 calc(4px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.20 * var(--glow-power))),
+    0 0 calc(13px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.15 * var(--glow-power))),
+    0 0 calc(30px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.10 * var(--glow-power)));
+  /* Slow enough that the colour is never seen to change — look away and back
+     and it has moved, watch it and it appears still. */
+  animation: glow-cycle 48s linear infinite,
+             glow-pulse 14s var(--ease) infinite;
   transition: text-shadow .4s var(--ease);
 }
 @keyframes glow-cycle {
@@ -462,15 +464,15 @@ body.mode-full .hero-video { display: none; }
   to   { --glow-hue: 640; }            /* one full turn back to violet */
 }
 @keyframes glow-pulse {
-  0%, 100% { --glow-power: .8; }
-  50%      { --glow-power: 1.3; }
+  0%, 100% { --glow-power: .9; }
+  50%      { --glow-power: 1.12; }
 }
 /* Under the pointer it comes up to full brightness without losing the cycle. */
 .hero-media-head:hover .eyebrow {
   text-shadow:
-    0 0 7px  hsl(var(--glow-hue) 95% 56% / .75),
-    0 0 22px hsl(var(--glow-hue) 95% 56% / .6),
-    0 0 52px hsl(var(--glow-hue) 95% 56% / .45);
+    0 0 6px  hsl(var(--glow-hue) 88% 58% / .42),
+    0 0 18px hsl(var(--glow-hue) 88% 58% / .32),
+    0 0 42px hsl(var(--glow-hue) 88% 58% / .22);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-media-head .eyebrow { animation: none; }
