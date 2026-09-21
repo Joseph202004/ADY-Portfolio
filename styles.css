@@ -1438,6 +1438,7 @@ body.mode-full .hero-stage { display: none; }
 
 .note-by {
   position: absolute; left: 14px; right: 14px; bottom: 10px;
+  padding-left: 13px;                   /* room for the status dot */
   font-size: 11px; color: rgba(0, 0, 0, .45);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   pointer-events: none;
@@ -1449,8 +1450,26 @@ body.mode-full .hero-stage { display: none; }
 .note:focus-within .note-by { color: transparent; }
 .note:focus-within .note-by::after {
   content: "Press enter to ask AI";
-  position: absolute; inset: 0;
+  position: absolute; inset: 0 0 0 13px;
   color: rgba(0, 0, 0, .5);
+}
+
+/* The dot in front of the byline: grey while the card is yours to write,
+   green while its answer is being worked out. */
+.note-by::before {
+  content: "";
+  position: absolute; left: 0; top: 50%;
+  width: 7px; height: 7px; margin-top: -3.5px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, .3);
+  transition: background .2s var(--ease);
+}
+.note.is-thinking .note-by::before {
+  background: #1f9d55;
+  animation: caret-blink 1s steps(1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .note.is-thinking .note-by::before { animation: none; }
 }
 
 /* ---------- Add a note ---------- */
@@ -1681,16 +1700,6 @@ body.mode-full .hero-stage { display: none; }
 
 
 
-/* The dot that pulses on a note while its answer is being worked out */
-.note-thinking {
-  /* Bottom left, clear of the close button in the opposite corner — behind it
-     the dot was invisible for exactly as long as it had something to say. */
-  position: absolute; left: 14px; bottom: 13px;
-  width: 7px; height: 7px; border-radius: 999px;
-  background: #1f9d55;
-  animation: caret-blink 1s steps(1) infinite;
-}
-@media (prefers-reduced-motion: reduce) { .note-thinking { animation: none; } }
 
 /* ---------- Hero portrait ---------- */
 /* Sits over the placeholder, so a missing file degrades to the placeholder

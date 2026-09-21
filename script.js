@@ -2055,7 +2055,15 @@ function aiToSafeHtml(text) {
   return lines.join("\n").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").trim();
 }
 
+/* Why the last attempt came back empty: "offline" when not one endpoint
+   answered at all, which is what a dropped connection looks like from here,
+   and "unanswered" when a server replied but the reply was unusable. Worth
+   telling apart — one is the board being down, the other is your wifi. */
+let lastReach = "offline";
+
 async function askModel(question) {
+  lastReach = "offline";
+
   const body = JSON.stringify({
     model: "openai",
     messages: [
@@ -2075,6 +2083,7 @@ async function askModel(question) {
         signal: stop.signal,
       });
       clearTimeout(timer);
+      lastReach = "unanswered";            // something answered, at least
       if (!res.ok) continue;
 
       const raw = await res.text();
@@ -2105,7 +2114,16 @@ async function answerFor(question) {
   if (pinned) return pinned.reply;
 
   const live = await askModel(question);
-  return live ? trimRefusal(live) : cannedAnswer(question);
+  if (live) return trimRefusal(live);
+
+  // Say which kind of quiet this is. Answering from the bank as though
+  // nothing had happened is how a question gets a confident reply to a
+  // question nobody asked.
+  if (!navigator.onLine || lastReach === "offline") {
+    return "I can't get online just now, so that one didn't reach me.\n" +
+           "Try again when the connection is back.";
+  }
+  return cannedAnswer(question);
 }
 
 const ANSWERS = [
@@ -2677,12 +2695,14 @@ function initBoard() {
     const turns = history.get(note) || [];
     if (!q || turns.at(-1)?.q === q) return;   // nothing new to ask
 
-    const dot = document.createElement("span");
-    dot.className = "note-thinking";
-    note.appendChild(dot);
+    // The status dot lives in the byline, beside the line that tells you what
+    // Enter does — grey while you are writing, green while the answer is being
+    // worked out. In a corner of its own it was either unnoticed or, in the
+    // corner it had, hidden behind the close button.
+    note.classList.add("is-thinking");
 
     const a = await answerFor(q);
-    dot.remove();
+    note.classList.remove("is-thinking");
 
     turns.push({ q, a });
     history.set(note, turns);
