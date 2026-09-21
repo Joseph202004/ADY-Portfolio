@@ -947,6 +947,25 @@ body.mode-video .hero-media-more { display: none; }
 .info-body strong { font-weight: 500; }
 /* A second paragraph in the same voice and size; only the gap is new. */
 .info-body-2 { margin-top: 24px; }
+
+/* The experience credit: a quiet label over the name, set apart from the
+   paragraphs by a rule rather than by more white, since it is a different
+   kind of fact about him rather than a continuation of the sentence. */
+.info-exp {
+  display: flex; flex-direction: column; gap: 4px;
+  margin: 32px 0 0; padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+}
+.info-exp-label {
+  font-size: var(--font-size-xs); color: var(--faint);
+  text-transform: uppercase; letter-spacing: .12em;
+}
+.info-exp-name {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: var(--font-size-md); color: var(--muted);
+}
+.info-exp-name strong { color: var(--foreground); font-weight: 500; }
+.info-exp-logo { height: 20px; width: auto; display: block; }
 .info-aside { color: var(--muted); font-size: var(--font-size-sm); line-height: 1.625; }
 /* The few words worth catching an eye in a paragraph of grey: darker and a
    notch heavier, the same lift the introduction gives his name. */
