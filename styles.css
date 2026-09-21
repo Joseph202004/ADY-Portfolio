@@ -948,18 +948,9 @@ body.mode-video .hero-media-more { display: none; }
 /* A second paragraph in the same voice and size; only the gap is new. */
 .info-body-2 { margin-top: 24px; }
 
-/* The experience credit: a quiet label over the name, set apart from the
-   paragraphs by a rule rather than by more white, since it is a different
-   kind of fact about him rather than a continuation of the sentence. */
-.info-exp {
-  display: flex; flex-direction: column; gap: 4px;
-  margin: 32px 0 0; padding-top: 20px;
-  border-top: 1px solid var(--line-soft);
-}
-.info-exp-label {
-  font-size: var(--font-size-xs); color: var(--faint);
-  text-transform: uppercase; letter-spacing: .12em;
-}
+/* Where he has worked, reading as one more line of the about copy rather
+   than as a field with a label over it. */
+.info-exp { margin: 24px 0 0; }
 .info-exp-name {
   display: inline-flex; align-items: center; gap: 10px;
   font-size: var(--font-size-md); color: var(--muted);
