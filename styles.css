@@ -830,12 +830,12 @@ body.mode-video .hero-media-more { display: none; }
    left 285px of white between the last sentence and the next heading, which
    read as the end of the page rather than a change of subject — so the
    handover is half the space and a hairline. */
-#about { padding-bottom: 80px; border-bottom: 1px solid var(--line-soft); }
-/* Services sits between two sections and keeps the same handover on both
-   sides: 80px under the cards, 80 above Work. Short of the 112 a full section
-   padding gives — two of those stacked left 224px of white — but enough that
-   one section finishes before the next begins. */
-.section-services { padding-top: 80px; padding-bottom: 80px; }
+/* The About boundary carries a rule, so it needs more air than a plain one:
+   a line with text close on both sides reads as a divider in a table. */
+#about { padding-bottom: 104px; border-bottom: 1px solid var(--line-soft); }
+/* Services sits between two sections. More above, where the rule is, than
+   below, where the handover to Work is a plain one. */
+.section-services { padding-top: 104px; padding-bottom: 80px; }
 #work { padding-top: 80px; }
 
 .services { border-top: 1px solid var(--line-soft); }
