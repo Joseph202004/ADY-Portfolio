@@ -47,6 +47,21 @@
    animate each frame of that loop against it. */
 html { -webkit-text-size-adjust: 100%; }
 
+/* The toolkit releases the page after five screens of pinned scrolling, and
+   Info used to slide by in whatever position the release left it. A proximity
+   snap settles a scroll that ends anywhere near Info onto its top edge.
+   Proximity, not mandatory, and only this one section carries an alignment —
+   everywhere else, including the pinned panel itself, scrolls untouched. */
+html { scroll-snap-type: y proximity; }
+#about {
+  scroll-snap-align: start;
+  /* clear of the fixed header, so the label is not tucked under it */
+  scroll-margin-top: 72px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-snap-type: none; }
+}
+
 body {
   font-family: "Geist", ui-sans-serif, system-ui, -apple-system, Arial, sans-serif;
   background: var(--background);
@@ -404,7 +419,7 @@ body.mode-full .hero-video { display: none; }
    every other section label. */
 .section-head.hero-media-head {
   margin-bottom: 64px;
-  justify-content: center; align-items: center; text-align: center;
+  justify-content: flex-start; align-items: flex-start; text-align: left;
 }
 
 body.mode-video .hero-media-head { display: none; }
@@ -783,14 +798,14 @@ body.mode-video .hero { padding-top: 96px; }
 }
 .link-more:hover { color: var(--foreground); }
 
-/* Under the featured pair, on the page's centre line with the heading above
-   them. The arrow walks out on hover, the way a link that goes somewhere
-   ought to. Two classes deep: .magnetic is declared later in this file and
-   sets display back to inline-block, which leaves margin:auto with nothing
-   to centre. */
+/* Under the featured pair, on the left margin with the heading above them and
+   the cards' own edge. The arrow walks out on hover, the way a link that goes
+   somewhere ought to. Two classes deep: .magnetic is declared later in this
+   file and sets display back to inline-block, which would put the underline
+   under the arrow as well. */
 .link-more.hero-media-more {
   display: block; width: fit-content;
-  margin: 36px auto 0;
+  margin: 36px 0 0;
   font-size: var(--font-size-sm);
   text-decoration: none;
 }
