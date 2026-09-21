@@ -1384,11 +1384,47 @@ body.mode-full .hero-stage { display: none; }
 
 @media (prefers-reduced-motion: reduce) { .hero-reply { transition: none; } }
 
+/* The close control. Out of the way until the card is under the pointer or
+   selected, so a wall of cards is not a wall of buttons. */
+.note-close {
+  position: absolute; top: 6px; right: 6px;
+  width: 22px; height: 22px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 999px;
+  background: rgba(17, 17, 17, .06);
+  color: rgba(17, 17, 17, .55);
+  cursor: pointer;
+  opacity: 0; transform: scale(.85);
+  transition: opacity .18s var(--ease), transform .18s var(--ease-out-expo),
+              background .18s var(--ease), color .18s var(--ease);
+}
+.note:hover .note-close,
+.note.is-selected .note-close,
+.note-close:focus-visible { opacity: 1; transform: none; }
+.note-close:hover { background: rgba(17, 17, 17, .12); color: var(--foreground); }
+.note-close span, .note-close span::before {
+  position: absolute; content: "";
+  width: 9px; height: 1.4px; border-radius: 1px;
+  background: currentColor;
+}
+.note-close span { transform: rotate(45deg); }
+.note-close span::before { transform: rotate(90deg); }
+
 .note-by {
   position: absolute; left: 14px; right: 14px; bottom: 10px;
   font-size: 11px; color: rgba(0, 0, 0, .45);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   pointer-events: none;
+}
+/* While the card is being written in, the byline says what to do with it.
+   Enter sends the question and nothing on the card says so, which is the one
+   thing someone typing here needs to know. The name comes back the moment
+   the card is left alone. */
+.note:focus-within .note-by { color: transparent; }
+.note:focus-within .note-by::after {
+  content: "Press enter to ask AI";
+  position: absolute; inset: 0;
+  color: rgba(0, 0, 0, .5);
 }
 
 /* ---------- Add a note ---------- */

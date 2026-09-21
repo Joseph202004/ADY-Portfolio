@@ -2284,13 +2284,61 @@ function initBoard() {
     by.className = "note-by";
     by.textContent = NOTE_AUTHOR;
 
-    note.append(body, by);
+    // Takes the card off the board and leaves it in the rail. A button, so it
+    // is reachable by keyboard and reads as a control to a screen reader.
+    const shut = document.createElement("button");
+    shut.type = "button";
+    shut.className = "note-close";
+    shut.setAttribute("aria-label", "Close this card");
+    shut.innerHTML = "<span aria-hidden='true'></span>";
+
+    note.append(body, by, shut);
     canvas.appendChild(note);
 
     // Every question typed into this box, newest last
     history.set(note, []);
     return note;
   }
+
+  /* A closed card is not a deleted one: it goes to the rail, which already
+     holds every exchange this board has had. A card that was never asked
+     anything joins it too, so closing one is never how you lose what you
+     wrote — clicking its line puts it back where it was. */
+  function closeNote(note) {
+    const body = bodyOf(note);
+    const plain = body ? body.innerText.trim() : "";
+    const state = {
+      html: body ? body.innerHTML : "",
+      colour: note.dataset.colour,
+      size: note.dataset.size,
+      font: note.dataset.font,
+      left: parseFloat(note.style.left) || 24,
+      top: parseFloat(note.style.top) || 24,
+    };
+
+    let kept = false;
+    for (const turn of log) {
+      if (turn.note !== note) continue;
+      turn.closed = state;
+      turn.note = null;
+      kept = true;
+    }
+    if (!kept && plain) {
+      log.push({ q: plain, a: "", label: threeWordLabel(plain), closed: state });
+    }
+
+    history.delete(note);
+    if (selected === note) select(null);
+    note.remove();
+    renderRail();
+  }
+
+  canvas.addEventListener("click", e => {
+    const shut = e.target.closest(".note-close");
+    if (!shut) return;
+    e.stopPropagation();
+    closeNote(shut.closest(".note"));
+  });
 
   /* ---------- Live handwritten reply ---------- */
   // The hero shows the intro when nothing is selected, and the selected
@@ -2548,9 +2596,9 @@ function initBoard() {
     if (!turn) return;
 
     railCard.innerHTML =
-      `<div class="rail-kicker">${turn.label}</div>` +
+      `<div class="rail-kicker">${turn.label}${turn.closed ? " · closed" : ""}</div>` +
       `<div class="rail-q">${turn.q}</div>` +
-      `<div class="rail-a">${turn.a}</div>`;
+      `<div class="rail-a">${turn.a || (turn.closed ? "Click to put this card back." : "")}</div>`;
     railCard.classList.add("is-on");
 
     // Sit beside its line, nudged up so the card stays inside the board
@@ -2579,8 +2627,26 @@ function initBoard() {
   rail.addEventListener("click", e => {
     const line = e.target.closest(".rail-line");
     const turn = line && log[+line.dataset.i];
-    if (!turn?.note?.isConnected) return;
+    if (!turn) return;
 
+    // A line whose card was closed puts it back, where it was, as it was
+    if (turn.closed && !turn.note?.isConnected) {
+      const back = makeNote({
+        x: turn.closed.left, y: turn.closed.top,
+        text: turn.closed.html, colour: turn.closed.colour,
+      });
+      if (turn.closed.size) {
+        back.dataset.size = turn.closed.size;
+        bodyOf(back).style.fontSize = `${turn.closed.size}px`;
+      }
+      for (const t of log) if (t.closed === turn.closed) { t.note = back; t.closed = null; }
+      history.set(back, log.filter(t => t.note === back && t.a).map(t => ({ q: t.q, a: t.a })));
+      select(back);
+      renderRail();
+      return;
+    }
+
+    if (!turn.note?.isConnected) return;
     select(turn.note);
     turn.note.classList.remove("is-flash");
     void turn.note.offsetWidth;          // restart the animation
