@@ -1314,11 +1314,35 @@ function initCursor() {
   let cx = 0, cy = 0, tx = 0, ty = 0;
   addEventListener("mousemove", e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
   (function loop() {
-    cx += (tx - cx) * 0.18;
-    cy += (ty - cy) * 0.18;
+    // A longer tail: the dot eats a twelfth of the remaining distance a frame
+    // rather than a fifth, so it follows the hand rather than sitting in it.
+    cx += (tx - cx) * 0.085;
+    cy += (ty - cy) * 0.085;
     cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
     requestAnimationFrame(loop);
   })();
+
+  /* Dark ground under the pointer flips the dot to white. Read off the first
+     ancestor that actually paints a background — everything up the tree to
+     that point is transparent, so its colour is what the dot is sitting on.
+     A luminance test rather than a blend mode: mix-blend-mode: difference
+     tints the label along with the dot and leaves it unreadable. */
+  function onDark(node) {
+    for (let el = node; el && el !== document.documentElement; el = el.parentElement) {
+      /* A picture's own colours are unknowable without reading pixels, but
+         whatever holds it is not: the tool clips sit on a near-black plate,
+         the thumbnails on a pale card. Keep walking. */
+      if (el.tagName === "VIDEO" || el.tagName === "IMG") continue;
+      const bg = getComputedStyle(el).backgroundColor;
+      const m = bg.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
+      if (!m) continue;
+      const alpha = m[4] === undefined ? 1 : +m[4];
+      if (alpha < 0.6) continue;                    // see-through: keep looking
+      const [r, g, b] = [+m[1], +m[2], +m[3]];
+      return (0.2126 * r + 0.7152 * g + 0.0722 * b) < 128;
+    }
+    return false;
+  }
 
   /* An iframe swallows pointer events: the page stops hearing mousemove the
      moment the pointer crosses into one, and the dot stays where it last was
@@ -1367,6 +1391,9 @@ function initCursor() {
       cursor.classList.add("is-away");
       return;
     }
+    const dark = onDark(e.target);
+    if (dark !== null) cursor.classList.toggle("on-dark", dark);
+
     const labelled = e.target.closest("[data-cursor]");
     const hoverable = e.target.closest("a, button, .frame, .marquee-item, .service");
     if (labelled) {

@@ -161,10 +161,27 @@ figure { margin: 0; }
     color: #111; opacity: 0; transition: opacity .2s var(--ease);
     white-space: nowrap;
   }
+  /* Over anything that can be pressed, the dot opens into a ring wide enough
+     to frame what it is over. */
   .cursor.is-hover {
-    width: 44px; height: 44px;
-    background: rgba(17, 17, 17, .08);
-    box-shadow: 0 0 0 1px rgba(17, 17, 17, .18);
+    width: 56px; height: 56px;
+    background: rgba(17, 17, 17, .06);
+    box-shadow: 0 0 0 1px rgba(17, 17, 17, .22);
+  }
+
+  /* On dark ground the dot and its halo flip, or an ink-coloured dot
+     disappears into the ink. */
+  .cursor.on-dark {
+    background: #fff;
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, .16);
+  }
+  .cursor.on-dark.is-hover {
+    background: rgba(255, 255, 255, .10);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .34);
+  }
+  .cursor.on-dark.has-label {
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .28), 0 6px 20px rgba(0, 0, 0, .35);
   }
   .cursor.has-label {
     width: 76px; height: 76px;
