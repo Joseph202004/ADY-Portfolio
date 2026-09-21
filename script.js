@@ -1864,7 +1864,7 @@ const AI_SYSTEM = [
   "copy, building prototypes to try an idea before committing. ChatGPT, for",
   "turning research notes and messy input into structure to design against.",
 
-  "PROJECT ONE. Eicore OneBuzz, B2B insurtech, enterprise UX. An AI reads",
+  "PROJECT ONE. Insure Tech, B2B insurtech, enterprise UX. An AI reads",
   "insurance product configurations out of business requirement documents,",
   "rate cards and policy wordings, compressing 3-5 days of manual",
   "configuration into hours of review. The extraction was already fast; the",
