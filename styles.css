@@ -449,10 +449,14 @@ body.mode-full .hero-video { display: none; }
   /* Three shadows, tight to wide, so the light falls off rather than ending
      at an edge. On a white page the glow goes around dark letters instead of
      behind bright ones. */
+  /* Four layers reaching much further out: the light should leave the words
+     and fall away into the page, not stop an inch from them. The near ones
+     stay faint, or the spread would read as a coloured shadow again. */
   text-shadow:
-    0 0 calc(4px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.20 * var(--glow-power))),
-    0 0 calc(13px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.15 * var(--glow-power))),
-    0 0 calc(30px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.10 * var(--glow-power)));
+    0 0 calc(6px   * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.16 * var(--glow-power))),
+    0 0 calc(24px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.13 * var(--glow-power))),
+    0 0 calc(60px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.10 * var(--glow-power))),
+    0 0 calc(110px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.07 * var(--glow-power)));
   /* Slow enough that the colour is never seen to change — look away and back
      and it has moved, watch it and it appears still. */
   animation: glow-cycle 48s linear infinite,
@@ -470,9 +474,10 @@ body.mode-full .hero-video { display: none; }
 /* Under the pointer it comes up to full brightness without losing the cycle. */
 .hero-media-head:hover .eyebrow {
   text-shadow:
-    0 0 6px  hsl(var(--glow-hue) 88% 58% / .42),
-    0 0 18px hsl(var(--glow-hue) 88% 58% / .32),
-    0 0 42px hsl(var(--glow-hue) 88% 58% / .22);
+    0 0 8px   hsl(var(--glow-hue) 88% 58% / .34),
+    0 0 30px  hsl(var(--glow-hue) 88% 58% / .26),
+    0 0 76px  hsl(var(--glow-hue) 88% 58% / .20),
+    0 0 140px hsl(var(--glow-hue) 88% 58% / .14);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-media-head .eyebrow { animation: none; }
