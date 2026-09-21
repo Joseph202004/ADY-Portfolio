@@ -2491,6 +2491,16 @@ body.mode-video .doodles { display: block; }
   }
   body.nav-open .site-header .nav { opacity: 1; transform: none; pointer-events: auto; }
   .site-header .nav a { padding: 12px 0; }
+  /* In the drawer the rows are full width, and the pill inherited that: it
+     stretched into an oval twice the height of its own text. Sized to its
+     words again, and set off from the links above it, since it is the one
+     row here that hands you a file rather than moving the page. */
+  .site-header .nav .nav-cta {
+    align-self: center;
+    width: fit-content;
+    margin: 8px 0 2px;
+    padding: 9px 20px 10px;
+  }
   /* Title over tags, rather than side by side: in two columns each card's
      name broke mid-word ("Insure-" / "Tech"). */
   .work-meta { flex-direction: column; align-items: flex-start; gap: 4px; }
