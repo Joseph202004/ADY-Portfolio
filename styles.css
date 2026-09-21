@@ -606,8 +606,13 @@ body.mode-video .hero { padding-top: 96px; }
 .scrolly {
   --steps: 5;
   --item-h: 72px;
+  /* Scroll spent on each tool while the panel is pinned. At 72vh the section
+     held the page for 460vh — five screens of scrolling to pass five names,
+     which on a slow scroll reads as the page having stopped working. 44vh is
+     still a deliberate beat per tool and takes the whole section to 320vh. */
+  --step-scroll: 44vh;
   position: relative;
-  height: calc(100vh + var(--steps) * 72vh);
+  height: calc(100vh + var(--steps) * var(--step-scroll));
 }
 .scrolly-sticky {
   position: sticky; top: 0;
