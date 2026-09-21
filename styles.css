@@ -461,7 +461,13 @@ body.mode-full .hero-video { display: none; }
      and it has moved, watch it and it appears still. */
   animation: glow-cycle 48s linear infinite,
              glow-pulse 14s var(--ease) infinite;
-  transition: text-shadow .4s var(--ease);
+}
+/* Two classes deep: .section-head .eyebrow is declared later in this file and
+   its transition covers the weight only, so a single-class rule here loses
+   and the light would snap on rather than come up. */
+.section-head.hero-media-head .eyebrow {
+  transition: text-shadow .6s var(--ease-out-expo),
+              font-variation-settings .45s var(--ease);
 }
 @keyframes glow-cycle {
   from { --glow-hue: 280; }            /* violet, where it started */
@@ -472,12 +478,14 @@ body.mode-full .hero-video { display: none; }
   50%      { --glow-power: 1.12; }
 }
 /* Under the pointer it comes up to full brightness without losing the cycle. */
+/* Under the pointer the light both brightens and travels further — a lamp
+   turned up rather than a colour turned on. */
 .hero-media-head:hover .eyebrow {
   text-shadow:
-    0 0 8px   hsl(var(--glow-hue) 88% 58% / .34),
-    0 0 30px  hsl(var(--glow-hue) 88% 58% / .26),
-    0 0 76px  hsl(var(--glow-hue) 88% 58% / .20),
-    0 0 140px hsl(var(--glow-hue) 88% 58% / .14);
+    0 0 10px  hsl(var(--glow-hue) 88% 58% / .30),
+    0 0 44px  hsl(var(--glow-hue) 88% 58% / .24),
+    0 0 116px hsl(var(--glow-hue) 88% 58% / .18),
+    0 0 220px hsl(var(--glow-hue) 88% 58% / .12);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-media-head .eyebrow { animation: none; }
