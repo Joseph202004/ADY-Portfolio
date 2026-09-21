@@ -423,31 +423,33 @@ body.mode-full .hero-video { display: none; }
   margin-bottom: 64px;
   justify-content: flex-start; align-items: flex-start; text-align: left;
 }
-/* Highlighted, and highlighted: a marker stroke draws itself across the
-   words as the row comes into view, in the yellow the sticky notes use, so
-   the mark belongs to the same hand as the board. Behind the text, not over
-   it — a highlighter goes under the ink. */
-.hero-media-head .eyebrow { position: relative; isolation: isolate; }
-.hero-media-head .eyebrow::before {
-  content: "";
-  position: absolute; z-index: -1;
-  left: -.16em; right: -.16em; bottom: -.02em;
-  height: .66em;
-  border-radius: .16em;
-  background: linear-gradient(90deg,
-    rgba(248, 220, 149, .95), rgba(248, 220, 149, .6));
-  transform: scaleX(0); transform-origin: left center;
-  transition: transform .8s var(--ease-out-expo) .2s,
-              height .35s var(--ease), filter .35s var(--ease);
+/* Highlighted, and lit: a neon halo around the words. On a white page the
+   glow goes around dark letters rather than behind bright ones — the same
+   read as the reference, inverted for the ground it sits on. Three shadows,
+   tight to wide, so the light falls off instead of ending at an edge. */
+.hero-media-head .eyebrow {
+  position: relative;
+  text-shadow:
+    0 0 4px rgba(168, 85, 247, .30),
+    0 0 14px rgba(168, 85, 247, .26),
+    0 0 32px rgba(168, 85, 247, .18);
+  animation: head-glow 3.4s var(--ease) infinite;
+  transition: text-shadow .4s var(--ease);
 }
-.hero-media-head .eyebrow.is-in::before { transform: scaleX(1); }
-/* Under the pointer the stroke fills out and catches a little light. */
-.hero-media-head:hover .eyebrow::before {
-  height: .82em;
-  filter: drop-shadow(0 0 10px rgba(248, 220, 149, .85));
+/* A slow breath, so it reads as lit rather than as a printed shadow. */
+@keyframes head-glow {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .93; }
+}
+/* Under the pointer it comes up to full brightness. */
+.hero-media-head:hover .eyebrow {
+  text-shadow:
+    0 0 6px rgba(168, 85, 247, .55),
+    0 0 20px rgba(168, 85, 247, .48),
+    0 0 46px rgba(168, 85, 247, .34);
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-media-head .eyebrow::before { transition: none; transform: scaleX(1); }
+  .hero-media-head .eyebrow { animation: none; }
 }
 
 body.mode-video .hero-media-head { display: none; }
