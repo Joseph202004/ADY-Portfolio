@@ -453,10 +453,10 @@ body.mode-full .hero-video { display: none; }
      and fall away into the page, not stop an inch from them. The near ones
      stay faint, or the spread would read as a coloured shadow again. */
   text-shadow:
-    0 0 calc(6px   * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.16 * var(--glow-power))),
-    0 0 calc(24px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.13 * var(--glow-power))),
-    0 0 calc(60px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.10 * var(--glow-power))),
-    0 0 calc(110px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.07 * var(--glow-power)));
+    0 0 calc(10px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.09 * var(--glow-power))),
+    0 0 calc(40px  * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.08 * var(--glow-power))),
+    0 0 calc(105px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.06 * var(--glow-power))),
+    0 0 calc(200px * var(--glow-power)) hsl(var(--glow-hue) 85% 60% / calc(.04 * var(--glow-power)));
   /* Slow enough that the colour is never seen to change — look away and back
      and it has moved, watch it and it appears still. */
   animation: glow-cycle 48s linear infinite,
@@ -482,10 +482,10 @@ body.mode-full .hero-video { display: none; }
    turned up rather than a colour turned on. */
 .hero-media-head:hover .eyebrow {
   text-shadow:
-    0 0 10px  hsl(var(--glow-hue) 88% 58% / .30),
-    0 0 44px  hsl(var(--glow-hue) 88% 58% / .24),
-    0 0 116px hsl(var(--glow-hue) 88% 58% / .18),
-    0 0 220px hsl(var(--glow-hue) 88% 58% / .12);
+    0 0 14px  hsl(var(--glow-hue) 88% 58% / .18),
+    0 0 64px  hsl(var(--glow-hue) 88% 58% / .15),
+    0 0 170px hsl(var(--glow-hue) 88% 58% / .11),
+    0 0 320px hsl(var(--glow-hue) 88% 58% / .08);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-media-head .eyebrow { animation: none; }
