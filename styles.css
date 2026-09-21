@@ -831,7 +831,11 @@ body.mode-video .hero-media-more { display: none; }
    read as the end of the page rather than a change of subject — so the
    handover is half the space and a hairline. */
 #about { padding-bottom: 64px; border-bottom: 1px solid var(--line-soft); }
-.section-services { padding-top: 64px; }
+/* Services sits between two sections and keeps the same short handover on
+   both sides: 64px under the cards, 64 above Work, rather than the two full
+   section paddings that left 224px of white between them. */
+.section-services { padding-top: 64px; padding-bottom: 64px; }
+#work { padding-top: 64px; }
 
 .services { border-top: 1px solid var(--line-soft); }
 /* Five services stacked as full-width rows ran to a thousand pixels of page
