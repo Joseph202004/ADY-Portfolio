@@ -801,7 +801,11 @@ body.mode-video .hero { padding-top: 96px; }
   .scrolly-viewport { height: auto; -webkit-mask-image: none; mask-image: none; }
   .scrolly-list { transform: none !important; }
   .scrolly-item { opacity: 1; filter: none; height: auto; padding-block: 10px; }
-  .scrolly-visual { margin-top: 24px; }
+  /* No second column to sit in at this width, and stacked under the list the
+     clip was a screen recording of a desktop app shown two inches wide — it
+     read as a smudge and pushed the caption off the phone. The names and what
+     each tool is for carry the section on their own. */
+  .scrolly-visual { display: none; }
 }
 
 /* ============================================================
