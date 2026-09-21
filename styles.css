@@ -404,7 +404,7 @@ body.mode-full .hero-video { display: none; }
    every other section label. */
 .section-head.hero-media-head {
   margin-bottom: 64px;
-  justify-content: flex-start; align-items: flex-start; text-align: left;
+  justify-content: center; align-items: center; text-align: center;
 }
 body.mode-video .hero-media-head { display: none; }
 
