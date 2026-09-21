@@ -819,6 +819,9 @@ function initMarquee() {
    offset and which step/visual is active — the page stays put
    while the text moves.
    ============================================================ */
+/* How fast the toolkit clips run against the speed they were recorded at. */
+const CLIP_RATE = 0.65;
+
 const SCROLLY_CAPTIONS = [
   "Where the design work happens \u2014 interfaces, components, variants and prototypes, and the file the team actually builds from.",
   "Writing and refactoring code alongside the design, so a prototype can become something real without a handoff gap.",
@@ -839,6 +842,14 @@ function initScrolly() {
   const medias = [...visual.querySelectorAll(".scrolly-media")];
   if (!items.length) return;
 
+  /* The first clip carries autoplay in the markup, so it is already running
+     before any row becomes active — and a rate set before metadata arrives is
+     forgotten. Set it now and again on load. */
+  visual.querySelectorAll("video").forEach(v => {
+    v.playbackRate = CLIP_RATE;
+    v.addEventListener("loadedmetadata", () => { v.playbackRate = CLIP_RATE; });
+  });
+
   let active = -1;
   let raf = null;
 
@@ -853,7 +864,14 @@ function initScrolly() {
       // nobody: rewind it and stop until its row comes round again.
       const clip = el.querySelector("video");
       if (!clip) return;
-      if (on) { clip.currentTime = 0; clip.play?.().catch(() => {}); }
+      if (on) {
+        // Slower than recorded. At full speed five screen recordings cutting
+        // one after another read as flicker rather than as a demonstration;
+        // at two-thirds there is time to see what each tool is doing.
+        clip.playbackRate = CLIP_RATE;
+        clip.currentTime = 0;
+        clip.play?.().catch(() => {});
+      }
       else {
         clip.pause?.();
         // Park it on the finished screen, not frame 0 — the clips open on a
