@@ -1314,10 +1314,8 @@ function initCursor() {
   let cx = 0, cy = 0, tx = 0, ty = 0;
   addEventListener("mousemove", e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
   (function loop() {
-    // A longer tail: the dot eats a twelfth of the remaining distance a frame
-    // rather than a fifth, so it follows the hand rather than sitting in it.
-    cx += (tx - cx) * 0.085;
-    cy += (ty - cy) * 0.085;
+    cx += (tx - cx) * 0.18;
+    cy += (ty - cy) * 0.18;
     cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
     requestAnimationFrame(loop);
   })();
