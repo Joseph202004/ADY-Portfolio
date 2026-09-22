@@ -14,17 +14,35 @@ const CLIENTS = [
 ];
 
 const SERVICES = [
-  { num: "001", title: "UX Design", lede: "Research-led flows.",
-    desc: "Research-led user flows and information architecture that reduce friction and help people complete tasks with confidence." },
-  { num: "002", title: "UI Design", lede: "Clarity and hierarchy.",
-    desc: "Clear, high-fidelity interfaces with strong hierarchy, practical interaction patterns, and visual polish." },
-  { num: "003", title: "Prototyping", lede: "Test ideas early.",
-    desc: "Clickable prototypes that help teams test ideas early, communicate behaviour, and make decisions faster." },
-  { num: "004", title: "Design Systems", lede: "Consistency that scales.",
-    desc: "Reusable components and design foundations that create consistency across product teams and platforms." },
+  { num: "001", title: "Product Design", icon: "flow",
+    lede: "Design how the system works.",
+    desc: "Translate complex requirements into clear user flows, states, actions, and outcomes that make enterprise products easier to understand and use." },
+  { num: "002", title: "System Thinking", icon: "signal",
+    lede: "Define behaviour across every state.",
+    desc: "Think through permissions, dependencies, edge cases, errors, and feedback to create predictable experiences across connected workflows." },
+  { num: "003", title: "Functional Prototyping", icon: "tap",
+    lede: "Build to understand.",
+    desc: "Create responsive, high-fidelity prototypes that demonstrate real interactions, validate system behaviour, and help teams test ideas early." },
+  { num: "004", title: "Design Engineering", icon: "bridge",
+    lede: "Bridge design and development.",
+    desc: "Work closely with engineers to turn designs into practical solutions, refine interaction details, and ensure the final product behaves as intended." },
 ];
 
 const WORK = [
+  {
+    title: "less Ops",
+    tags: "Supply-chain ops, AI agents, Enterprise UX",
+    tone: "",
+    // Decoded from the case study's own hero mockup and letterboxed onto the
+    // artwork's background, so the laptop keeps its full width — the same
+    // reason the insure-tech plate is padded rather than cover-cropped.
+    thumb: "media/less-ops-card.webp",
+    // Opens in a tab rather than the portal: this one is a deployed site, not
+    // a study embedded in the page, and it carries its own navigation.
+    href: "https://less-ops.vercel.app/",
+    blurb: "A grocery control tower run by five AI agents and one manager — " +
+           "watching the gaps, drafting the fix, and handing over a ranked plan to approve.",
+  },
   {
     title: "Insure-Tech",
     tags: "B2B InsurTech, AI Workflow, Enterprise UX",
@@ -144,7 +162,6 @@ const WORK = [
     // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
     // ground, so the wordmark and the hands survive the card's scale-in.
     thumb: "media/oykot-money-card.webp" },
-  { title: "Project 03", tags: "Prototyping",       tone: "cool" },
   { title: "Project 04", tags: "Interface systems", tone: "warm" },
 ];
 
@@ -174,51 +191,61 @@ if (marqueeEl) {
    between two arrangements, and a form extruding up and settling back. The
    motion lives in the CSS; this is only the drawing. */
 const SERVICE_ICONS = {
-  // Rings born at the rim, each contracting to the centre and fading, one
-  // launched every third of the cycle so three are always in flight.
-  "UX Design": `
-    <svg class="svc-icon svc-rings" viewBox="0 0 64 64" aria-hidden="true">
-      <circle class="r1" cx="32" cy="32" r="21" />
-      <circle class="r2" cx="32" cy="32" r="21" />
-      <circle class="r3" cx="32" cy="32" r="21" />
+  // Product Design: requirements resolving into a flow. Connectors draw in
+  // order and each node arrives as it is reached, so the mark performs the
+  // translation the service describes rather than just illustrating it.
+  "flow": `
+    <svg class="svc-icon svc-flow" viewBox="0 0 64 64" aria-hidden="true">
+      <path class="c1" d="M15 30 L25 20" pathLength="1" />
+      <path class="c2" d="M15 34 L25 44" pathLength="1" />
+      <path class="c3" d="M43 20 L52 29" pathLength="1" />
+      <path class="c4" d="M43 44 L52 35" pathLength="1" />
+      <circle class="n0" cx="11" cy="32" r="4" />
+      <rect class="n1" x="26" y="13" width="17" height="12" rx="2" />
+      <rect class="n2" x="26" y="39" width="17" height="12" rx="2" />
+      <circle class="n3" cx="55" cy="32" r="4" />
     </svg>`,
-  // Two cubes on one axis, turning opposite ways, meeting square every few
-  // seconds before drifting apart again.
-  "UI Design": `
-    <svg class="svc-icon svc-cubes" viewBox="0 0 64 64" aria-hidden="true">
-      <g class="outer">
-        <path d="M32 12 49.3 22 49.3 42 32 52 14.7 42 14.7 22 Z" />
-        <path d="M32 32 32 12 M32 32 14.7 42 M32 32 49.3 42" />
-      </g>
-      <g class="inner">
-        <path d="M32 22 41.5 27.5 41.5 38.5 32 44 22.5 38.5 22.5 27.5 Z" />
-        <path d="M32 33 32 22 M32 33 22.5 38.5 M32 33 41.5 38.5" />
-      </g>
+
+  // System Thinking: a change at the centre travelling out along every
+  // dependency. Each edge carries one pulse and the node it reaches lights
+  // only once the pulse lands — behaviour propagating, in order.
+  "signal": `
+    <svg class="svc-icon svc-signal" viewBox="0 0 64 64" aria-hidden="true">
+      <line class="l1" x1="32" y1="32" x2="15" y2="15" pathLength="1" />
+      <line class="l2" x1="32" y1="32" x2="49" y2="15" pathLength="1" />
+      <line class="l3" x1="32" y1="32" x2="15" y2="49" pathLength="1" />
+      <line class="l4" x1="32" y1="32" x2="49" y2="49" pathLength="1" />
+      <circle class="s1" cx="15" cy="15" r="3.5" />
+      <circle class="s2" cx="49" cy="15" r="3.5" />
+      <circle class="s3" cx="15" cy="49" r="3.5" />
+      <circle class="s4" cx="49" cy="49" r="3.5" />
+      <circle class="hub" cx="32" cy="32" r="5.5" />
     </svg>`,
-  // A form built up and let down again: the top face rises while its walls
-  // grow under it, so the solid stays a solid the whole way.
-  "Prototyping": `
-    <svg class="svc-icon svc-extrude" viewBox="0 0 64 64" aria-hidden="true">
-      <path class="base" d="M32 30 58 46.5 49.3 52 32 41 13 52 4.3 46.5 Z" />
-      <g class="risers">
-        <line x1="32" y1="30" x2="32" y2="16" />
-        <line x1="58" y1="46.5" x2="58" y2="32.5" />
-        <line x1="49.3" y1="52" x2="49.3" y2="38" />
-        <line x1="32" y1="41" x2="32" y2="27" />
-        <line x1="13" y1="52" x2="13" y2="38" />
-        <line x1="4.3" y1="46.5" x2="4.3" y2="32.5" />
-      </g>
-      <path class="top" d="M32 30 58 46.5 49.3 52 32 41 13 52 4.3 46.5 Z" />
+
+  // Functional Prototyping: a pointer taps the screen and the screen answers.
+  // The panel widening on the tap is the whole point of the service — the
+  // prototype behaves, it is not a picture of behaviour.
+  "tap": `
+    <svg class="svc-icon svc-tap" viewBox="0 0 64 64" aria-hidden="true">
+      <rect class="screen" x="9" y="12" width="46" height="40" rx="3" />
+      <line class="bar" x1="16" y1="22" x2="33" y2="22" />
+      <rect class="panel" x="16" y="29" width="18" height="13" rx="2" />
+      <circle class="ripple" cx="41" cy="37" r="3.5" />
+      <path class="cursor" d="M37 30 L37 43 L40.4 39.8 L42.7 44.6 L45 43.5 L42.7 38.9 L47.2 38.4 Z" />
     </svg>`,
-  // Five modules that slide and resize between two arrangements, each on its
-  // own beat, so the middle of the move is a scatter rather than a shuffle.
-  "Design Systems": `
-    <svg class="svc-icon svc-modules" viewBox="0 0 64 64" aria-hidden="true">
-      <rect class="m1" x="8"  y="10" width="24" height="12" rx="1.5" />
-      <rect class="m2" x="36" y="10" width="20" height="12" rx="1.5" />
-      <rect class="m3" x="8"  y="26" width="16" height="12" rx="1.5" />
-      <rect class="m4" x="28" y="26" width="28" height="12" rx="1.5" />
-      <rect class="m5" x="8"  y="42" width="30" height="12" rx="1.5" />
+
+  // Design Engineering: the span between a drawn curve and the code that has
+  // to carry it. A token crosses, and the brackets take it — the handover the
+  // service is named for.
+  "bridge": `
+    <svg class="svc-icon svc-bridge" viewBox="0 0 64 64" aria-hidden="true">
+      <path class="vec" d="M7 43 Q15 21 25 31" />
+      <circle class="h1" cx="7" cy="43" r="2.6" />
+      <circle class="h2" cx="25" cy="31" r="2.6" />
+      <line class="span" x1="28" y1="32" x2="36" y2="32" pathLength="1" />
+      <circle class="token" cx="28" cy="32" r="2.1" />
+      <path class="lt" d="M45 24 L39 32 L45 40" />
+      <path class="gt" d="M51 24 L57 32 L51 40" />
     </svg>`,
 };
 
@@ -227,7 +254,7 @@ if (servicesEl) {
   servicesEl.innerHTML = SERVICES.map((s, i) => `
     <article class="service reveal" style="--d:${i * 80}ms">
       <span class="num">${s.num}</span>
-      <div class="service-mark">${SERVICE_ICONS[s.title] || ""}</div>
+      <div class="service-mark">${SERVICE_ICONS[s.icon] || ""}</div>
       <div class="service-body">
         <h3>${s.title}</h3>
         <p class="lede">${s.lede}</p>
@@ -243,6 +270,7 @@ if (servicesEl) {
 function projectCard(w, i, { ratio = "ratio-107", parallax = 0, index = false } = {}) {
   return `
     <a class="work-card" href="${w.href}" data-cursor="View"
+       ${/^https?:/i.test(w.href || "") ? 'target="_blank" rel="noopener"' : ""}
        ${w.thumb ? `data-project="${i}"` : ""}>
       ${index ? `<span class="work-index">Project ${i + 1}</span>` : ""}
       <figure class="frame ${ratio}" data-parallax="${parallax}">
@@ -476,8 +504,13 @@ function initProjectPortal() {
   document.addEventListener("click", e => {
     const card = e.target.closest("[data-project]");
     if (!card) return;
+    const project = WORK[+card.dataset.project];
+    // A card with no embed, no PDF and no written study has nothing to put in
+    // the modal — opening it would show an empty shell. Those are plain links:
+    // let the browser follow the href instead.
+    if (!project || (!project.live && !project.pdf && !project.study)) return;
     e.preventDefault();
-    open(WORK[+card.dataset.project]);
+    open(project);
   });
 
   portal.addEventListener("click", e => {
@@ -623,7 +656,7 @@ function resetTypewriter(el) {
    the promise: that waits out the caret's closing blink as well. Anything that
    should follow the sentence — the paragraph under the headline — wants the
    former, or it sits dark for another second and a half. */
-function typewrite(el, { speed = 38, jitter = 26, onTyped } = {}) {
+function typewrite(el, { speed = 27, jitter = 14, onTyped } = {}) {
   const chars = [...el.querySelectorAll(".char")];
   if (!chars.length) { onTyped?.(); return Promise.resolve(); }
 
@@ -673,8 +706,8 @@ function typewrite(el, { speed = 38, jitter = 26, onTyped } = {}) {
       i++;
 
       let delay = speed + Math.random() * jitter;
-      if (prev && prev.parentElement !== ch.parentElement) delay += 90;  // word gap
-      if (/[.,]/.test(ch.textContent)) delay += 280;                     // punctuation beat
+      if (prev && prev.parentElement !== ch.parentElement) delay += 63;  // word gap
+      if (/[.,]/.test(ch.textContent)) delay += 175;                     // punctuation beat
 
       setTimeout(next, delay);
     })();

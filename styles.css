@@ -452,6 +452,10 @@ body.mode-full .hero-video { display: none; }
   line-height: 1.625;
   color: var(--muted);
 }
+/* Emphasis inside muted copy. Geist carries real weights, so this is an
+   actual bold rather than a synthesised one; the colour lifts too, because
+   weight alone barely registers against --muted. */
+.hero-sub strong { color: var(--foreground); font-weight: 600; }
 
 /* The label sits where the cards' top margin used to be, so the peek is
    unchanged: the eyebrow is the first thing over the fold and the cards follow
@@ -1014,83 +1018,146 @@ body.mode-video .hero-media-more { display: none; }
 }
 
 /* ---------- The marks, moving ---------- */
-/* Timings taken off the recording: the rings launch roughly every .8s, the
-   cubes come back into line every few seconds, the modules hold an
-   arrangement before moving, and the form rises and settles in about 3s. */
+/* Each mark performs its own service. They share the loop shape the earlier
+   set used: state in, hold, clear, repeat — so four different ideas still
+   read as one family. pathLength="1" is set in the markup, which lets a line
+   be drawn or a pulse sent along it without knowing its length. */
 
-/* Rings: born at the rim, contracting to nothing. Left exactly as it was —
-   the ring is scaled, so its line thins as it closes in, and that thinning is
-   part of how the mark reads. */
-.svc-rings circle { transform-origin: 32px 32px; }
-.svc-rings .r1 { animation: svc-contract 2.4s linear infinite; }
-.svc-rings .r2 { animation: svc-contract 2.4s linear infinite -0.8s; }
-.svc-rings .r3 { animation: svc-contract 2.4s linear infinite -1.6s; }
-@keyframes svc-contract {
-  0%   { transform: scale(1);    opacity: 1; }
-  85%  { transform: scale(.16);  opacity: .5; }
-  100% { transform: scale(.08);  opacity: 0; }
+/* Flow: connectors draw, nodes arrive as they are reached, the whole path
+   clears and starts over. animation-fill-mode is both, so a node waiting on
+   its delay holds the 0% frame instead of sitting there fully drawn. */
+.svc-flow path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.svc-flow path, .svc-flow circle, .svc-flow rect {
+  animation-duration: 4.6s; animation-timing-function: var(--ease);
+  animation-iteration-count: infinite; animation-fill-mode: both;
 }
-
-/* Cubes: one turn each way, meeting square halfway through */
-.svc-cubes g { transform-origin: 32px 32px; }
-/* 10.8s a turn, which is 33 degrees a second — the rate read off the
-   recording, where the outer hexagon returns to flat-topped every .9s. */
-.svc-cubes .outer { animation: svc-turn-cw 10.8s linear infinite; }
-.svc-cubes .inner { animation: svc-turn-ccw 10.8s linear infinite; }
-@keyframes svc-turn-cw  { to { transform: rotate(360deg); } }
-@keyframes svc-turn-ccw { to { transform: rotate(-360deg); } }
-
-/* The form: the top face lifts, the walls grow under it. No non-scaling
-   stroke here — that draws in screen pixels and would set this one mark at a
-   different weight from the other three. A vertical line's stroke runs across
-   it, so scaling its height leaves that weight alone; only the round caps
-   would squash, so the walls are cut square instead. */
-.svc-extrude .top { animation: svc-lift 3.2s var(--ease) infinite; }
-.svc-extrude line {
-  stroke-linecap: butt;
-  transform-box: fill-box; transform-origin: 50% 100%;
-  animation: svc-wall 3.2s var(--ease) infinite;
+.svc-flow path   { animation-name: svc-draw; }
+.svc-flow circle, .svc-flow rect {
+  animation-name: svc-arrive;
+  transform-box: fill-box; transform-origin: 50% 50%;
 }
-@keyframes svc-lift {
-  0%, 100% { transform: translateY(-3px); }
-  50%      { transform: translateY(-14px); }
+.svc-flow .n0 { animation-delay: 0s; }
+.svc-flow .c1 { animation-delay: .18s; }
+.svc-flow .c2 { animation-delay: .34s; }
+.svc-flow .n1 { animation-delay: .72s; }
+.svc-flow .n2 { animation-delay: .88s; }
+.svc-flow .c3 { animation-delay: 1.16s; }
+.svc-flow .c4 { animation-delay: 1.32s; }
+.svc-flow .n3 { animation-delay: 1.7s; }
+@keyframes svc-draw {
+  0%        { stroke-dashoffset: 1; opacity: 1; }
+  20%, 78%  { stroke-dashoffset: 0; opacity: 1; }
+  90%, 100% { stroke-dashoffset: 0; opacity: 0; }
 }
-@keyframes svc-wall {
-  0%, 100% { transform: scaleY(.214); }
-  50%      { transform: scaleY(1); }
+@keyframes svc-arrive {
+  0%        { transform: scale(.2); opacity: 0; }
+  9%, 78%   { transform: scale(1);  opacity: 1; }
+  90%, 100% { transform: scale(1);  opacity: 0; }
 }
 
-/* Modules: two arrangements, held, with each piece on its own beat */
-.svc-modules rect { animation: 5s var(--ease-out-expo) infinite; }
-.svc-modules .m1 { animation-name: svc-m1; }
-.svc-modules .m2 { animation-name: svc-m2; animation-delay: .06s; }
-.svc-modules .m3 { animation-name: svc-m3; animation-delay: .12s; }
-.svc-modules .m4 { animation-name: svc-m4; animation-delay: .18s; }
-.svc-modules .m5 { animation-name: svc-m5; animation-delay: .24s; }
-@keyframes svc-m1 {
-  0%, 40%   { x: 8px;  y: 10px; width: 24px; height: 12px; }
-  55%, 92%  { x: 8px;  y: 10px; width: 16px; height: 12px; }
-  100%      { x: 8px;  y: 10px; width: 24px; height: 12px; }
+/* Signal: one pulse per edge, leaving the hub together and arriving apart,
+   each node lighting only once its pulse lands. The dash is .22 of the edge,
+   so the gap carries the rest and the offset walks it outward. */
+.svc-signal line {
+  stroke-dasharray: .22 .78; stroke-dashoffset: 1;
+  animation: svc-pulse 2.9s linear infinite both;
 }
-@keyframes svc-m2 {
-  0%, 40%   { x: 36px; y: 10px; width: 20px; height: 12px; }
-  55%, 92%  { x: 28px; y: 10px; width: 28px; height: 12px; }
-  100%      { x: 36px; y: 10px; width: 20px; height: 12px; }
+.svc-signal .l1 { animation-delay: 0s; }
+.svc-signal .l2 { animation-delay: .16s; }
+.svc-signal .l3 { animation-delay: .32s; }
+.svc-signal .l4 { animation-delay: .48s; }
+@keyframes svc-pulse { to { stroke-dashoffset: 0; } }
+
+.svc-signal circle { transform-box: fill-box; transform-origin: 50% 50%; }
+.svc-signal .hub { animation: svc-beat 2.9s var(--ease) infinite; }
+@keyframes svc-beat {
+  0%, 100% { transform: scale(1); }
+  6%       { transform: scale(1.16); }
+  22%      { transform: scale(1); }
 }
-@keyframes svc-m3 {
-  0%, 40%   { x: 8px;  y: 26px; width: 16px; height: 12px; }
-  55%, 92%  { x: 8px;  y: 26px; width: 12px; height: 28px; }
-  100%      { x: 8px;  y: 26px; width: 16px; height: 12px; }
+.svc-signal .s1, .svc-signal .s2, .svc-signal .s3, .svc-signal .s4 {
+  animation: svc-lit 2.9s var(--ease) infinite both;
 }
-@keyframes svc-m4 {
-  0%, 40%   { x: 28px; y: 26px; width: 28px; height: 12px; }
-  55%, 92%  { x: 24px; y: 26px; width: 32px; height: 12px; }
-  100%      { x: 28px; y: 26px; width: 28px; height: 12px; }
+.svc-signal .s1 { animation-delay: .30s; }
+.svc-signal .s2 { animation-delay: .46s; }
+.svc-signal .s3 { animation-delay: .62s; }
+.svc-signal .s4 { animation-delay: .78s; }
+@keyframes svc-lit {
+  0%, 100% { transform: scale(1);    opacity: .4; }
+  12%      { transform: scale(1.35); opacity: 1; }
+  34%      { transform: scale(1);    opacity: .4; }
 }
-@keyframes svc-m5 {
-  0%, 40%   { x: 8px;  y: 42px; width: 30px; height: 12px; }
-  55%, 92%  { x: 24px; y: 42px; width: 32px; height: 12px; }
-  100%      { x: 8px;  y: 42px; width: 30px; height: 12px; }
+
+/* Tap: the pointer comes in, presses, and the panel answers. The press and
+   the widening share a beat, so the screen reads as responding to the tap
+   rather than animating beside it. Geometry is animated directly, the way
+   the module mark did, to keep the stroke weight even. */
+.svc-tap .cursor {
+  transform-box: fill-box; transform-origin: 50% 0%;
+  animation: svc-point 3.6s var(--ease) infinite;
+}
+@keyframes svc-point {
+  0%, 6%    { transform: translate(9px, 11px); }
+  26%       { transform: translate(0, 0); }
+  33%       { transform: translate(0, 2.6px); }   /* press */
+  40%, 74%  { transform: translate(0, 0); }
+  100%      { transform: translate(9px, 11px); }
+}
+.svc-tap .ripple {
+  transform-box: fill-box; transform-origin: 50% 50%;
+  animation: svc-ripple 3.6s var(--ease) infinite;
+}
+@keyframes svc-ripple {
+  0%, 32%   { transform: scale(.25); opacity: 0; }
+  37%       { transform: scale(.7);  opacity: .85; }
+  58%, 100% { transform: scale(2.2); opacity: 0; }
+}
+.svc-tap .panel { animation: svc-respond 3.6s var(--ease) infinite; }
+@keyframes svc-respond {
+  0%, 33%   { width: 18px; }
+  45%, 74%  { width: 31px; }
+  88%, 100% { width: 18px; }
+}
+
+/* Bridge: the span draws, a token crosses it, and the brackets take it. The
+   handles twitch first, so the order reads design, hand over, code. */
+.svc-bridge .h1, .svc-bridge .h2, .svc-bridge .token,
+.svc-bridge .lt, .svc-bridge .gt {
+  transform-box: fill-box; transform-origin: 50% 50%;
+}
+.svc-bridge .h1, .svc-bridge .h2 {
+  animation: svc-handle 3.8s var(--ease) infinite both;
+}
+.svc-bridge .h2 { animation-delay: .1s; }
+@keyframes svc-handle {
+  0%, 100% { transform: scale(1); }
+  8%       { transform: scale(1.4); }
+  22%      { transform: scale(1); }
+}
+.svc-bridge .span {
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  animation: svc-span 3.8s var(--ease) infinite both;
+}
+@keyframes svc-span {
+  0%, 14%   { stroke-dashoffset: 1; }
+  34%, 86%  { stroke-dashoffset: 0; }
+  100%      { stroke-dashoffset: 0; }
+}
+.svc-bridge .token { animation: svc-cross 3.8s var(--ease) infinite both; }
+@keyframes svc-cross {
+  0%, 34%   { transform: translateX(0);   opacity: 0; }
+  40%       { transform: translateX(0);   opacity: 1; }
+  66%       { transform: translateX(8px); opacity: 1; }
+  74%, 100% { transform: translateX(8px); opacity: 0; }
+}
+.svc-bridge .lt, .svc-bridge .gt {
+  animation: svc-take 3.8s var(--ease) infinite both;
+}
+.svc-bridge .gt { animation-delay: .07s; }
+@keyframes svc-take {
+  0%, 64%   { transform: scale(1); }
+  72%       { transform: scale(1.22); }
+  86%, 100% { transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
