@@ -45,7 +45,7 @@ const LESS_OPS_STUDY = {
       brief: "An AI-assisted control tower that watches a supermarket region " +
              "around the clock, drafts the fix, and hands the manager a ranked " +
              "plan to approve.",
-      shot: { img: "media/less-ops/dashboard.webp", mock: true, ratio: "16 / 10",
+      shot: { img: "media/less-ops/dashboard.webp?v=2", mock: true, ratio: "16 / 10",
               label: "Dashboard",
               alt: "The less Ops dashboard, showing agent performance and the morning's priority actions.",
               caption: "The morning view: what needs a decision, and what the agents have already drafted." } },
@@ -71,7 +71,7 @@ const LESS_OPS_STUDY = {
       role: { label: "My role — end to end",
               items: ["Problem framing", "Product planning", "Agent and workflow design",
                       "UI design", "Visual system", "Interactive prototype"] },
-      shot: { img: "media/less-ops/action-center.webp", ratio: "16 / 10",
+      shot: { img: "media/less-ops/action-center.webp?v=2", ratio: "16 / 10",
               label: "Action Center",
               alt: "The Action Center queue, with each action's source, owner, status and AI insight.",
               caption: "One queue across stores, inventory, suppliers and deliveries — each row carrying its owner and status." } },
@@ -132,7 +132,7 @@ const LESS_OPS_STUDY = {
         { n: "05", name: "Execute",     note: "The work is issued to the named people who carry it out." },
         { n: "06", name: "Verify",      note: "The outcome is confirmed on the ground and closed off." },
       ],
-      shot: { img: "media/less-ops/workflow-map.webp", ratio: "16 / 10",
+      shot: { img: "media/less-ops/workflow-map.webp?v=2", ratio: "16 / 10",
               label: "Agent workflow map",
               alt: "The full agent workflow map, from signal sources through to verified outcome.",
               caption: "Signal sources, the case, domain-agent investigation, and the loop back to the control tower." } },

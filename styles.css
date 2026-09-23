@@ -92,7 +92,10 @@ html { -webkit-text-size-adjust: 100%; }
 /* ---------- Shots ----------
    The ratio is set per shot from the data, so a placeholder reserves exactly
    the space its future screenshot will take and nothing reflows on drop-in. */
-.cs-shot { margin: 28px 0 0; }
+/* Capped rather than full-bleed: at the panel's width a 16:10 screenshot was
+   taller than the viewport, so no shot could be seen whole without scrolling
+   through it. At this size it sits in one screen with its caption. */
+.cs-shot { margin: 28px 0 0; max-width: 880px; }
 .cs-plate {
   aspect-ratio: var(--cs-ratio, 16 / 10);
   border: 1px solid var(--line); border-radius: 12px;
