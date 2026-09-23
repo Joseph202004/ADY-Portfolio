@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="case-study.css?v=6">
+  <link rel="stylesheet" href="case-study.css?v=7">
 </head>
 <body>
   <a class="skip" href="#main">Skip to case study</a>
@@ -38,28 +38,36 @@
 
     <section class="statement module">
       <div class="wrap two-col">
-        <p class="eyebrow">The brief</p>
+        <p class="eyebrow">02 — The problem</p>
         <div><h2>A region loses money <em>in the gaps between systems.</em></h2><p>Stock, suppliers, shelves and deliveries each have their own screen, and the trouble lives between them. A shortage shows up in one system, the stock that would fix it sits in another, and the vehicle that could move it is in a third. By the time someone joins them up, the shelf has been empty for a day.</p><p>less Ops watches all four together. When something drifts it opens a case, works out what happened, and proposes the response — leaving the manager to judge it rather than assemble it.</p></div>
       </div>
     </section>
 
     <section class="audience module">
-      <div class="wrap audience-grid">
-        <div><p class="eyebrow">02 — Who it is for</p><h2>The people who run, supply and staff a grocery region.</h2></div>
-        <div class="audience-list"><p><b>Regional manager</b> — approves the consequential calls and carries the P&amp;L.</p><p><b>Store and hub staff</b> — picking, dispatch and receiving: the people who execute.</p><p><b>Category and supply teams</b> — suppliers, purchase orders, lead times and alternates.</p></div>
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">03 — Who it is for</p>
+          <div>
+            <h2>The people who run, supply and staff a grocery region.</h2>
+            <div class="audience-list"><p><b>Regional manager</b> — approves the consequential calls and carries the P&amp;L.</p><p><b>Store and hub staff</b> — picking, dispatch and receiving: the people who execute.</p><p><b>Category and supply teams</b> — suppliers, purchase orders, lead times and alternates.</p></div>
+          </div>
+        </div>
+        <figure class="case-figure wide">
+          <img src="media/less-ops/action-center.webp?v=2" alt="The Action Center queue, with each action's source, owner, status and AI insight." loading="lazy" />
+          <figcaption class="caption">The view they share: one queue across stores, inventory, suppliers and deliveries — each row carrying its owner and status.</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="wrap module">
-      <figure class="case-figure wide">
-        <img src="media/less-ops/action-center.webp?v=2" alt="The Action Center queue, with each action's source, owner, status and AI insight." loading="lazy" />
-        <figcaption class="caption">One queue across stores, inventory, suppliers and deliveries — each row carrying its owner and status.</figcaption>
-      </figure>
-    </section>
-
     <section class="wrap module problem-section">
-      <div class="section-intro"><p class="eyebrow">03 — AI agents</p><h2>Five agents, one control tower.</h2></div>
-      <p class="caption" style="max-width:62ch;margin-bottom:28px">A coordinator reads the whole network and routes work to four domain agents. Each has its own sub-agents and its own patch, and each reports back rather than acting alone. Agents investigate and recommend — they do not move stock, raise purchase orders or dispatch vehicles on their own. Anything consequential waits for a person to approve it.</p>
+      <div class="section-intro">
+        <p class="eyebrow">04 — AI agents</p>
+        <div>
+          <h2>Five agents, one control tower.</h2>
+          <p class="intro-lede">A coordinator reads the whole network and routes work to four domain agents. Each has its own sub-agents and reports back rather than acting alone.</p>
+          <p class="intro-guard"><b>Agents recommend; people decide.</b> They do not move stock, raise purchase orders or dispatch vehicles on their own — anything consequential waits for approval.</p>
+        </div>
+      </div>
       <div class="agent-grid">
         <article class="agent-card is-lead" style="--agent:#6C5CE7">
           <div class="agent-head">
@@ -114,7 +122,7 @@
     </section>
 
     <section class="process module">
-      <div class="wrap"><div class="section-intro"><p class="eyebrow">04 — System flow</p><h2>Signal to verified outcome, in the same six steps every time.</h2></div>
+      <div class="wrap"><div class="section-intro"><p class="eyebrow">05 — System flow</p><h2>Signal to verified outcome, in the same six steps every time.</h2></div>
         <ol class="process-list">
           <li><span>01</span><div><h3>Detect</h3><p>An agent spots a risk in the signals it watches.</p></div><b>Signal</b></li>
           <li><span>02</span><div><h3>Investigate</h3><p>Agents gather the facts and confirm what is happening.</p></div><b>Evidence</b></li>
@@ -131,7 +139,7 @@
     </section>
 
     <section class="wrap module response-section">
-      <p class="eyebrow">05 — Example: Store 027 runs out of cooking oil</p>
+      <div class="section-intro"><p class="eyebrow">06 — Worked example</p><div><h2>Store 027 runs out of cooking oil.</h2><p class="intro-lede">One real case from the prototype, followed through all six steps.</p></div></div>
       <div class="response-table">
         <div class="response-row response-head"><span>Step</span><span>What happens</span><span>Who</span></div>
         <div class="response-row"><span>Detect</span><span>Store 027 has <b>12 units</b> of 1 L cooking oil left against demand for 28 — a gap that lands by the end of the day.</span><span>Inventory Planning</span></div>
@@ -148,12 +156,12 @@
     </section>
 
     <section class="wrap module solution">
-      <p class="eyebrow">06 — My role</p>
+      <p class="eyebrow">07 — My role</p>
       <div class="solution-grid"><h2>From framing the problem to <em>a working prototype.</em></h2><p>End to end: the problem, the product plan, how the agents divide the work and hand it back, the interface and its visual system, and the interactive prototype that runs all of it.</p></div>
       <div class="principles"><span>Problem framing</span><span>Product planning</span><span>Agent and workflow design</span><span>UI design</span><span>Visual system</span><span>Interactive prototype</span></div>
     </section>
 
-    <section class="impact module"><div class="wrap impact-grid"><p class="eyebrow">07 — The product</p><div><h2>The manager judges the plan. <em>The agents assemble it.</em></h2><p>Every case in the prototype runs the same path, from the signal that raised it to the person who confirms it on the ground.</p><a href="https://less-ops.vercel.app/" target="_blank" rel="noopener">Open the prototype ↗</a></div></div></section>
+    <section class="impact module"><div class="wrap impact-grid"><p class="eyebrow">08 — The product</p><div><h2>The manager judges the plan. <em>The agents assemble it.</em></h2><p>Every case in the prototype runs the same path, from the signal that raised it to the person who confirms it on the ground.</p><a href="https://less-ops.vercel.app/" target="_blank" rel="noopener">Open the prototype ↗</a></div></div></section>
   </main>
   <footer class="wrap"><span>© 2026 Aditya Joseph</span><span>less Ops case study</span></footer>
   <script src="case-study.js?v=5"></script>

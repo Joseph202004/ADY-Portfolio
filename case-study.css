@@ -585,3 +585,22 @@ footer {
   grid-column: 1 / -1; height: 4px; border-radius: 4px;
   background: linear-gradient(90deg, var(--agent) var(--pct), color-mix(in srgb, var(--agent) 12%, #fff) 0);
 }
+
+
+/* ---------- Section intros that carry a paragraph ----------
+   The label keeps the narrow column and everything that explains the
+   section — heading, lede, a caveat, a list — sits together in the wide
+   one, so each section reads top to bottom in one place. */
+.section-intro .intro-lede {
+  margin: 20px 0 0; max-width: 62ch;
+  font-size: var(--font-size-md); color: var(--muted); line-height: 1.625;
+}
+.section-intro .intro-guard {
+  margin: 18px 0 0; max-width: 62ch; padding: 14px 18px;
+  border-left: 2px solid var(--foreground);
+  background: var(--surface);
+  font-size: var(--font-size-sm); color: var(--muted); line-height: 1.6;
+}
+.section-intro .intro-guard b { color: var(--foreground); font-weight: 500; }
+.section-intro .audience-list { margin-top: 28px; }
+.section-intro + .agent-grid { margin-top: var(--space-block); }
