@@ -45,6 +45,16 @@ const LESS_OPS_STUDY = {
       brief: "An AI-assisted control tower that watches a supermarket region " +
              "around the clock, drafts the fix, and hands the manager a ranked " +
              "plan to approve.",
+      // Beside the shot, what the project is at a glance. Every line is from
+      // the prototype or from the sections below — nothing here is new.
+      facts: [
+        { k: "Product",  v: "AI control tower for grocery operations" },
+        { k: "Region",   v: "Bengaluru — 48 stores, 2 DCs, 6 hub stores" },
+        { k: "Agents",   v: "One coordinator and four domain agents" },
+        { k: "Users",    v: "Regional manager, store and hub staff, category and supply teams" },
+        { k: "My role",  v: "End to end — framing, planning, agent design, UI and prototype" },
+        { k: "Output",   v: "A working interactive prototype" },
+      ],
       shot: { img: "media/less-ops/dashboard.webp?v=2", mock: true, ratio: "16 / 10",
               label: "Dashboard",
               alt: "The less Ops dashboard, showing agent performance and the morning's priority actions.",
@@ -195,7 +205,11 @@ function studySectionsHTML(sections) {
     intro: s => `
       ${head(s)}
       <p class="cs-brief">${esc(s.brief)}</p>
-      ${shot(s.shot)}`,
+      <div class="cs-intro-grid">
+        ${shot(s.shot)}
+        ${s.facts ? `<dl class="cs-facts">${s.facts.map(f =>
+          `<div><dt>${esc(f.k)}</dt><dd>${esc(f.v)}</dd></div>`).join("")}</dl>` : ""}
+      </div>`,
 
     problem: s => `
       ${head(s)}

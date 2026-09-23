@@ -96,6 +96,26 @@ html { -webkit-text-size-adjust: 100%; }
    taller than the viewport, so no shot could be seen whole without scrolling
    through it. At this size it sits in one screen with its caption. */
 .cs-shot { margin: 28px 0 0; max-width: 880px; }
+
+/* The intro's shot no longer leaves the right of the panel empty: the facts
+   sit beside it, top-aligned with the laptop's lid, and drop under it when
+   the panel is too narrow for both. */
+.cs-intro-grid {
+  display: grid; grid-template-columns: minmax(0, 880px) minmax(220px, 1fr);
+  gap: 48px; align-items: start;
+}
+.cs-intro-grid .cs-shot { max-width: none; }
+.cs-facts { margin: 28px 0 0; display: grid; gap: 0; }
+.cs-facts div { padding: 14px 0; border-top: 1px solid var(--line); }
+.cs-facts div:last-child { border-bottom: 1px solid var(--line); }
+.cs-facts dt {
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted-2, #9ca3af); margin: 0 0 4px;
+}
+.cs-facts dd { margin: 0; font-size: var(--font-size-sm); line-height: 1.45; color: var(--foreground); }
+@media (max-width: 1100px) {
+  .cs-intro-grid { grid-template-columns: 1fr; gap: 0; }
+}
 .cs-plate {
   aspect-ratio: var(--cs-ratio, 16 / 10);
   border: 1px solid var(--line); border-radius: 12px;
