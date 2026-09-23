@@ -45,6 +45,9 @@ const LESS_OPS_STUDY = {
       brief: "An AI-assisted control tower that watches a supermarket region " +
              "around the clock, drafts the fix, and hands the manager a ranked " +
              "plan to approve.",
+      // The thing itself, deployed. The study can describe the decisions; only
+      // the prototype answers what it is like to use.
+      link: { href: "https://less-ops.vercel.app/", label: "Open the prototype" },
       shot: { img: "media/less-ops/dashboard.webp", mock: true, ratio: "16 / 10",
               label: "Dashboard",
               alt: "The less Ops dashboard, showing agent performance and the morning's priority actions.",
@@ -196,6 +199,8 @@ function studySectionsHTML(sections) {
     intro: s => `
       ${head(s)}
       <p class="cs-brief">${esc(s.brief)}</p>
+      ${s.link ? `<a class="cs-cta" href="${esc(s.link.href)}" target="_blank"
+         rel="noopener">${esc(s.link.label)}</a>` : ""}
       ${shot(s.shot)}`,
 
     problem: s => `

@@ -77,6 +77,21 @@ html { -webkit-text-size-adjust: 100%; }
   color: var(--foreground);
 }
 .cs-prose { max-width: 68ch; }
+
+/* Out to the running product. Placed under the brief rather than in the
+   portal head: the head belongs to the modal, this belongs to the project. */
+.cs-cta {
+  display: inline-block;
+  margin: 28px 0 0;
+  padding: 11px 22px 12px;
+  font-size: var(--font-size-xs);
+  color: var(--background, #fff);
+  background: var(--foreground);
+  border-radius: 999px;
+  transition: transform .2s var(--ease-out-expo), opacity .2s var(--ease);
+}
+.cs-cta::after { content: " \2197"; }
+.cs-cta:hover { transform: translateY(-2px); opacity: .9; }
 .cs-prose p {
   margin: 0 0 16px;
   font-size: var(--font-size-sm); color: var(--muted); line-height: 1.7;
@@ -2003,7 +2018,10 @@ body.mode-full .hero-stage { display: none; }
   display: flex; flex-direction: column;
   /* A real height, not just a cap: the frame below is flex:1, and with only
      max-height it has nothing to fill and collapses to nothing. */
-  width: min(1180px, 100%);
+  /* Wider than it was: the case study is mostly full-bleed screenshots of a
+     dense operations tool, and at 1180 the laptop shots were reading at about
+     two-thirds the size the interface was designed at. */
+  width: min(1440px, 100%);
   height: min(860px, calc(100vh - 48px));
   padding: 24px;
   border-radius: 18px;
