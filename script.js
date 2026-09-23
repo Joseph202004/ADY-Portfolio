@@ -277,7 +277,9 @@ const WORK = [
     // Opens in a tab rather than the portal: this one is a deployed site, not
     // a study embedded in the page, and it carries its own navigation.
     href: "https://less-ops.vercel.app/",
-    study: LESS_OPS_STUDY,
+    // The written case study, on its own page in the same template as the
+    // other two, so the three read as one body of work.
+    live: "less-ops-case-study.html",
     blurb: "A grocery control tower run by five AI agents and one manager — " +
            "watching the gaps, drafting the fix, and handing over a ranked plan to approve.",
   },
