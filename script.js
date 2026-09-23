@@ -45,9 +45,6 @@ const LESS_OPS_STUDY = {
       brief: "An AI-assisted control tower that watches a supermarket region " +
              "around the clock, drafts the fix, and hands the manager a ranked " +
              "plan to approve.",
-      // The thing itself, deployed. The study can describe the decisions; only
-      // the prototype answers what it is like to use.
-      link: { href: "https://less-ops.vercel.app/", label: "Open the prototype" },
       shot: { img: "media/less-ops/dashboard.webp", mock: true, ratio: "16 / 10",
               label: "Dashboard",
               alt: "The less Ops dashboard, showing agent performance and the morning's priority actions.",
@@ -154,8 +151,7 @@ const LESS_OPS_STUDY = {
       shot: { img: "media/less-ops/example-transfer.webp", ratio: "16 / 10",
               label: "Transfer 18 Cooking Oil units",
               alt: "The Store 027 cooking oil transfer, showing the recommendation and the six workflow steps.",
-              caption: "The recommendation, what each agent did, and the point where it waits for a person." },
-      cta: { label: "Open the full workflow map", href: "https://less-ops.vercel.app/" } },
+              caption: "The recommendation, what each agent did, and the point where it waits for a person." } },
   ],
 };
 
@@ -199,8 +195,6 @@ function studySectionsHTML(sections) {
     intro: s => `
       ${head(s)}
       <p class="cs-brief">${esc(s.brief)}</p>
-      ${s.link ? `<a class="cs-cta" href="${esc(s.link.href)}" target="_blank"
-         rel="noopener">${esc(s.link.label)}</a>` : ""}
       ${shot(s.shot)}`,
 
     problem: s => `
@@ -248,11 +242,7 @@ function studySectionsHTML(sections) {
         <li><span class="cs-num">0${i + 1}</span>
           <h4>${esc(t.step)}</h4>
           <p>${esc(t.body)}</p></li>`).join("")}</ol>
-      ${s.cta ? `<p class="cs-cta-row">
-        <a class="cs-cta" href="${s.cta.href}" target="_blank" rel="noopener">
-          ${esc(s.cta.label)}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-        </a></p>` : ""}`,
+`,
   };
 
   return sections.map(s => {
@@ -677,6 +667,7 @@ function initProjectPortal() {
   }
 
   const downloadEl = portal.querySelector(".portal-download");
+  const ctaEl = portal.querySelector(".portal-cta");
 
   function open(project) {
     lastFocus = document.activeElement;
@@ -690,6 +681,11 @@ function initProjectPortal() {
     // A PDF is not an application: it goes to the browser's own viewer, which
     // needs no sandbox and would be broken by one — several browsers refuse to
     // run the built-in viewer inside a sandboxed frame at all.
+    // A project with a deployed build gets the way in at the top, beside what
+    // it is, rather than buried at the foot of the study.
+    ctaEl.hidden = !project.href;
+    if (project.href) ctaEl.href = project.href;
+
     downloadEl.hidden = !project.pdf;
     if (project.pdf) downloadEl.href = project.pdf;
 

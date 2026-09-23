@@ -78,20 +78,6 @@ html { -webkit-text-size-adjust: 100%; }
 }
 .cs-prose { max-width: 68ch; }
 
-/* Out to the running product. Placed under the brief rather than in the
-   portal head: the head belongs to the modal, this belongs to the project. */
-.cs-cta {
-  display: inline-block;
-  margin: 28px 0 0;
-  padding: 11px 22px 12px;
-  font-size: var(--font-size-xs);
-  color: var(--background, #fff);
-  background: var(--foreground);
-  border-radius: 999px;
-  transition: transform .2s var(--ease-out-expo), opacity .2s var(--ease);
-}
-.cs-cta::after { content: " \2197"; }
-.cs-cta:hover { transform: translateY(-2px); opacity: .9; }
 .cs-prose p {
   margin: 0 0 16px;
   font-size: var(--font-size-sm); color: var(--muted); line-height: 1.7;
@@ -214,17 +200,6 @@ html { -webkit-text-size-adjust: 100%; }
   .cs-trace h4 { margin: 0; }
 }
 
-/* ---------- CTA ---------- */
-.cs-cta-row { margin: 36px 0 0; }
-.cs-cta {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 13px 22px; border-radius: 999px;
-  background: var(--foreground); color: var(--background);
-  font-size: var(--font-size-sm); font-weight: 500; letter-spacing: -0.01em;
-  transition: opacity .2s var(--ease), transform .3s var(--ease-out-expo);
-}
-.cs-cta:hover { opacity: .86; transform: translateY(-2px); }
-.cs-cta svg { width: 14px; height: 14px; flex: 0 0 auto; }
 
 @media (max-width: 559px) {
   .cs-laptop-lid { padding: 6px 6px 0; border-radius: 10px 10px 3px 3px; }
@@ -2054,6 +2029,23 @@ body.mode-full .hero-stage { display: none; }
 .portal-actions { display: flex; align-items: center; gap: 10px; flex: none; }
 
 /* The one action beside Close: takes the file rather than reading it here. */
+/* Out to the running product, under the blurb: before the study rather than
+   at the end of it. Someone who wants to try the thing should not have to
+   read six sections to find the way in. */
+.portal-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  align-self: flex-start;
+  margin: 0 0 20px;
+  padding: 10px 20px 11px;
+  border-radius: 999px;
+  background: var(--foreground); color: var(--background);
+  font-size: var(--font-size-xs); font-weight: 500;
+  transition: opacity .2s var(--ease), transform .3s var(--ease-out-expo);
+}
+.portal-cta::after { content: "\2197"; }
+.portal-cta:hover { opacity: .86; transform: translateY(-2px); }
+.portal-cta[hidden] { display: none; }
+
 .portal-download {
   font-size: var(--font-size-xs);
   padding: 7px 14px;
@@ -2120,6 +2112,23 @@ body.mode-full .hero-stage { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .portal, .portal-panel, /* The one action beside Close: takes the file rather than reading it here. */
+/* Out to the running product, under the blurb: before the study rather than
+   at the end of it. Someone who wants to try the thing should not have to
+   read six sections to find the way in. */
+.portal-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  align-self: flex-start;
+  margin: 0 0 20px;
+  padding: 10px 20px 11px;
+  border-radius: 999px;
+  background: var(--foreground); color: var(--background);
+  font-size: var(--font-size-xs); font-weight: 500;
+  transition: opacity .2s var(--ease), transform .3s var(--ease-out-expo);
+}
+.portal-cta::after { content: "\2197"; }
+.portal-cta:hover { opacity: .86; transform: translateY(-2px); }
+.portal-cta[hidden] { display: none; }
+
 .portal-download {
   font-size: var(--font-size-xs);
   padding: 7px 14px;
