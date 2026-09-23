@@ -28,6 +28,234 @@ const SERVICES = [
     desc: "Work closely with engineers to turn designs into practical solutions, refine interaction details, and ensure the final product behaves as intended." },
 ];
 
+/* ============================================================
+   less OPS — CASE STUDY
+   Five sections, rendered by studySectionsHTML(). Everything
+   that changes lives here: copy, image paths, captions, links.
+   A shot with no `img` renders a labelled placeholder at the
+   same aspect ratio, so artwork can be dropped in later
+   without touching the layout.
+   ============================================================ */
+const LESS_OPS_STUDY = {
+  sections: [
+
+    { kind: "intro",
+      kicker: "01 — Introduction",
+      title: "less Ops",
+      brief: "An AI-assisted control tower that watches a supermarket region " +
+             "around the clock, drafts the fix, and hands the manager a ranked " +
+             "plan to approve.",
+      shot: { img: "media/less-ops/dashboard.webp", mock: true, ratio: "16 / 10",
+              label: "Dashboard",
+              alt: "The less Ops dashboard, showing agent performance and the morning's priority actions.",
+              caption: "The morning view: what needs a decision, and what the agents have already drafted." } },
+
+    { kind: "problem",
+      kicker: "02 — Problem and people",
+      title: "A region loses money in the gaps between systems.",
+      body: [
+        "Stock, suppliers, shelves and deliveries each have their own screen, and " +
+        "the trouble lives between them. A shortage shows up in one system, the " +
+        "stock that would fix it sits in another, and the vehicle that could move " +
+        "it is in a third. By the time someone joins them up, the shelf has been " +
+        "empty for a day.",
+        "less Ops watches all four together. When something drifts it opens a case, " +
+        "works out what happened, and proposes the response — leaving the manager " +
+        "to judge it rather than assemble it.",
+      ],
+      who: [
+        { role: "Regional manager", note: "Approves the consequential calls and carries the P&L." },
+        { role: "Store and hub staff", note: "Picking, dispatch and receiving — the people who execute." },
+        { role: "Category and supply teams", note: "Suppliers, purchase orders, lead times and alternates." },
+      ],
+      role: { label: "My role — end to end",
+              items: ["Problem framing", "Product planning", "Agent and workflow design",
+                      "UI design", "Visual system", "Interactive prototype"] },
+      shot: { img: "media/less-ops/action-center.webp", ratio: "16 / 10",
+              label: "Action Center",
+              alt: "The Action Center queue, with each action's source, owner, status and AI insight.",
+              caption: "One queue across stores, inventory, suppliers and deliveries — each row carrying its owner and status." } },
+
+    { kind: "agents",
+      kicker: "03 — AI agents",
+      title: "Five agents, one control tower.",
+      lede: "A coordinator reads the whole network and routes work to four domain " +
+            "agents. Each has its own sub-agents and its own patch, and each reports " +
+            "back rather than acting alone.",
+      guard: "Agents investigate and recommend. They do not move stock, raise purchase " +
+             "orders or dispatch vehicles on their own — anything consequential waits " +
+             "for a person to approve it.",
+      items: [
+        { name: "Operations Coordinator", role: "Control tower",
+          body: "Reads signals across the network, opens a case, ranks work by urgency " +
+                "and impact, and coordinates the four domain agents beneath it.",
+          shot: { img: "media/less-ops/agent-ops-coordinator.webp", ratio: "16 / 10",
+                  label: "Operations Coordinator",
+                  alt: "Operations Coordinator panel, showing the four domain agents it coordinates." } },
+        { name: "Inventory Planning", role: "Forecast and allocation",
+          body: "Forecasts demand, detects stockouts before they land, and splits limited " +
+                "distribution-centre stock by urgency, safety stock, capacity and store maturity.",
+          shot: { img: "media/less-ops/agent-inventory-planning.webp", ratio: "16 / 10",
+                  label: "Inventory Planning",
+                  alt: "Inventory Planning panel, with its demand forecast and stock allocation sub-agents." } },
+        { name: "Purchasing", role: "Sourcing and supply",
+          body: "Supplier intelligence and sourcing — purchase orders, vendor changes, " +
+                "lead times, pricing, minimum order quantities, terms and alternates.",
+          shot: { img: "media/less-ops/agent-purchasing.webp", ratio: "16 / 10",
+                  label: "Purchasing",
+                  alt: "Purchasing panel, with its purchase order and supplier scheduling sub-agents." } },
+        { name: "Shelf Availability", role: "Availability and freshness",
+          body: "Shelf gaps, replenishment timing, fresh-stock rescue, quality checks and " +
+                "suitable substitutions — the last few metres to the customer.",
+          shot: { img: "media/less-ops/agent-shelf-availability.webp", ratio: "16 / 10",
+                  label: "Shelf Availability",
+                  alt: "Shelf Availability panel, with its shelf refill and fresh food rescue sub-agents." } },
+        { name: "Delivery and Transfers", role: "Movement and reconciliation",
+          body: "Hub supply and source selection, transfer documents, picking, routing, " +
+                "live shipments, receiving capacity and reconciliation.",
+          shot: { img: "media/less-ops/agent-delivery-transfers.webp", ratio: "16 / 10",
+                  label: "Delivery and Transfers",
+                  alt: "Delivery and Transfers panel, with its movement and reconciliation sub-agents." } },
+      ] },
+
+    { kind: "flow",
+      kicker: "04 — System flow",
+      title: "Signal to verified outcome.",
+      lede: "Every case runs the same six steps, whichever agent opened it. The map " +
+            "holds the whole path in one view, so a recommendation can always be " +
+            "traced back to the signal that caused it.",
+      steps: [
+        { n: "01", name: "Detect",      note: "An agent spots a risk in the signals it watches." },
+        { n: "02", name: "Investigate", note: "Agents gather the facts and confirm what is happening." },
+        { n: "03", name: "Recommend",   note: "The control tower drafts a response, with its cost and confidence." },
+        { n: "04", name: "Approve",     note: "A person judges it. Nothing consequential moves before this." },
+        { n: "05", name: "Execute",     note: "The work is issued to the named people who carry it out." },
+        { n: "06", name: "Verify",      note: "The outcome is confirmed on the ground and closed off." },
+      ],
+      shot: { img: "media/less-ops/workflow-map.webp", ratio: "16 / 10",
+              label: "Agent workflow map",
+              alt: "The full agent workflow map, from signal sources through to verified outcome.",
+              caption: "Signal sources, the case, domain-agent investigation, and the loop back to the control tower." } },
+
+    { kind: "example",
+      kicker: "05 — Example",
+      title: "Store 027 runs out of cooking oil.",
+      trace: [
+        { step: "Detect",      body: "Store 027 has 12 units of 1 L cooking oil left against demand for 28 — a gap that lands by the end of the day." },
+        { step: "Investigate", body: "Agents check nearby stock and confirm Hub Store 018 can cover it without opening a second shortage." },
+        { step: "Recommend",   body: "The control tower proposes transferring 18 units from Hub 018 to Store 027, with the cost and the sales it protects." },
+        { step: "Approve",     body: "The manager approves. Only then is the transfer order raised, the hub picking task created and the delivery scheduled." },
+        { step: "Execute",     body: "A named driver carries it out, and the shipment is tracked on its way." },
+        { step: "Verify",      body: "The Store 027 supervisor confirms arrival and the shelf is replenished. The case closes." },
+      ],
+      shot: { img: "media/less-ops/example-transfer.webp", ratio: "16 / 10",
+              label: "Transfer 18 Cooking Oil units",
+              alt: "The Store 027 cooking oil transfer, showing the recommendation and the six workflow steps.",
+              caption: "The recommendation, what each agent did, and the point where it waits for a person." },
+      cta: { label: "Open the full workflow map", href: "https://less-ops.vercel.app/" } },
+  ],
+};
+
+/* Renders LESS_OPS_STUDY.sections. Each `kind` is one section type, so a
+   section can be reordered, dropped or duplicated by editing the data alone.
+   A shot without an `img` becomes a labelled placeholder holding the same
+   aspect ratio — artwork drops in later without the layout moving. */
+function studyShotHTML(shot, esc) {
+  if (!shot) return "";
+  const ratio = shot.ratio || "16 / 10";
+  const media = shot.img
+    ? `<img src="${shot.img}" alt="${esc(shot.alt || "")}" loading="lazy" decoding="async" />`
+    : `<div class="cs-slot">
+         <span class="cs-slot-label">${esc(shot.label || "Screenshot")}</span>
+         <span class="cs-slot-ratio">${esc(ratio.replace(/\s/g, ""))}</span>
+       </div>`;
+  // The laptop is drawn, not photographed: a bezel and a base in the site's
+  // own greys, so it costs one element instead of a third-party mockup image.
+  const framed = shot.mock
+    ? `<div class="cs-laptop">
+         <div class="cs-laptop-lid"><div class="cs-laptop-screen">${media}</div></div>
+         <div class="cs-laptop-base"><span></span></div>
+       </div>`
+    : `<div class="cs-plate">${media}</div>`;
+  return `<figure class="cs-shot" style="--cs-ratio:${ratio}">
+      ${framed}
+      ${shot.caption ? `<figcaption class="cs-cap">${esc(shot.caption)}</figcaption>` : ""}
+    </figure>`;
+}
+
+function studySectionsHTML(sections) {
+  const esc = t => String(t).replace(/[&<>"]/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const shot = s => studyShotHTML(s, esc);
+  const head = s => `
+    <p class="cs-kicker">${esc(s.kicker)}</p>
+    <h3 class="cs-h">${esc(s.title)}</h3>
+    ${s.lede ? `<p class="cs-lede">${esc(s.lede)}</p>` : ""}`;
+
+  const render = {
+    intro: s => `
+      ${head(s)}
+      <p class="cs-brief">${esc(s.brief)}</p>
+      ${shot(s.shot)}`,
+
+    problem: s => `
+      ${head(s)}
+      <div class="cs-prose">${s.body.map(p => `<p>${esc(p)}</p>`).join("")}</div>
+      ${shot(s.shot)}
+      <div class="cs-split">
+        <div>
+          <p class="cs-sub">Who uses it</p>
+          <ul class="cs-list">${s.who.map(w =>
+            `<li><strong>${esc(w.role)}</strong><span>${esc(w.note)}</span></li>`).join("")}</ul>
+        </div>
+        <div>
+          <p class="cs-sub">${esc(s.role.label)}</p>
+          <ul class="cs-tags">${s.role.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul>
+        </div>
+      </div>`,
+
+    agents: s => `
+      ${head(s)}
+      <p class="cs-guard"><span aria-hidden="true">✓</span>${esc(s.guard)}</p>
+      <div class="cs-agents">${s.items.map((a, i) => `
+        <article class="cs-agent">
+          <div class="cs-agent-head">
+            <span class="cs-num">0${i + 1}</span>
+            <h4>${esc(a.name)}</h4>
+            <p class="cs-agent-role">${esc(a.role)}</p>
+            <p class="cs-agent-body">${esc(a.body)}</p>
+          </div>
+          ${shot(a.shot)}
+        </article>`).join("")}</div>`,
+
+    flow: s => `
+      ${head(s)}
+      ${shot(s.shot)}
+      <ol class="cs-steps">${s.steps.map(t => `
+        <li><span class="cs-num">${esc(t.n)}</span>
+          <h4>${esc(t.name)}</h4>
+          <p>${esc(t.note)}</p></li>`).join("")}</ol>`,
+
+    example: s => `
+      ${head(s)}
+      ${shot(s.shot)}
+      <ol class="cs-trace">${s.trace.map((t, i) => `
+        <li><span class="cs-num">0${i + 1}</span>
+          <h4>${esc(t.step)}</h4>
+          <p>${esc(t.body)}</p></li>`).join("")}</ol>
+      ${s.cta ? `<p class="cs-cta-row">
+        <a class="cs-cta" href="${s.cta.href}" target="_blank" rel="noopener">
+          ${esc(s.cta.label)}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a></p>` : ""}`,
+  };
+
+  return sections.map(s => {
+    const fn = render[s.kind];
+    return fn ? `<section class="cs-section cs-${s.kind}">${fn(s)}</section>` : "";
+  }).join("");
+}
+
 const WORK = [
   {
     title: "less Ops",
@@ -40,6 +268,7 @@ const WORK = [
     // Opens in a tab rather than the portal: this one is a deployed site, not
     // a study embedded in the page, and it carries its own navigation.
     href: "https://less-ops.vercel.app/",
+    study: LESS_OPS_STUDY,
     blurb: "A grocery control tower run by five AI agents and one manager — " +
            "watching the gaps, drafting the fix, and handing over a ranked plan to approve.",
   },
@@ -266,10 +495,18 @@ if (servicesEl) {
 // A project card, used both by the featured pair in the hero and by the work
 // grid. Cards with a live project carry data-project, which the portal picks
 // up; the rest stay inert until they have somewhere to go.
+/* One rule, used by both the card markup and the portal's click handler: a
+   project opens in the modal when it has something to show there. Anything
+   else is a plain link. Deciding this twice is how a card ended up both
+   opening a tab and opening the modal. */
+function opensInPortal(w) {
+  return !!(w && (w.live || w.pdf || w.study));
+}
+
 function projectCard(w, i, { ratio = "ratio-107", parallax = 0, index = false } = {}) {
   return `
     <a class="work-card" href="${w.href}" data-cursor="View"
-       ${/^https?:/i.test(w.href || "") ? 'target="_blank" rel="noopener"' : ""}
+       ${/^https?:/i.test(w.href || "") && !opensInPortal(w) ? 'target="_blank" rel="noopener"' : ""}
        ${w.thumb ? `data-project="${i}"` : ""}>
       ${index ? `<span class="work-index">Project ${i + 1}</span>` : ""}
       <figure class="frame ${ratio}" data-parallax="${parallax}">
@@ -334,6 +571,9 @@ function initProjectPortal() {
 
   // The case study, in this site's own type and spacing.
   function caseStudyHTML(p) {
+    // Newer studies are a list of typed sections rendered from data;
+    // the original shape is kept for the studies already written to it.
+    if (p.study && p.study.sections) return studySectionsHTML(p.study.sections);
     const st = p.study;
     const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 
@@ -507,7 +747,7 @@ function initProjectPortal() {
     // A card with no embed, no PDF and no written study has nothing to put in
     // the modal — opening it would show an empty shell. Those are plain links:
     // let the browser follow the href instead.
-    if (!project || (!project.live && !project.pdf && !project.study)) return;
+    if (!opensInPortal(project)) return;
     e.preventDefault();
     open(project);
   });

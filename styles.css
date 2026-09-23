@@ -60,6 +60,164 @@ html { -webkit-text-size-adjust: 100%; }
   html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
   #about { scroll-snap-align: start; scroll-margin-top: 72px; }
 }
+/* A project with no embed leaves this empty, and an empty frame still held
+   its 16/10 box and grey ground — a dead letterbox above the written study. */
+.portal-frame:empty { display: none; }
+
+/* ---------- Sectioned case study (less Ops) ----------
+   Builds on the .cs-* system already here: .cs-section, .cs-h, .cs-lede,
+   .cs-num and .cs-list keep their meaning, and these add only what the
+   five sections need. Everything sits on the existing tokens, so the
+   study inherits the site's type, spacing, rules and colour. */
+
+.cs-brief {
+  margin: -12px 0 32px; max-width: 54ch;
+  font-size: var(--font-size-lg); font-weight: 300;
+  line-height: 1.5; letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+.cs-prose { max-width: 68ch; }
+.cs-prose p {
+  margin: 0 0 16px;
+  font-size: var(--font-size-sm); color: var(--muted); line-height: 1.7;
+}
+.cs-prose p:last-child { margin-bottom: 0; }
+.cs-sub {
+  margin: 0 0 14px;
+  font-size: var(--font-size-xs); letter-spacing: .08em;
+  text-transform: uppercase; color: var(--faint);
+}
+
+/* ---------- Shots ----------
+   The ratio is set per shot from the data, so a placeholder reserves exactly
+   the space its future screenshot will take and nothing reflows on drop-in. */
+.cs-shot { margin: 28px 0 0; }
+.cs-plate {
+  aspect-ratio: var(--cs-ratio, 16 / 10);
+  border: 1px solid var(--line); border-radius: 12px;
+  overflow: hidden; background: var(--surface);
+}
+.cs-plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.cs-slot {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; background: var(--line-soft);
+}
+.cs-slot-label {
+  font-size: var(--font-size-sm); font-weight: 500; color: var(--muted);
+  letter-spacing: -0.01em;
+}
+.cs-slot-ratio {
+  font-size: var(--font-size-xs); color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.cs-cap {
+  margin: 12px 0 0; max-width: 62ch;
+  font-size: var(--font-size-xs); color: var(--muted); line-height: 1.6;
+}
+
+/* Drawn laptop: a lid holding the screen and a base under it, in the site's
+   own greys — no mockup image to ship or keep in step with the design. */
+.cs-laptop { display: block; }
+.cs-laptop-lid {
+  background: #14161a; border-radius: 14px 14px 4px 4px;
+  padding: 10px 10px 0;
+}
+.cs-laptop-screen {
+  aspect-ratio: var(--cs-ratio, 16 / 10);
+  border-radius: 6px 6px 0 0; overflow: hidden; background: #fff;
+}
+.cs-laptop-screen img,
+.cs-laptop-screen .cs-slot { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cs-laptop-base {
+  position: relative; height: 13px;
+  background: linear-gradient(#d7d9de, #b7bac0);
+  border-radius: 0 0 12px 12px;
+}
+.cs-laptop-base span {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 92px; height: 7px; background: #a7aab0; border-radius: 0 0 7px 7px;
+}
+
+/* ---------- Problem: who / role ---------- */
+.cs-split { display: grid; gap: 32px; grid-template-columns: 1fr; margin-top: 36px; }
+@media (min-width: 760px) { .cs-split { grid-template-columns: 1.2fr 1fr; gap: 56px; } }
+.cs-split .cs-list li { display: flex; flex-direction: column; gap: 4px; }
+.cs-split .cs-list strong {
+  font-weight: 500; color: var(--foreground); font-size: var(--font-size-sm);
+}
+.cs-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.cs-tags li {
+  padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: var(--font-size-xs); color: var(--muted);
+}
+
+/* ---------- Agents ---------- */
+.cs-guard {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin: 0 0 8px; padding: 18px 20px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  font-size: var(--font-size-sm); color: var(--foreground); line-height: 1.6;
+}
+.cs-guard span { flex: 0 0 auto; color: var(--muted); }
+.cs-agents { display: flex; flex-direction: column; }
+.cs-agent { padding: 36px 0; border-bottom: 1px solid var(--line-soft); }
+.cs-agent:last-child { border-bottom: 0; padding-bottom: 0; }
+.cs-agent h4 {
+  margin: 0 0 4px;
+  font-size: var(--font-size-lg); font-weight: 400; letter-spacing: -0.02em;
+}
+.cs-agent-role {
+  margin: 0 0 10px;
+  font-size: var(--font-size-xs); letter-spacing: .06em;
+  text-transform: uppercase; color: var(--faint);
+}
+.cs-agent-body {
+  margin: 0; max-width: 62ch;
+  font-size: var(--font-size-sm); color: var(--muted); line-height: 1.7;
+}
+
+/* ---------- Steps and trace ---------- */
+.cs-steps, .cs-trace { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 1px; }
+.cs-steps { grid-template-columns: 1fr; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+@media (min-width: 620px) { .cs-steps { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) { .cs-steps { grid-template-columns: repeat(3, 1fr); } }
+.cs-steps li { background: var(--background); padding: 20px 22px; }
+.cs-steps h4, .cs-trace h4 {
+  margin: 6px 0 4px;
+  font-size: var(--font-size-sm); font-weight: 500; letter-spacing: -0.01em;
+}
+.cs-steps p, .cs-trace p {
+  margin: 0; font-size: var(--font-size-xs); color: var(--muted); line-height: 1.6;
+}
+.cs-trace { gap: 0; }
+.cs-trace li { padding: 18px 0; border-top: 1px solid var(--line-soft); }
+.cs-trace li:first-child { border-top: 0; }
+@media (min-width: 620px) {
+  .cs-trace li { display: grid; grid-template-columns: 52px 150px 1fr; gap: 18px; align-items: baseline; }
+  .cs-trace h4 { margin: 0; }
+}
+
+/* ---------- CTA ---------- */
+.cs-cta-row { margin: 36px 0 0; }
+.cs-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 22px; border-radius: 999px;
+  background: var(--foreground); color: var(--background);
+  font-size: var(--font-size-sm); font-weight: 500; letter-spacing: -0.01em;
+  transition: opacity .2s var(--ease), transform .3s var(--ease-out-expo);
+}
+.cs-cta:hover { opacity: .86; transform: translateY(-2px); }
+.cs-cta svg { width: 14px; height: 14px; flex: 0 0 auto; }
+
+@media (max-width: 559px) {
+  .cs-laptop-lid { padding: 6px 6px 0; border-radius: 10px 10px 3px 3px; }
+  .cs-laptop-base { height: 9px; }
+  .cs-laptop-base span { width: 62px; height: 5px; }
+  .cs-agent { padding: 28px 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-snap-type: none; }
 }
