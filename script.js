@@ -288,7 +288,7 @@ const WORK = [
     // A 4:3 plate, matching the card's own ratio. The wide 1600x829 artwork is
     // still the source, but cover-fitting it into a 4:3 card cropped a third
     // of the width away — the phone and the laptop's right edge went with it.
-    thumb: "media/insure-tech-card.webp",
+    thumb: "media/insure-tech-card.webp?v=2",
     // The written case study, on its own page, in the portfolio's own design.
     // It opens with buttons through to the prototype and the design system —
     // the embed used to carry those as tabs, which meant the modal showed a
@@ -399,7 +399,7 @@ const WORK = [
     live: "oykot-case-study.html",
     // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
     // ground, so the wordmark and the hands survive the card's scale-in.
-    thumb: "media/oykot-money-card.webp" },
+    thumb: "media/oykot-money-card.webp?v=2" },
 ];
 
 /* The drawing screen's own shelf: sketchbook pages, lettering, whatever else
