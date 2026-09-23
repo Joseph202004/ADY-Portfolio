@@ -394,10 +394,17 @@ const WORK = [
    `ratio` is any of the .frame ratio classes, so the shelf can hold a portrait
    sketchbook page next to a square study without cropping either. */
 const DOODLES = [
-  { title: "Sketchbook",     note: "Pages from this year",      tone: "warm", ratio: "ratio-34" },
-  { title: "Lettering",      note: "The hand this site is set in", tone: "alt",  ratio: "ratio-11" },
-  { title: "Character study", note: "Adi, in many moods",       tone: "cool", ratio: "ratio-11" },
-  { title: "Daily doodles",  note: "Ten minutes, most mornings", tone: "warm", ratio: "ratio-34" },
+  { title: "Scrunchie",       note: "coloured pencil",       img: "media/doodles/scrunchie.webp" },
+  { title: "Rainbow",         note: "coloured pencil",       img: "media/doodles/rainbow-face.webp" },
+  { title: "Tiger",           note: "ink",                   img: "media/doodles/tiger.webp" },
+  { title: "Portrait",        note: "graphite",              img: "media/doodles/portrait.webp" },
+  { title: "Notes",           note: "watercolour",           img: "media/doodles/notes.webp" },
+  { title: "Eyes",            note: "pencil studies",        img: "media/doodles/eyes.webp" },
+  { title: "Astronaut",       note: "ink, cross-hatched",    img: "media/doodles/astronaut.webp" },
+  { title: "London street",   note: "watercolour",           img: "media/doodles/street.webp" },
+  { title: "Why so serious",  note: "ink and type",          img: "media/doodles/joker.webp" },
+  { title: "Trees",           note: "acrylic",               img: "media/doodles/landscapes.webp" },
+  { title: "Faces",           note: "charcoal",              img: "media/doodles/charcoal.webp" },
 ];
 
 /* ============================================================
@@ -527,7 +534,7 @@ const doodleGrid = document.getElementById("doodle-grid");
 if (doodleGrid) {
   doodleGrid.innerHTML = DOODLES.map((d, i) => `
     <figure class="doodle reveal" style="--d:${i * 70}ms">
-      <div class="frame ${d.ratio || "ratio-11"}">
+      <div class="frame ${d.ratio || "ratio-34"}">
         ${d.img
           ? `<img class="doodle-img" src="${d.img}" alt="${d.title}" loading="lazy" />`
           : `<div class="ph ${d.tone || ""}">${d.title}</div>`}

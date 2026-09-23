@@ -2684,6 +2684,75 @@ body.mode-video .doodles { display: block; }
   .doodle:nth-child(even):hover .frame { transform: none; }
 }
 
+/* ---------- The fridge door ----------
+   These are drawings, and they are shown the way drawings get shown at home:
+   stuck up crooked on paper squares with a strip of coloured tape, a crayon
+   caption underneath. The rest of the site is set straight; this shelf is
+   allowed not to be. */
+.doodles {
+  background-color: #fffaf0;
+  background-image:
+    radial-gradient(circle, rgba(232, 180, 90, .22) 1.4px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+.doodles-title { position: relative; display: inline-block; }
+/* a crayon squiggle under the heading */
+.doodles-title::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -10px; height: 12px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12'%3E%3Cpath d='M2 7 Q 12 1 22 7 T 42 7 T 62 7 T 82 7 T 102 7 T 118 6' fill='none' stroke='%23f4a340' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left center / 120px 12px;
+}
+
+.doodle-grid { gap: 44px 28px; }
+.doodle {
+  --tilt: -2deg; --tape: #ffd166;
+  position: relative;
+  padding: 12px 12px 14px;
+  background: #fff;
+  /* paper with a hand-cut edge: no two corners the same */
+  border-radius: 6px 14px 8px 16px / 14px 6px 16px 8px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .04), 0 10px 22px rgba(80, 50, 0, .10);
+  transform: rotate(var(--tilt));
+  transition: transform .45s var(--soft-spring, cubic-bezier(.34, 1.56, .64, 1)),
+              box-shadow .3s var(--ease);
+}
+/* the tape */
+.doodle::before {
+  content: ""; position: absolute; z-index: 2;
+  top: -12px; left: 50%; width: 74px; height: 24px; margin-left: -37px;
+  background: var(--tape); opacity: .85;
+  border-radius: 2px;
+  transform: rotate(calc(var(--tilt) * -2));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+}
+.doodle:nth-child(6n+1) { --tilt: -2.5deg; --tape: #ffd166; }
+.doodle:nth-child(6n+2) { --tilt: 1.8deg;  --tape: #8fd3fe; }
+.doodle:nth-child(6n+3) { --tilt: -1deg;   --tape: #ff9aa2; }
+.doodle:nth-child(6n+4) { --tilt: 2.6deg;  --tape: #b5e48c; }
+.doodle:nth-child(6n+5) { --tilt: -1.8deg; --tape: #cdb4db; }
+.doodle:nth-child(6n)   { --tilt: 1.2deg;  --tape: #ffb86b; }
+
+.doodle .frame { border-radius: 4px; background: #f3efe6; }
+.doodle-img { object-fit: cover; }
+
+/* Picked up rather than lifted: it straightens, grows and bounces. The
+   frame's own hover tilt is off here — the whole card moves instead. */
+.doodle:hover .frame,
+.doodle:nth-child(even):hover .frame { transform: none; }
+.doodle:hover {
+  transform: rotate(0deg) scale(1.05) translateY(-6px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .04), 0 22px 40px rgba(80, 50, 0, .16);
+  z-index: 3;
+}
+
+.doodle-cap { align-items: center; text-align: center; margin-top: 10px; }
+.doodle-title { font-size: 1.25rem; color: #3b2f2f; }
+.doodle-note  { font-size: var(--font-size-xs); color: #a0845c; }
+
+@media (prefers-reduced-motion: reduce) {
+  .doodle, .doodle:hover { transition: none; }
+  .doodle:hover { transform: rotate(var(--tilt)); }
+}
+
 /* Between 768 and 1023 the text column is narrower than the headline's own
    20ch cap, so the cap has to give way there — and only there. Above it the
    cap is what holds the headline off the portrait; removing it everywhere let
