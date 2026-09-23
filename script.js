@@ -540,8 +540,7 @@ if (doodleGrid) {
           : `<div class="ph ${d.tone || ""}">${d.title}</div>`}
       </div>
       <figcaption class="doodle-cap">
-        <span class="doodle-title hand">${d.title}</span>
-        <span class="doodle-note">${d.note || ""}</span>
+        <span class="doodle-note hand">${d.note || ""}</span>
       </figcaption>
     </figure>`).join("");
 }

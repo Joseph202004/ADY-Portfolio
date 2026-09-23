@@ -2746,7 +2746,10 @@ body.mode-video .doodles { display: block; }
 
 .doodle-cap { align-items: center; text-align: center; margin-top: 10px; }
 .doodle-title { font-size: 1.25rem; color: #3b2f2f; }
-.doodle-note  { font-size: var(--font-size-xs); color: #a0845c; }
+/* One line under each drawing: what it was made with, in the hand. The name
+   stays as the picture's alt text; written under it as well, a tiger drawing
+   captioned "Tiger" told nobody anything. */
+.doodle-note  { font-size: 1.3rem; color: #3b2f2f; }
 
 @media (prefers-reduced-motion: reduce) {
   .doodle, .doodle:hover { transition: none; }
