@@ -1185,10 +1185,6 @@ body.mode-video .hero-media-more { display: none; }
 }
 .work-tags { font-size: var(--font-size-xs); color: var(--muted); }
 
-/* ---------- Explorations ---------- */
-.explore-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
-@media (min-width: 768px) { .explore-grid { grid-template-columns: repeat(4, 1fr); } }
-
 /* ---------- Contact ---------- */
 .contact { border-top: 1px solid var(--line); padding-block: var(--space-section) 64px; }
 .contact-title {

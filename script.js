@@ -162,7 +162,6 @@ const WORK = [
     // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
     // ground, so the wordmark and the hands survive the card's scale-in.
     thumb: "media/oykot-money-card.webp" },
-  { title: "Project 04", tags: "Interface systems", tone: "warm" },
 ];
 
 /* The drawing screen's own shelf: sketchbook pages, lettering, whatever else
@@ -872,7 +871,7 @@ const revealIO = new IntersectionObserver(entries => {
 
 const REVEAL_SELECTOR =
   ".reveal, .frame, .eyebrow, [data-split]:not([data-typewriter]), " +
-  "[data-split-lines]:not(.hero-sub), .info-grid, .explore-grid";
+  "[data-split-lines]:not(.hero-sub), .info-grid";
 
 function observeAll() {
   // [data-typewriter] is driven by typewrite() after the preloader, not by
