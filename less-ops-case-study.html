@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="case-study.css?v=4">
+  <link rel="stylesheet" href="case-study.css?v=6">
 </head>
 <body>
   <a class="skip" href="#main">Skip to case study</a>
@@ -60,12 +60,52 @@
     <section class="wrap module problem-section">
       <div class="section-intro"><p class="eyebrow">03 — AI agents</p><h2>Five agents, one control tower.</h2></div>
       <p class="caption" style="max-width:62ch;margin-bottom:28px">A coordinator reads the whole network and routes work to four domain agents. Each has its own sub-agents and its own patch, and each reports back rather than acting alone. Agents investigate and recommend — they do not move stock, raise purchase orders or dispatch vehicles on their own. Anything consequential waits for a person to approve it.</p>
-      <div class="pain-grid">
-        <article><span>01</span><h3>Operations Coordinator</h3><p>The control tower. Reads signals across the network, opens a case, ranks work by urgency and impact, and coordinates the four domain agents beneath it.</p></article>
-        <article><span>02</span><h3>Inventory Planning</h3><p>Forecasts demand, detects stockouts before they land, and splits limited distribution-centre stock by urgency, safety stock, capacity and store maturity.</p></article>
-        <article><span>03</span><h3>Purchasing</h3><p>Supplier intelligence and sourcing — purchase orders, vendor changes, lead times, pricing, minimum order quantities, terms and alternates.</p></article>
-        <article><span>04</span><h3>Shelf Availability</h3><p>Shelf gaps, replenishment timing, fresh-stock rescue, quality checks and suitable substitutions — the last few metres to the customer.</p></article>
-        <article><span>05</span><h3>Delivery and Transfers</h3><p>Hub supply and source selection, transfer documents, picking, routing, live shipments, receiving capacity and reconciliation.</p></article>
+      <div class="agent-grid">
+        <article class="agent-card is-lead" style="--agent:#6C5CE7">
+          <div class="agent-head">
+            <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <div><h3>Operations Coordinator</h3><p class="agent-role">Control tower</p></div>
+          </div>
+          <p>Reads signals across the network, opens a case, ranks work by urgency and impact, and coordinates the four domain agents beneath it.</p>
+          <ul class="agent-subs" aria-label="Sub-agents"><li>Purchasing</li><li>Inventory Planning</li><li>Shelf Availability</li><li>Delivery and Transfers</li></ul>
+          <div class="agent-meter"><b>85.6%</b><span>4,125 of 4,820 recommendations accepted</span><i style="--pct:85.6%"></i></div>
+        </article>
+        <article class="agent-card" style="--agent:#D6489B">
+          <div class="agent-head">
+            <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M5 15l4-5 4 3 6-7"/></svg></span>
+            <div><h3>Inventory Planning</h3><p class="agent-role">Forecast and allocation</p></div>
+          </div>
+          <p>Forecasts demand, detects stockouts before they land, and splits limited distribution-centre stock by urgency, safety stock, capacity and store maturity.</p>
+          <ul class="agent-subs" aria-label="Sub-agents"><li>Demand Forecast</li><li>Store Stock Allocation</li></ul>
+          <div class="agent-meter"><b>80.9%</b><span>1,062 of 1,312 recommendations accepted</span><i style="--pct:80.9%"></i></div>
+        </article>
+        <article class="agent-card" style="--agent:#2E86C1">
+          <div class="agent-head">
+            <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span>
+            <div><h3>Purchasing</h3><p class="agent-role">Sourcing and supply</p></div>
+          </div>
+          <p>Supplier intelligence and sourcing — purchase orders, vendor changes, lead times, pricing, minimum order quantities, terms and alternates.</p>
+          <ul class="agent-subs" aria-label="Sub-agents"><li>Purchase Order</li><li>Supplier Delivery Scheduling</li></ul>
+          <div class="agent-meter"><b>88.5%</b><span>1,174 of 1,327 recommendations accepted</span><i style="--pct:88.5%"></i></div>
+        </article>
+        <article class="agent-card" style="--agent:#D25E3A">
+          <div class="agent-head">
+            <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></svg></span>
+            <div><h3>Shelf Availability</h3><p class="agent-role">Availability and freshness</p></div>
+          </div>
+          <p>Shelf gaps, replenishment timing, fresh-stock rescue, quality checks and suitable substitutions — the last few metres to the customer.</p>
+          <ul class="agent-subs" aria-label="Sub-agents"><li>Shelf Refill</li><li>Fresh Food Rescue</li></ul>
+          <div class="agent-meter"><b>86.1%</b><span>908 of 1,054 recommendations accepted</span><i style="--pct:86.1%"></i></div>
+        </article>
+        <article class="agent-card" style="--agent:#2FA189">
+          <div class="agent-head">
+            <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg></span>
+            <div><h3>Delivery and Transfers</h3><p class="agent-role">Movement and reconciliation</p></div>
+          </div>
+          <p>Hub supply and source selection, transfer documents, picking, routing, live shipments, receiving capacity and reconciliation.</p>
+          <ul class="agent-subs" aria-label="Sub-agents"><li>Hub-to-Store Supply</li><li>Stock Transfer</li><li>Transfer Order</li><li>Picking and Dispatch</li><li>Route and Vehicle</li><li>Delivery Tracking</li><li>Receiving Space</li><li>Delivery Receiving</li></ul>
+          <div class="agent-meter"><b>87.0%</b><span>981 of 1,127 recommendations accepted</span><i style="--pct:87.0%"></i></div>
+        </article>
       </div>
       <figure class="case-figure wide">
         <img src="media/less-ops/agent-ops-coordinator.webp" alt="Operations Coordinator panel, showing the four domain agents it coordinates." loading="lazy" />
