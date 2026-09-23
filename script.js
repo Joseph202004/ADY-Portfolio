@@ -37,6 +37,9 @@ const SERVICES = [
    without touching the layout.
    ============================================================ */
 const LESS_OPS_STUDY = {
+  // Dressed in the product's own design language — its palette, type and
+  // surfaces — rather than the portfolio's. See [data-theme="less-ops"].
+  theme: "less-ops",
   sections: [
 
     { kind: "intro",
@@ -732,6 +735,9 @@ function initProjectPortal() {
     studyBox.innerHTML = !project.live && !project.pdf && project.study ? caseStudyHTML(project) : "";
     body.classList.toggle("is-embed", !!(project.live || project.pdf));
     body.scrollTop = 0;
+
+    // A study can carry its product's look; the panel takes it while open
+    portal.dataset.theme = (project.study && project.study.theme) || "";
 
     portal.hidden = false;
     requestAnimationFrame(() => portal.classList.add("is-on"));
