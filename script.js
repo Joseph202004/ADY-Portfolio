@@ -403,7 +403,7 @@ const DOODLES = [
   { title: "Astronaut",       note: "ink, cross-hatched",    img: "media/doodles/astronaut.webp" },
   { title: "London street",   note: "watercolour",           img: "media/doodles/street.webp" },
   { title: "Why so serious",  note: "ink and type",          img: "media/doodles/joker.webp" },
-  { title: "Trees",           note: "acrylic",               img: "media/doodles/landscapes.webp" },
+  { title: "Trees",           note: "acrylic study",         img: "media/doodles/landscapes.webp" },
   { title: "Faces",           note: "charcoal study",        img: "media/doodles/charcoal.webp" },
 ];
 
