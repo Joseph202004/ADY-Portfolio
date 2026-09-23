@@ -259,7 +259,7 @@ const WORK = [
     // Decoded from the case study's own hero mockup and letterboxed onto the
     // artwork's background, so the laptop keeps its full width — the same
     // reason the insure-tech plate is padded rather than cover-cropped.
-    thumb: "media/less-ops-card.webp",
+    thumb: "media/less-ops-card.webp?v=2",
     // Opens in a tab rather than the portal: this one is a deployed site, not
     // a study embedded in the page, and it carries its own navigation.
     href: "https://less-ops.vercel.app/",
