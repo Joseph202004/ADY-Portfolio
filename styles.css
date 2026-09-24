@@ -2578,23 +2578,25 @@ body.mode-full .hero-stage { display: none; }
   85.6% { transform: scale(1.18) rotate(-1deg); fill: var(--foreground); }
   90.9% { transform: none; fill: var(--muted); }
 }
-/* the shout line: one fine grey stroke off the face's top-left edge */
+/* the shout: a small handwritten exclamation mark */
 .mode-toggle::before {
-  /* one box over the face's top-left: the face fills its bottom-right
-     54px, the shout lines sit in the margin above it and to its left, and
-     both sets are one image, so they flash in exact sync */
-  content: ""; position: absolute; pointer-events: none;
-  left: -30px; top: -30px; width: 84px; height: 84px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M34 34 L25 25'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
-  opacity: 0; transform-origin: 45% 45%;          /* the face's top-left edge */
+  /* a handwritten "!" off the face's top-left, in the same hand as
+     "press me" — the shout itself, not a diagram of one */
+  content: "!"; position: absolute; pointer-events: none;
+  left: -2px; top: -8px;
+  font-family: "Mynerve", "Caveat", cursive; font-weight: 700;
+  font-size: 22px; line-height: 1;
+  color: var(--muted);
+  opacity: 0; transform-origin: 50% 100%;
   animation: mode-shout-lines 5s var(--ease) -1.15s infinite;
 }
 @keyframes mode-shout-lines {
-  /* one quiet pop, not a flashing burst */
-  0%, 72%, 100% { opacity: 0; transform: scale(.7); }
-  76% { opacity: 1; transform: scale(1); }
-  86% { opacity: 1; transform: scale(1.04); }
-  92% { opacity: 0; transform: scale(1.1); }
+  /* pops up with the hop, wobbles once, and goes */
+  0%, 72%, 100% { opacity: 0; transform: translateY(4px) rotate(-14deg) scale(.6); }
+  76% { opacity: 1; transform: translateY(0) rotate(-14deg) scale(1.1); }
+  80% { transform: rotate(-4deg) scale(1); }
+  84% { transform: rotate(-16deg) scale(1.05); opacity: 1; }
+  92% { opacity: 0; transform: translateY(-3px) rotate(-12deg) scale(1); }
 }
 }
 /* heard: the pointer is here, so it stops yelling and just reacts */
