@@ -2578,14 +2578,15 @@ body.mode-full .hero-stage { display: none; }
   85.6% { transform: scale(1.18) rotate(-1deg); fill: var(--foreground); }
   90.9% { transform: none; fill: var(--muted); }
 }
-/* the shout lines: three strokes fanning out from the left of the face */
+/* the shout lines: three strokes out of the top of the face and three out of its left */
 .mode-toggle::before {
+  /* one box over the face's top-left: the face fills its bottom-right
+     54px, the shout lines sit in the margin above it and to its left, and
+     both sets are one image, so they flash in exact sync */
   content: ""; position: absolute; pointer-events: none;
-  /* level with the face, on its left, so the shout reads as coming out of
-     that side of the image rather than off its top corner */
-  left: -28px; top: 50%; margin-top: -11px; width: 22px; height: 22px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M19 11 L10 11'/%3E%3Cpath d='M18 6 L11 2'/%3E%3Cpath d='M18 16 L11 20'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
-  opacity: 0; transform-origin: 100% 50%;
+  left: -30px; top: -30px; width: 84px; height: 84px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M26 57 L17 57'/%3E%3Cpath d='M26 49 L19 44'/%3E%3Cpath d='M26 65 L19 70'/%3E%3Cpath d='M57 26 L57 17'/%3E%3Cpath d='M49 26 L44 19'/%3E%3Cpath d='M65 26 L70 19'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+  opacity: 0; transform-origin: 68% 68%;          /* the face's centre */
   animation: mode-shout-lines 5s var(--ease) -1.15s infinite;
 }
 @keyframes mode-shout-lines {
