@@ -1877,7 +1877,9 @@ function initCursor() {
 function initMagnetic() {
   if (REDUCED || !FINE_POINTER) return;
   document.querySelectorAll(".magnetic").forEach(el => {
-    const STRENGTH = 0.35;
+    // Nav words pull gently: at .35 a long handwritten link like "my
+    // drawings" swung 40px toward the cursor and shoved into its neighbours.
+    const STRENGTH = el.closest(".nav") ? 0.12 : 0.35;
     el.addEventListener("mousemove", e => {
       const r = el.getBoundingClientRect();
       const dx = e.clientX - (r.left + r.width / 2);

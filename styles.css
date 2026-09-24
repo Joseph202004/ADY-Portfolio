@@ -480,7 +480,7 @@ body.mode-video .site-header { border-bottom-color: transparent !important; }
 /* Nav in a handwriting face to match the drawing. Handwriting reads
    small, so it is sized up and spaced out. */
 body.mode-video .nav {
-  gap: 44px;                         /* the drawn words need more air than the typed ones */
+  gap: 30px;                         /* a little more air than the typed row, not a gulf */
   /* Mynerve — the same hand the hero and the replies are written in, so the
      nav belongs to the drawing rather than reading as a second handwriting. */
   font-family: "Mynerve", "Caveat", "Adi Hand", cursive;
