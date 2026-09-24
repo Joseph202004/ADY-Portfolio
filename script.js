@@ -561,6 +561,76 @@ if (doodleGrid) {
     </figure>`).join("");
 }
 
+/* A drawing opens large, in a lightbox of its own: the shelf shows them at
+   the size of a polaroid, and pencil work does not read at that size. The
+   arrows (and the keyboard's) walk the shelf without closing it. */
+(function initDoodleLightbox() {
+  const grid = document.getElementById("doodle-grid");
+  if (!grid) return;
+  const box = document.createElement("div");
+  box.className = "lightbox"; box.hidden = true;
+  box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true");
+  box.setAttribute("aria-label", "Drawing preview");
+  box.innerHTML = `
+    <div class="lightbox-backdrop"></div>
+    <figure class="lightbox-card">
+      <img class="lightbox-img" alt="" />
+      <figcaption class="lightbox-cap hand"></figcaption>
+    </figure>
+    <button class="lightbox-btn lightbox-close" type="button" aria-label="Close preview"></button>
+    <button class="lightbox-btn lightbox-prev" type="button" aria-label="Previous drawing">\u2190</button>
+    <button class="lightbox-btn lightbox-next" type="button" aria-label="Next drawing">\u2192</button>`;
+  document.body.appendChild(box);
+  const img = box.querySelector(".lightbox-img");
+  const cap = box.querySelector(".lightbox-cap");
+  const items = DOODLES.filter(d => d.img);
+  let at = 0, lastFocus = null;
+
+  function show(i) {
+    at = (i + items.length) % items.length;
+    const d = items[at];
+    img.src = d.img; img.alt = d.title;
+    cap.textContent = d.note || d.title;
+  }
+  function open(i) {
+    lastFocus = document.activeElement;
+    show(i);
+    box.hidden = false;
+    requestAnimationFrame(() => box.classList.add("is-on"));
+    document.body.style.overflow = "hidden";
+    box.querySelector(".lightbox-close").focus();
+  }
+  function close() {
+    box.classList.remove("is-on");
+    document.body.style.overflow = "";
+    setTimeout(() => { box.hidden = true; }, 240);
+    lastFocus?.focus();
+  }
+
+  grid.querySelectorAll(".doodle").forEach((fig, i) => {
+    if (!DOODLES[i]?.img) return;
+    fig.tabIndex = 0;
+    fig.setAttribute("role", "button");
+    fig.setAttribute("aria-label", `Open ${DOODLES[i].title}`);
+    const go = () => open(items.indexOf(DOODLES[i]));
+    fig.addEventListener("click", go);
+    fig.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+    });
+  });
+  box.addEventListener("click", e => {
+    if (e.target.closest(".lightbox-prev")) return show(at - 1);
+    if (e.target.closest(".lightbox-next")) return show(at + 1);
+    if (e.target.closest(".lightbox-close") || e.target.classList.contains("lightbox-backdrop")) close();
+  });
+  document.addEventListener("keydown", e => {
+    if (box.hidden) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowLeft") show(at - 1);
+    else if (e.key === "ArrowRight") show(at + 1);
+  });
+})();
+
 const workGrid = document.getElementById("work-grid");
 if (workGrid) {
   workGrid.innerHTML = WORK
@@ -1965,7 +2035,7 @@ function initSmoothScroll() {
 
   // While a modal is open the page behind it is locked, so hijacking the
   // wheel would swallow the scroll entirely — the modal must keep it.
-  const overlayOpen = () => !!document.querySelector(".portal:not([hidden])");
+  const overlayOpen = () => !!document.querySelector(".portal:not([hidden]), .lightbox:not([hidden])");
 
   addEventListener("wheel", e => {
     // Leave trackpad pinch-zoom and opted-out panes alone
