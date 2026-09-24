@@ -2578,14 +2578,14 @@ body.mode-full .hero-stage { display: none; }
   85.6% { transform: scale(1.18) rotate(-1deg); fill: var(--foreground); }
   90.9% { transform: none; fill: var(--muted); }
 }
-/* the shout lines: three fine grey strokes off the face's top-left edge */
+/* the shout line: one fine grey stroke off the face's top-left edge */
 .mode-toggle::before {
   /* one box over the face's top-left: the face fills its bottom-right
      54px, the shout lines sit in the margin above it and to its left, and
      both sets are one image, so they flash in exact sync */
   content: ""; position: absolute; pointer-events: none;
   left: -30px; top: -30px; width: 84px; height: 84px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M34 34 L26 26'/%3E%3Cpath d='M40 29 L36 20'/%3E%3Cpath d='M29 40 L20 36'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M34 34 L25 25'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
   opacity: 0; transform-origin: 45% 45%;          /* the face's top-left edge */
   animation: mode-shout-lines 5s var(--ease) -1.15s infinite;
 }
