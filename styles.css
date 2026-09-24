@@ -2547,9 +2547,8 @@ body.mode-full .hero-stage { display: none; }
 
 /* ---------- The shout ----------
    Every five seconds the face goes off: it hops, shakes its head, and
-   "press me" underneath swells and trembles with it, while little shout
-   lines pop out on its left — a button yelling to be pressed, then catching
-   its breath. The first shout lands 2.4s after load (the loop starts partway through,
+   "press me" underneath swells and trembles with it — a button yelling to
+   be pressed, then catching its breath. The first shout lands 2.4s after load (the loop starts partway through,
    so it does not wait a whole cycle), then one every five seconds. The rest
    of the loop is still, so it is a call, not a
    flicker, and it stops the moment the pointer arrives: once someone is
@@ -2578,36 +2577,14 @@ body.mode-full .hero-stage { display: none; }
   85.6% { transform: scale(1.18) rotate(-1deg); fill: var(--foreground); }
   90.9% { transform: none; fill: var(--muted); }
 }
-/* the shout: a small handwritten exclamation mark */
-.mode-toggle::before {
-  /* a handwritten "!" off the face's top-left, in the same hand as
-     "press me" — the shout itself, not a diagram of one */
-  content: "!"; position: absolute; pointer-events: none;
-  left: -2px; top: -8px;
-  font-family: "Mynerve", "Caveat", cursive; font-weight: 700;
-  font-size: 22px; line-height: 1;
-  color: var(--muted);
-  opacity: 0; transform-origin: 50% 100%;
-  animation: mode-shout-lines 5s var(--ease) -1.15s infinite;
-}
-@keyframes mode-shout-lines {
-  /* pops up with the hop, wobbles once, and goes */
-  0%, 72%, 100% { opacity: 0; transform: translateY(4px) rotate(-14deg) scale(.6); }
-  76% { opacity: 1; transform: translateY(0) rotate(-14deg) scale(1.1); }
-  80% { transform: rotate(-4deg) scale(1); }
-  84% { transform: rotate(-16deg) scale(1.05); opacity: 1; }
-  92% { opacity: 0; transform: translateY(-3px) rotate(-12deg) scale(1); }
-}
+
 }
 /* heard: the pointer is here, so it stops yelling and just reacts */
 .mode-toggle:hover .mode-avatar,
 .mode-toggle:hover .mode-ring text,
-.mode-toggle:hover::before,
-.mode-toggle:focus-visible .mode-avatar,
-.mode-toggle:focus-visible::before { animation: none; }
-.mode-toggle:hover::before { opacity: 0; }
+.mode-toggle:focus-visible .mode-avatar { animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  .mode-avatar, .mode-ring text, .mode-toggle::before { animation: none; }
+  .mode-avatar, .mode-ring text { animation: none; }
 }
 
 /* ---------- The press ---------- */
