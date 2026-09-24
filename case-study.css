@@ -604,3 +604,10 @@ footer {
 .section-intro .intro-guard b { color: var(--foreground); font-weight: 500; }
 .section-intro .audience-list { margin-top: 28px; }
 .section-intro + .agent-grid { margin-top: var(--space-block); }
+
+
+/* A device shot in the hero, built at the band's own proportion so the
+   whole laptop sits centred in it; the centre stays centred if the band
+   is narrower than the image on a smaller screen. */
+.hero-image--device { background: #e8e9eb; }
+.hero-image--device img { object-position: center; }
