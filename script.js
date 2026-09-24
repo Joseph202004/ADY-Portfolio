@@ -410,17 +410,17 @@ const WORK = [
    `ratio` is any of the .frame ratio classes, so the shelf can hold a portrait
    sketchbook page next to a square study without cropping either. */
 const DOODLES = [
-  { title: "Scrunchie",       note: "coloured pencil",       img: "media/doodles/scrunchie.webp" },
-  { title: "Rainbow",         note: "coloured pencil",       img: "media/doodles/rainbow-face.webp" },
-  { title: "Tiger",           note: "ink",                   img: "media/doodles/tiger.webp" },
-  { title: "Portrait",        note: "graphite",              img: "media/doodles/portrait.webp" },
-  { title: "Notes",           note: "watercolour",           img: "media/doodles/notes.webp" },
-  { title: "Eyes",            note: "pencil studies",        img: "media/doodles/eyes.webp" },
-  { title: "Astronaut",       note: "ink, cross-hatched",    img: "media/doodles/astronaut.webp" },
-  { title: "London street",   note: "watercolour",           img: "media/doodles/street.webp" },
-  { title: "Why so serious",  note: "ink and type",          img: "media/doodles/joker.webp" },
-  { title: "Trees",           note: "acrylic study",         img: "media/doodles/landscapes.webp" },
   { title: "Faces",           note: "charcoal study",        img: "media/doodles/charcoal.webp" },
+  { title: "Trees",           note: "acrylic study",         img: "media/doodles/landscapes.webp" },
+  { title: "Why so serious",  note: "ink and type",          img: "media/doodles/joker.webp" },
+  { title: "London street",   note: "watercolour",           img: "media/doodles/street.webp" },
+  { title: "Astronaut",       note: "ink, cross-hatched",    img: "media/doodles/astronaut.webp" },
+  { title: "Eyes",            note: "pencil studies",        img: "media/doodles/eyes.webp" },
+  { title: "Notes",           note: "watercolour",           img: "media/doodles/notes.webp" },
+  { title: "Portrait",        note: "graphite",              img: "media/doodles/portrait.webp" },
+  { title: "Tiger",           note: "ink",                   img: "media/doodles/tiger.webp" },
+  { title: "Rainbow",         note: "coloured pencil",       img: "media/doodles/rainbow-face.webp" },
+  { title: "Scrunchie",       note: "coloured pencil",       img: "media/doodles/scrunchie.webp" },
 ];
 
 /* ============================================================
