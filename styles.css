@@ -2578,25 +2578,24 @@ body.mode-full .hero-stage { display: none; }
   85.6% { transform: scale(1.18) rotate(-1deg); fill: var(--foreground); }
   90.9% { transform: none; fill: var(--muted); }
 }
-/* the shout lines: three strokes out of the top of the face and three out of its left */
+/* the shout lines: three fine grey strokes off the face's top-left edge */
 .mode-toggle::before {
   /* one box over the face's top-left: the face fills its bottom-right
      54px, the shout lines sit in the margin above it and to its left, and
      both sets are one image, so they flash in exact sync */
   content: ""; position: absolute; pointer-events: none;
   left: -30px; top: -30px; width: 84px; height: 84px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M26 57 L17 57'/%3E%3Cpath d='M26 49 L19 44'/%3E%3Cpath d='M26 65 L19 70'/%3E%3Cpath d='M57 26 L57 17'/%3E%3Cpath d='M49 26 L44 19'/%3E%3Cpath d='M65 26 L70 19'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
-  opacity: 0; transform-origin: 68% 68%;          /* the face's centre */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%239ca3af' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M34 34 L26 26'/%3E%3Cpath d='M40 29 L36 20'/%3E%3Cpath d='M29 40 L20 36'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+  opacity: 0; transform-origin: 45% 45%;          /* the face's top-left edge */
   animation: mode-shout-lines 5s var(--ease) -1.15s infinite;
 }
 @keyframes mode-shout-lines {
-  0%, 71.1%, 100% { opacity: 0; transform: scale(.4); }
-  73.4% { opacity: 1; transform: scale(1.1); }
-  77.2% { opacity: .35; transform: scale(.9); }
-  80.2% { opacity: 1; transform: scale(1.15); }
-  84.0% { opacity: .4; transform: scale(.95); }
-  87.1% { opacity: 1; transform: scale(1.1); }
-  90.9% { opacity: 0; transform: scale(1.3); }
+  /* one quiet pop, not a flashing burst */
+  0%, 72%, 100% { opacity: 0; transform: scale(.7); }
+  76% { opacity: 1; transform: scale(1); }
+  86% { opacity: 1; transform: scale(1.04); }
+  92% { opacity: 0; transform: scale(1.1); }
+}
 }
 /* heard: the pointer is here, so it stops yelling and just reacts */
 .mode-toggle:hover .mode-avatar,
