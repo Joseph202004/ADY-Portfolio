@@ -611,3 +611,20 @@ footer {
    is narrower than the image on a smaller screen. */
 .hero-image--device { background: #e8e9eb; }
 .hero-image--device img { object-position: center; }
+
+
+/* The way into the running product, under the lede — the first thing a
+   reader who wants to try it rather than read about it will look for. */
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 28px; padding: 11px 20px 12px;
+  border-radius: 999px;
+  background: var(--foreground); color: var(--background, #fff);
+  font-size: var(--font-size-sm); font-weight: 500; text-decoration: none;
+  transition: opacity .2s var(--ease), transform .3s var(--ease-out-expo);
+}
+.hero-cta:hover { opacity: .86; transform: translateY(-2px); }
+
+
+/* Room for the modal's floating Close, when this page is inside it */
+.in-portal .site-header { padding-right: 72px; }

@@ -1,3 +1,7 @@
+/* Inside the portfolio's modal, the modal's Close floats over this page's
+   top-right corner. Mark the page so its header can leave room for it. */
+if (window.self !== window.top) document.documentElement.classList.add("in-portal");
+
 /* The prototype and the design system open in a tab of their own: they want
  * the whole window, and inside the portal modal they were running in a panel
  * a third of that size. The app's own close control still needs somewhere to

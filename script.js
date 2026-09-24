@@ -735,6 +735,10 @@ function initProjectPortal() {
     body.classList.toggle("is-embed", !!(project.live || project.pdf));
     body.scrollTop = 0;
 
+    // A live page is a whole case study with its own header, so the portal
+    // drops its own and gives the page the full panel.
+    portal.classList.toggle("is-page", !!project.live && !project.pdf);
+
     portal.hidden = false;
     requestAnimationFrame(() => portal.classList.add("is-on"));
     document.body.style.overflow = "hidden";
