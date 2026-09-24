@@ -2578,12 +2578,14 @@ body.mode-full .hero-stage { display: none; }
   85.6% { transform: scale(1.18) rotate(-1deg); fill: var(--foreground); }
   90.9% { transform: none; fill: var(--muted); }
 }
-/* the shout lines: three strokes fanning out from the top right of the face */
+/* the shout lines: three strokes fanning out from the left of the face */
 .mode-toggle::before {
   content: ""; position: absolute; pointer-events: none;
-  left: -18px; top: -14px; width: 22px; height: 22px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M18 13 L13 11'/%3E%3Cpath d='M15 5 L11 9'/%3E%3Cpath d='M7 2 L8 7'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
-  opacity: 0; transform-origin: 100% 100%;
+  /* level with the face, on its left, so the shout reads as coming out of
+     that side of the image rather than off its top corner */
+  left: -28px; top: 50%; margin-top: -11px; width: 22px; height: 22px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M19 11 L10 11'/%3E%3Cpath d='M18 6 L11 2'/%3E%3Cpath d='M18 16 L11 20'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+  opacity: 0; transform-origin: 100% 50%;
   animation: mode-shout-lines 5s var(--ease) -1.15s infinite;
 }
 @keyframes mode-shout-lines {
