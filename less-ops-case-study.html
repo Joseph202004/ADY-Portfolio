@@ -22,8 +22,8 @@
       <p class="eyebrow">01 — Supply-chain operations · Product design</p>
       <div class="hero-grid">
         <div>
-          <h1>A control tower that <em>drafts the fix.</em></h1>
-          <p class="lede">An AI-assisted control tower that watches a supermarket region around the clock, drafts the fix, and hands the manager a ranked plan to approve.</p>
+          <h1>A control tower for <em>supermarket operations.</em></h1>
+          <p class="lede">less Ops is a prototype I designed for a regional manager looking after 48 stores in Bengaluru. AI agents keep watch on stock, suppliers, shelves and deliveries, and flag problems early. The manager reviews what they suggest and decides what happens.</p>
           <a class="hero-cta" href="https://less-ops.vercel.app/" target="_blank" rel="noopener">Open the prototype <span aria-hidden="true">↗</span></a>
         </div>
         <dl class="project-facts">
@@ -34,13 +34,13 @@
         </dl>
       </div>
       <figure class="hero-image hero-image--device"><img src="media/less-ops/hero-wide.webp?v=3" alt="The less Ops dashboard on a laptop held in one hand, showing the morning greeting, the five agents and the day's totals."></figure>
-      <p class="caption">The morning view: what needs a decision, and what the agents have already drafted.</p>
+      <p class="caption">What the manager sees first thing in the morning: what needs a decision today, and what the agents have already prepared.</p>
     </section>
 
     <section class="statement module">
       <div class="wrap two-col">
         <p class="eyebrow">02 — The problem</p>
-        <div><h2>A region loses money <em>in the gaps between systems.</em></h2><p>Stock, suppliers, shelves and deliveries each have their own screen, and the trouble lives between them. A shortage shows up in one system, the stock that would fix it sits in another, and the vehicle that could move it is in a third. By the time someone joins them up, the shelf has been empty for a day.</p><p>less Ops watches all four together. When something drifts it opens a case, works out what happened, and proposes the response — leaving the manager to judge it rather than assemble it.</p></div>
+        <div><h2>Problems slip through <em>because the information is split up.</em></h2><p>Stock levels, supplier orders, shelf checks and deliveries all sit in different tools. A shortage might show up in one, the spare stock to fix it in another, and the truck that could move it in a third. Someone has to connect those dots by hand, and by the time they do, the shelf is often already empty.</p><p>less Ops brings all four into one place. When something looks off, it opens a case, pulls the related information together and suggests what to do. The manager’s job becomes checking that suggestion, not piecing the picture together.</p></div>
       </div>
     </section>
 
@@ -49,13 +49,13 @@
         <div class="section-intro">
           <p class="eyebrow">03 — Who it is for</p>
           <div>
-            <h2>The people who run, supply and staff a grocery region.</h2>
-            <div class="audience-list"><p><b>Regional manager</b> — approves the consequential calls and carries the P&amp;L.</p><p><b>Store and hub staff</b> — picking, dispatch and receiving: the people who execute.</p><p><b>Category and supply teams</b> — suppliers, purchase orders, lead times and alternates.</p></div>
+            <h2>Built for the people who keep the shelves stocked.</h2>
+            <div class="audience-list"><p><b>Regional manager.</b> Signs off on anything that costs money or moves stock.</p><p><b>Store and hub staff.</b> Pick, dispatch and receive the goods.</p><p><b>Category and supply teams.</b> Handle suppliers, purchase orders and lead times.</p></div>
           </div>
         </div>
         <figure class="case-figure wide">
           <img src="media/less-ops/action-center.webp?v=2" alt="The Action Center queue, with each action's source, owner, status and AI insight." loading="lazy" />
-          <figcaption class="caption">The view they share: one queue across stores, inventory, suppliers and deliveries — each row carrying its owner and status.</figcaption>
+          <figcaption class="caption">Everyone works from the same Action Center, where each task shows who owns it and how far along it is.</figcaption>
         </figure>
       </div>
     </section>
@@ -64,105 +64,105 @@
       <div class="section-intro">
         <p class="eyebrow">04 — AI agents</p>
         <div>
-          <h2>Five agents, one control tower.</h2>
-          <p class="intro-lede">A coordinator reads the whole network and routes work to four domain agents. Each has its own sub-agents and reports back rather than acting alone.</p>
-          <p class="intro-guard"><b>Agents recommend; people decide.</b> They do not move stock, raise purchase orders or dispatch vehicles on their own — anything consequential waits for approval.</p>
+          <h2>How the agents split the work.</h2>
+          <p class="intro-lede">One coordinator watches the whole region and hands work to four specialist agents. Each specialist has smaller sub-agents for specific jobs, and they all report back to the coordinator instead of acting on their own.</p>
+          <p class="intro-guard"><b>People make the final call.</b> The agents can suggest a transfer, a purchase order or a delivery, but none of it happens until someone approves it.</p>
         </div>
       </div>
       <div class="agent-grid">
         <article class="agent-card is-lead" style="--agent:#6C5CE7">
           <div class="agent-head">
             <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></span>
-            <div><h3>Operations Coordinator</h3><p class="agent-role">Control tower</p></div>
+            <div><h3>Operations Coordinator</h3><p class="agent-role">Coordinator</p></div>
           </div>
-          <p>Reads signals across the network, opens a case, ranks work by urgency and impact, and coordinates the four domain agents beneath it.</p>
+          <p>Keeps an eye on everything coming in, opens a case when something needs attention, works out what’s most urgent and passes it to the right specialist.</p>
           <ul class="agent-subs" aria-label="Sub-agents"><li>Purchasing</li><li>Inventory Planning</li><li>Shelf Availability</li><li>Delivery and Transfers</li></ul>
           <div class="agent-meter"><b>85.6%</b><span>4,125 of 4,820 recommendations accepted</span><i style="--pct:85.6%"></i></div>
         </article>
         <article class="agent-card" style="--agent:#D6489B">
           <div class="agent-head">
             <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M5 15l4-5 4 3 6-7"/></svg></span>
-            <div><h3>Inventory Planning</h3><p class="agent-role">Forecast and allocation</p></div>
+            <div><h3>Inventory Planning</h3><p class="agent-role">Forecasting and allocation</p></div>
           </div>
-          <p>Forecasts demand, detects stockouts before they land, and splits limited distribution-centre stock by urgency, safety stock, capacity and store maturity.</p>
+          <p>Predicts demand, spots stores that are about to run out, and decides how to share limited warehouse stock between them.</p>
           <ul class="agent-subs" aria-label="Sub-agents"><li>Demand Forecast</li><li>Store Stock Allocation</li></ul>
           <div class="agent-meter"><b>80.9%</b><span>1,062 of 1,312 recommendations accepted</span><i style="--pct:80.9%"></i></div>
         </article>
         <article class="agent-card" style="--agent:#2E86C1">
           <div class="agent-head">
             <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span>
-            <div><h3>Purchasing</h3><p class="agent-role">Sourcing and supply</p></div>
+            <div><h3>Purchasing</h3><p class="agent-role">Suppliers</p></div>
           </div>
-          <p>Supplier intelligence and sourcing — purchase orders, vendor changes, lead times, pricing, minimum order quantities, terms and alternates.</p>
+          <p>Handles the supplier side: raising purchase orders, tracking lead times and prices, and finding another supplier when one can’t deliver.</p>
           <ul class="agent-subs" aria-label="Sub-agents"><li>Purchase Order</li><li>Supplier Delivery Scheduling</li></ul>
           <div class="agent-meter"><b>88.5%</b><span>1,174 of 1,327 recommendations accepted</span><i style="--pct:88.5%"></i></div>
         </article>
         <article class="agent-card" style="--agent:#D25E3A">
           <div class="agent-head">
             <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></svg></span>
-            <div><h3>Shelf Availability</h3><p class="agent-role">Availability and freshness</p></div>
+            <div><h3>Shelf Availability</h3><p class="agent-role">Shelves and fresh food</p></div>
           </div>
-          <p>Shelf gaps, replenishment timing, fresh-stock rescue, quality checks and suitable substitutions — the last few metres to the customer.</p>
+          <p>Looks after what customers actually see: empty shelves, when to refill them, and fresh food that’s close to going off.</p>
           <ul class="agent-subs" aria-label="Sub-agents"><li>Shelf Refill</li><li>Fresh Food Rescue</li></ul>
           <div class="agent-meter"><b>86.1%</b><span>908 of 1,054 recommendations accepted</span><i style="--pct:86.1%"></i></div>
         </article>
         <article class="agent-card" style="--agent:#2FA189">
           <div class="agent-head">
             <span class="agent-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg></span>
-            <div><h3>Delivery and Transfers</h3><p class="agent-role">Movement and reconciliation</p></div>
+            <div><h3>Delivery and Transfers</h3><p class="agent-role">Deliveries and transfers</p></div>
           </div>
-          <p>Hub supply and source selection, transfer documents, picking, routing, live shipments, receiving capacity and reconciliation.</p>
+          <p>Moves stock between hubs and stores, from choosing where to take it from and planning the route to checking that it arrived.</p>
           <ul class="agent-subs" aria-label="Sub-agents"><li>Hub-to-Store Supply</li><li>Stock Transfer</li><li>Transfer Order</li><li>Picking and Dispatch</li><li>Route and Vehicle</li><li>Delivery Tracking</li><li>Receiving Space</li><li>Delivery Receiving</li></ul>
           <div class="agent-meter"><b>87.0%</b><span>981 of 1,127 recommendations accepted</span><i style="--pct:87.0%"></i></div>
         </article>
       </div>
       <figure class="case-figure wide">
         <img src="media/less-ops/agent-ops-coordinator.webp" alt="Operations Coordinator panel, showing the four domain agents it coordinates." loading="lazy" />
-        <figcaption class="caption">The coordinator's view: the four domain agents it routes work to, each with its own sub-agents.</figcaption>
+        <figcaption class="caption">The coordinator’s panel, showing the four specialists it hands work to.</figcaption>
       </figure>
     </section>
 
     <section class="process module">
-      <div class="wrap"><div class="section-intro"><p class="eyebrow">05 — System flow</p><h2>Signal to verified outcome, in the same six steps every time.</h2></div>
+      <div class="wrap"><div class="section-intro"><p class="eyebrow">05 — System flow</p><h2>Every case follows the same six steps.</h2></div>
         <ol class="process-list">
-          <li><span>01</span><div><h3>Detect</h3><p>An agent spots a risk in the signals it watches.</p></div><b>Signal</b></li>
-          <li><span>02</span><div><h3>Investigate</h3><p>Agents gather the facts and confirm what is happening.</p></div><b>Evidence</b></li>
-          <li><span>03</span><div><h3>Recommend</h3><p>The control tower drafts a response, with its cost and confidence.</p></div><b>Draft</b></li>
-          <li><span>04</span><div><h3>Approve</h3><p>A person judges it. Nothing consequential moves before this.</p></div><b>Human</b></li>
-          <li><span>05</span><div><h3>Execute</h3><p>The work is issued to the named people who carry it out.</p></div><b>Action</b></li>
-          <li><span>06</span><div><h3>Verify</h3><p>The outcome is confirmed on the ground and closed off.</p></div><b>Close</b></li>
+          <li><span>01</span><div><h3>Detect</h3><p>An agent notices something off in the data it’s watching.</p></div><b>Signal</b></li>
+          <li><span>02</span><div><h3>Investigate</h3><p>The agents dig in and confirm what’s actually going on.</p></div><b>Evidence</b></li>
+          <li><span>03</span><div><h3>Recommend</h3><p>The coordinator suggests a fix, with its cost and how confident it is.</p></div><b>Draft</b></li>
+          <li><span>04</span><div><h3>Approve</h3><p>The manager reviews it. Nothing is moved or ordered before this.</p></div><b>Human</b></li>
+          <li><span>05</span><div><h3>Execute</h3><p>The task goes to the person who will carry it out.</p></div><b>Action</b></li>
+          <li><span>06</span><div><h3>Verify</h3><p>Someone at the store confirms it’s done, and the case is closed.</p></div><b>Close</b></li>
         </ol>
         <figure class="case-figure wide">
           <img src="media/less-ops/workflow-map.webp?v=2" alt="The full agent workflow map, from signal sources through to verified outcome." loading="lazy" />
-          <figcaption class="caption">The map holds the whole path in one view, so a recommendation can always be traced back to the signal that caused it.</figcaption>
+          <figcaption class="caption">The full workflow map. Any suggestion can be traced back to the alert that started it.</figcaption>
         </figure>
       </div>
     </section>
 
     <section class="wrap module response-section">
-      <div class="section-intro"><p class="eyebrow">06 — Worked example</p><div><h2>Store 027 runs out of cooking oil.</h2><p class="intro-lede">One real case from the prototype, followed through all six steps.</p></div></div>
+      <div class="section-intro"><p class="eyebrow">06 — Worked example</p><div><h2>Store 027 runs out of cooking oil.</h2><p class="intro-lede">Here’s one case from the prototype, step by step.</p></div></div>
       <div class="response-table">
         <div class="response-row response-head"><span>Step</span><span>What happens</span><span>Who</span></div>
-        <div class="response-row"><span>Detect</span><span>Store 027 has <b>12 units</b> of 1 L cooking oil left against demand for 28 — a gap that lands by the end of the day.</span><span>Inventory Planning</span></div>
-        <div class="response-row"><span>Investigate</span><span>Agents check nearby stock and confirm <b>Hub Store 018</b> can cover it without opening a second shortage.</span><span>Agents</span></div>
-        <div class="response-row"><span>Recommend</span><span>The control tower proposes <b>transferring 18 units</b> from Hub 018 to Store 027, with the cost and the sales it protects.</span><span>Control tower</span></div>
-        <div class="response-row"><span>Approve</span><span>The manager approves. <b>Only then</b> is the transfer order raised, the picking task created and the delivery scheduled.</span><span>Regional manager</span></div>
-        <div class="response-row"><span>Execute</span><span>A named driver carries it out, and the shipment is tracked on its way.</span><span>Hub and driver</span></div>
-        <div class="response-row"><span>Verify</span><span>The Store 027 supervisor confirms arrival and the shelf is replenished. <b>The case closes.</b></span><span>Store supervisor</span></div>
+        <div class="response-row"><span>Detect</span><span>Store 027 has <b>12 units</b> of 1 L cooking oil left but expects to sell 28 by the end of the day.</span><span>Inventory Planning</span></div>
+        <div class="response-row"><span>Investigate</span><span>The agents check nearby stock and find that <b>Hub Store 018</b> can spare enough without running short itself.</span><span>Agents</span></div>
+        <div class="response-row"><span>Recommend</span><span>The coordinator suggests <b>moving 18 units</b> from Hub 018 to Store 027, and shows the cost and the sales it would save.</span><span>Coordinator</span></div>
+        <div class="response-row"><span>Approve</span><span>The manager approves it. <b>Only then</b> are the transfer order, picking task and delivery created.</span><span>Regional manager</span></div>
+        <div class="response-row"><span>Execute</span><span>A driver takes it over, and the delivery can be tracked on the way.</span><span>Hub and driver</span></div>
+        <div class="response-row"><span>Verify</span><span>The Store 027 supervisor confirms it arrived and the shelf is restocked. <b>The case is closed.</b></span><span>Store supervisor</span></div>
       </div>
       <figure class="case-figure wide">
         <img src="media/less-ops/example-transfer.webp" alt="The Store 027 cooking oil transfer, showing the recommendation and the six workflow steps." loading="lazy" />
-        <figcaption class="caption">The recommendation, what each agent did, and the point where it waits for a person.</figcaption>
+        <figcaption class="caption">The transfer screen: the suggestion, what each agent did, and the step waiting on the manager.</figcaption>
       </figure>
     </section>
 
     <section class="wrap module solution">
       <p class="eyebrow">07 — My role</p>
-      <div class="solution-grid"><h2>From framing the problem to <em>a working prototype.</em></h2><p>End to end: the problem, the product plan, how the agents divide the work and hand it back, the interface and its visual system, and the interactive prototype that runs all of it.</p></div>
+      <div class="solution-grid"><h2>I designed it <em>end to end.</em></h2><p>I worked on the whole project: defining the problem, planning the product, deciding which agent does what and when a person steps in, designing the interface and its visual style, and building the clickable prototype.</p></div>
       <div class="principles"><span>Problem framing</span><span>Product planning</span><span>Agent and workflow design</span><span>UI design</span><span>Visual system</span><span>Interactive prototype</span></div>
     </section>
 
-    <section class="impact module"><div class="wrap impact-grid"><p class="eyebrow">08 — The product</p><div><h2>The manager judges the plan. <em>The agents assemble it.</em></h2><p>Every case in the prototype runs the same path, from the signal that raised it to the person who confirms it on the ground.</p><a href="https://less-ops.vercel.app/" target="_blank" rel="noopener">Open the prototype ↗</a></div></div></section>
+    <section class="impact module"><div class="wrap impact-grid"><p class="eyebrow">08 — Try it</p><div><h2>See it <em>in action.</em></h2><p>The prototype is fully clickable, including the cooking oil case above. Open it and follow a case from the first alert to the final check.</p><a href="https://less-ops.vercel.app/" target="_blank" rel="noopener">Open the prototype ↗</a></div></div></section>
   </main>
   <footer class="wrap"><span>© 2026 Aditya Joseph</span><span>less Ops case study</span></footer>
   <script src="case-study.js?v=6"></script>

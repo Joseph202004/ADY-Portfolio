@@ -8,7 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600;700&family=Mynerve&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=436" />
+  <link rel="stylesheet" href="styles.css?v=437" />
+  <!-- Vercel Web Analytics. The script is served by Vercel itself, so it only
+       exists on the deployment; locally it 404s, which is harmless. -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body class="is-loading mode-full">
 
@@ -62,9 +68,6 @@
         <a class="magnetic" href="#about"   data-full="About"   data-hand="about me">About</a>
         <a class="magnetic" href="#work"    data-full="Work"    data-hand="my drawings">Work</a>
         <a class="magnetic" href="#contact" data-full="Contact" data-hand="say hi!">Contact</a>
-        <!-- The one link that leaves the page: a file, not a section, so it
-             reads as a button rather than another word in the row. -->
-        <a class="nav-cta" href="media/aditya-joseph-resume.pdf?v=2" id="resume-link">Resume</a>
       </nav>
     </div>
   </header>
@@ -278,6 +281,13 @@
               href="https://www.hcltech.com" target="_blank"
               rel="noopener noreferrer">HCLTech</a></span>
           </p>
+          <!-- The resume reads as the next line of the same fact: same size,
+               weight and hover rule as the company above it, rather than a
+               pill borrowed from the nav. -->
+          <p class="info-exp">
+            <span class="info-exp-name"><a class="info-exp-link"
+              href="media/aditya-joseph-resume.pdf?v=2" id="resume-link">Resume</a></span>
+          </p>
         </div>
         <div>
           <p class="info-aside" data-split-lines>
@@ -368,6 +378,6 @@
   </footer>
 
   <script src="hand.js?v=254"></script>
-  <script src="script.js?v=422"></script>
+  <script src="script.js?v=429"></script>
 </body>
 </html>

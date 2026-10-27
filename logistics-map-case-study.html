@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Logistics real estate map product design case study">
+  <title>Logistics Map — Feature Case Study</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23101010'/%3E%3Cpath d='M7 14 16 8l9 6v10H7V14Zm4 2v5h10v-5H11Zm2 1h2v2h-2v-2Zm4 0h2v2h-2v-2Z' fill='%23d9ff50'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#101010;--paper:#f5f3ee;--line:#d5d1c8;--muted:#6e6a63;--lime:#d9ff50;--soft:#e6e2da;--serif:"Instrument Serif",Georgia,serif;--sans:Geist,Arial,sans-serif;--wrap:min(1320px,calc(100% - 48px))}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5}
+    img,video{display:block;width:100%}
+    button,a{font:inherit}
+    .wrap{width:var(--wrap);margin:auto}
+    .skip{position:absolute;left:-999px}.skip:focus{left:20px;top:20px;z-index:20;background:var(--lime);padding:8px;color:var(--ink)}
+    .site-header{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--ink);font-size:13px}
+    .brand{font-weight:700;text-decoration:none;color:inherit}.header-meta{display:flex;gap:18px;color:var(--muted)}.jump{color:inherit;text-decoration:none}.jump span{font-size:18px}
+    .module{padding:110px 0}.eyebrow{margin:0 0 18px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+    .hero{padding-top:84px}.hero-grid{display:grid;grid-template-columns:1.5fr .5fr;gap:50px;align-items:end}
+    .hero h1,.statement h2,.section-intro h2,.audience h2,.solution h2,.feature-head h2,.impact h2{font-size:clamp(54px,8.6vw,136px);font-weight:400;letter-spacing:-.065em;line-height:.87;margin:0}
+    .hero h1 em,h2 em{font-family:var(--serif);font-weight:400}.lede{font-size:clamp(20px,2vw,28px);max-width:680px;margin:35px 0 0}
+    .project-facts{border-top:1px solid var(--ink);margin:0}.project-facts div{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}.project-facts dt{color:var(--muted)}.project-facts dd{margin:0;text-align:right}
+    .hero-image{width:100%;aspect-ratio:1268/793;margin:80px 0 16px;overflow:hidden;background:#dedbd3;border:1px solid var(--ink)}.hero-image img{height:100%;object-fit:contain;object-position:center}.caption{color:var(--muted);font-size:13px;max-width:680px;margin:0}
+    .statement,.audience,.impact{background:var(--ink);color:var(--paper)}.two-col,.audience-grid,.impact-grid{display:grid;grid-template-columns:.55fr 1.45fr;gap:44px}
+    .statement{padding:130px 0}.statement h2{font-size:clamp(44px,6.7vw,98px)}.statement h2+p,.solution-grid p,.impact p{font-size:18px;max-width:650px;margin:36px 0 0;color:#d6d3cd}
+    .section-intro{display:grid;grid-template-columns:.55fr 1.45fr;gap:44px}.section-intro h2{font-size:clamp(40px,5.5vw,78px)}
+    .pain-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink);margin-top:80px}.pain-grid article{min-height:270px;padding:20px;border-right:1px solid var(--line)}.pain-grid article:first-child{border-left:1px solid var(--line)}.pain-grid span,.feature-card>span{font-size:12px;color:var(--muted)}.pain-grid h3,.feature-card h3{font-size:21px;letter-spacing:-.04em;margin:75px 0 8px}.pain-grid p,.feature-card p{font-size:14px;margin:0;color:var(--muted)}
+    .audience h2{font-size:clamp(43px,5.9vw,86px)}.audience-list{border-top:1px solid #555}.audience-list p{font-size:22px;margin:0;padding:19px 0;border-bottom:1px solid #555}.audience-list small{display:block;margin-top:5px;color:#aaa;font-size:13px}
+    .story-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);margin-top:70px}.story-card{min-height:320px;padding:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.story-card:first-child{border-left:1px solid var(--line)}.story-card>span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}.story-card h3{font-size:29px;line-height:1.02;letter-spacing:-.05em;margin:75px 0 14px}.story-card p{margin:0;color:var(--muted)}.quote-card{background:var(--lime);display:flex;flex-direction:column;justify-content:space-between}.quote-card p{font-family:var(--serif);font-size:37px;line-height:.98;letter-spacing:-.045em;color:var(--ink)}
+    .process{background:var(--soft)}.process-list{list-style:none;padding:0;margin:72px 0 0;border-top:1px solid var(--ink)}.process-list li{display:grid;grid-template-columns:.2fr 1.4fr .4fr;gap:28px;padding:27px 0;border-bottom:1px solid #bfbab1}.process-list span,.process-list b{font-size:12px;text-transform:uppercase;letter-spacing:.08em}.process-list h3{font-size:30px;line-height:1;margin:0 0 10px;letter-spacing:-.05em}.process-list p{margin:0;max-width:720px;color:var(--muted)}.process-list b{text-align:right;color:var(--muted)}
+    .solution-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:60px}.solution h2{font-size:clamp(48px,6.9vw,105px)}.solution-grid p{color:var(--muted)}.principles{display:flex;gap:8px;flex-wrap:wrap;margin-top:90px}.principles span{font-size:clamp(25px,3.2vw,45px);letter-spacing:-.05em;border:1px solid var(--ink);border-radius:100px;padding:13px 24px}
+    .feature-module{background:var(--lime)}.feature-head{display:grid;grid-template-columns:.55fr 1.45fr;gap:44px}.feature-head h2{font-size:clamp(42px,6vw,85px)}.feature-head>div>p:last-child{max-width:600px;margin:28px 0 0}.film-shell{margin-top:76px}.film-top{border:1px solid var(--ink);border-bottom:0;display:flex;gap:9px;align-items:center;padding:12px 14px;font-size:12px}.record-dot{width:7px;height:7px;background:#f94738;border-radius:50%}.film-top span:last-child{margin-left:auto;color:#4e4e4e}.film{height:min(68vw,720px);overflow:hidden;background:#18201e;border:1px solid var(--ink)}.film video{height:100%;object-fit:cover;background:#18201e}
+    .feature-photo{width:var(--wrap);margin:72px auto 0}.wrap>.feature-photo{width:100%}.feature-photo-frame{height:min(54vw,640px);overflow:hidden;border:1px solid var(--ink);background:#d8d4cc}.feature-photo img{height:100%;object-fit:cover}.feature-photo figcaption{display:grid;grid-template-columns:.55fr 1.45fr;gap:44px;padding:13px 0 0;font-size:13px;color:#4e4e4e}.feature-photo figcaption b{font-weight:600;text-transform:uppercase;letter-spacing:.07em}.feature-photo figcaption span{max-width:680px}
+    .feature-detail{display:grid;grid-template-columns:.75fr 1.25fr;gap:70px;margin-top:55px}.feature-detail h3{font-family:var(--serif);font-weight:400;font-size:clamp(42px,5vw,72px);line-height:.95;letter-spacing:-.045em;margin:0}.feature-detail p{font-size:18px;margin:0 0 25px}.feature-detail ul{list-style:none;padding:0;margin:0;border-top:1px solid var(--ink)}.feature-detail li{padding:15px 0;border-bottom:1px solid rgba(16,16,16,.32);display:grid;grid-template-columns:100px 1fr;gap:20px}.feature-detail li b{font-size:12px;text-transform:uppercase;letter-spacing:.07em}.feature-detail li span{font-size:14px}
+    .feature-dark{background:#262825;color:var(--paper)}.feature-dark .feature-head h2{color:var(--paper)}.feature-dark .feature-head>div>p:last-child{color:#d1cec7}.feature-dark .feature-photo-frame,.feature-dark .film-top,.feature-dark .film{border-color:#666}.feature-dark .feature-photo figcaption{color:#aaa}.feature-dark .feature-detail ul{border-color:#666}.feature-dark .feature-detail li{border-color:#555}.feature-dark .feature-detail li span{color:#d1cec7}
+    .filter-layout{display:grid;grid-template-columns:.75fr 1.25fr;gap:60px;margin-top:70px;align-items:start}.filter-visual{background:#fff;padding:45px;min-height:580px;display:flex;justify-content:center;align-items:center;border:1px solid var(--ink)}.filter-visual img{width:min(100%,360px);image-rendering:auto}.filter-copy{border-top:1px solid var(--ink)}.filter-copy article{display:grid;grid-template-columns:70px 1fr;padding:24px 0;border-bottom:1px solid var(--line)}.filter-copy b{font-size:12px;color:var(--muted)}.filter-copy h3{font-size:28px;line-height:1;margin:0 0 8px;letter-spacing:-.04em}.filter-copy p{margin:0;color:var(--muted)}
+    .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--ink);margin-top:64px}.feature-card{min-height:350px;padding:22px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}.feature-card:nth-child(odd){border-left:1px solid var(--line)}.feature-card h3{font-size:38px;margin-top:65px}.feature-card.primary{background:var(--ink);color:var(--paper)}.feature-card.primary p{color:#d1cec7}.mini-map{height:74px;margin-top:38px;border:1px solid currentColor;position:relative;overflow:hidden}.mini-map:before,.mini-map:after{content:"";position:absolute;background:currentColor;opacity:.5}.mini-map:before{width:140%;height:1px;transform:rotate(-12deg);left:-15%;top:50%}.mini-map:after{width:1px;height:140%;transform:rotate(30deg);left:55%;top:-20%}.mini-radius{width:76px;height:76px;border:1px solid var(--ink);border-radius:50%;margin-top:34px;background:rgba(91,66,153,.14)}.mini-list{margin-top:36px}.mini-list i{height:11px;background:#dad6ce;display:block;margin:10px 0}.mini-list i:nth-child(2){width:75%}.mini-list i:nth-child(3){width:50%}.mini-score{border:1px solid var(--ink);margin-top:40px;padding:18px;display:flex;justify-content:space-between}.mini-score b{font-size:25px}
+    .reach-demo{display:grid;grid-template-columns:1.15fr .85fr;margin-top:58px;border:1px solid var(--ink);background:#fff}.reach-demo figure{margin:0;min-height:460px;overflow:hidden;background:#dedbd3}.reach-demo img{height:100%;object-fit:cover}.reach-copy{padding:45px;border-left:1px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between}.reach-copy span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.reach-copy h3{font-family:var(--serif);font-weight:400;font-size:clamp(42px,4.6vw,68px);line-height:.95;letter-spacing:-.045em;margin:22px 0}.reach-copy p{margin:0;color:var(--muted)}
+    .response-table{border-top:1px solid var(--ink);margin-top:45px}.response-row{display:grid;grid-template-columns:1fr 1.15fr .85fr;gap:35px;padding:22px 0;border-bottom:1px solid var(--line);font-size:15px}.response-row span:last-child{color:var(--muted)}.response-head{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .flow-section{background:#262825;color:var(--paper)}.flow-section .section-intro h2{color:var(--paper)}.flow-steps{display:grid;grid-template-columns:repeat(7,1fr);margin-top:72px;border-top:1px solid #666}.flow-steps div{min-height:220px;padding:18px;border-right:1px solid #666}.flow-steps div:first-child{border-left:1px solid #666}.flow-steps b{color:var(--lime);font-size:12px}.flow-steps p{font-size:16px;line-height:1.25}
+    .metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink);margin-top:52px}.metrics-grid div{padding:22px;min-height:190px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.metrics-grid div:first-child{border-left:1px solid var(--line)}.metrics-grid b{font-family:var(--serif);font-size:38px;font-weight:400;letter-spacing:-.05em}.metrics-grid p{color:var(--muted);font-size:14px;margin-top:44px}.impact h2{font-size:clamp(46px,6.4vw,94px)}.impact a{display:inline-block;color:var(--paper);margin-top:45px;border-bottom:1px solid var(--paper);text-decoration:none}.reflection{display:grid;grid-template-columns:.55fr 1.45fr;gap:44px}.reflection blockquote{font-family:var(--serif);font-size:clamp(42px,5.6vw,80px);line-height:.96;letter-spacing:-.045em;margin:0}footer{display:flex;justify-content:space-between;border-top:1px solid var(--ink);padding:20px 0;font-size:12px}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}.reveal.in{opacity:1;transform:none}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}}
+    .hero-cta{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:12px 20px;border:1px solid var(--ink);border-radius:100px;background:var(--lime);color:var(--ink);font-size:14px;font-weight:600;text-decoration:none;transition:transform .2s}.hero-cta:hover{transform:translateY(-2px)}
+    @media(max-width:760px){:root{--wrap:min(100% - 32px,1320px)}.site-header{padding:16px 0}.header-meta{display:none}.module{padding:75px 0}.hero{padding-top:52px}.hero-grid,.two-col,.section-intro,.audience-grid,.solution-grid,.feature-head,.impact-grid,.reflection,.feature-detail,.filter-layout,.reach-demo,.feature-photo figcaption{grid-template-columns:1fr;gap:25px}.hero-image{margin-top:55px;height:auto;aspect-ratio:1268/793}.pain-grid{grid-template-columns:1fr 1fr;margin-top:45px}.pain-grid article{min-height:220px}.pain-grid h3{margin-top:45px}.story-grid{grid-template-columns:1fr}.story-card{min-height:240px;border-left:1px solid var(--line)}.story-card h3{margin-top:38px}.process-list li{grid-template-columns:42px 1fr;gap:14px}.process-list b{display:none}.feature-photo{margin-top:48px}.feature-photo-frame{height:62vw;min-height:280px}.film{height:58vw;min-height:280px}.feature-detail li{grid-template-columns:80px 1fr}.filter-visual{min-height:430px;padding:28px}.reach-demo{gap:0}.reach-demo figure{min-height:320px}.reach-copy{border-left:0;border-top:1px solid var(--ink);padding:28px}.feature-grid{grid-template-columns:1fr}.feature-card{min-height:300px}.feature-card h3{margin-top:42px}.response-row{grid-template-columns:1fr;gap:8px}.response-head{display:none}.flow-steps{grid-template-columns:1fr}.flow-steps div{min-height:0;border-left:1px solid #666}.metrics-grid{grid-template-columns:1fr 1fr}.metrics-grid div{min-height:150px}.metrics-grid div:nth-child(odd){border-left:1px solid var(--line)}footer{gap:15px}.jump{font-size:12px}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to case study</a>
+  <header class="site-header wrap">
+    <a class="brand" href="#main">Logistics Map.</a>
+    <div class="header-meta"><span>Feature case study</span><span>2026</span></div>
+    <a class="jump" href="#features">View features <span>↓</span></a>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap module">
+      <p class="eyebrow">01 — Logistics real estate · Product design</p>
+      <div class="hero-grid">
+        <div>
+          <h1>Find the right site <em>before the wrong lease.</em></h1>
+          <p class="lede">A map-led decision tool that helps logistics teams evaluate properties through real operating conditions—not just rent, size, and a pin on a map.</p>
+          <a class="hero-cta" href="https://logestic-real-estate-map-experience.vercel.app/" target="_blank" rel="noopener">View the prototype <span aria-hidden="true">↗</span></a>
+        </div>
+        <dl class="project-facts">
+          <div><dt>Role</dt><dd>Product / UI UX design</dd></div>
+          <div><dt>Scope</dt><dd>Research, workflows, UI system</dd></div>
+          <div><dt>Focus</dt><dd>Location intelligence</dd></div>
+        </dl>
+      </div>
+      <figure class="hero-image"><img src="media/logistics-map/main-map-screen.webp" alt="Main logistics real estate map screen with market search, drive-time controls, a Chicago delivery radius, map layers, comparison, and a scrollable property results panel."></figure>
+      <p class="caption">The main workspace keeps market search, delivery reach, map layers, comparison, selected-property context, and ranked property results visible in one connected screen.</p>
+    </section>
+
+    <section class="statement module">
+      <div class="wrap two-col">
+        <p class="eyebrow">The brief</p>
+        <div><h2>Make site selection reflect <em>how the operation actually works.</em></h2><p>Warehouse searches often begin with square footage and asking rent, while the operational consequences remain scattered across maps, spreadsheets, broker PDFs, and local research. The product brings property and network intelligence into one connected map so teams can shortlist with evidence.</p></div>
+      </div>
+    </section>
+
+    <section class="wrap module">
+      <div class="section-intro"><p class="eyebrow">02 — The problem</p><h2>A low-rent building can become an expensive logistics decision.</h2></div>
+      <div class="pain-grid">
+        <article><span>01</span><h3>Access is oversimplified</h3><p>“Near a highway” does not reveal the actual truck route, interchange, restrictions, or time lost in traffic.</p></article>
+        <article><span>02</span><h3>Demand is disconnected</h3><p>Customer, store, supplier, and service-area data rarely sit beside available properties.</p></article>
+        <article><span>03</span><h3>Operations are fragmented</h3><p>Labor, power, ports, parcel hubs, congestion, and risk are researched in separate tools.</p></article>
+        <article><span>04</span><h3>Shortlists lack explanation</h3><p>Teams can see what is available, but not why one property fits—or where it falls short.</p></article>
+      </div>
+    </section>
+
+    <section class="audience module">
+      <div class="wrap audience-grid">
+        <div><p class="eyebrow">03 — Who it is for</p><h2>Different businesses. One location decision.</h2></div>
+        <div class="audience-list">
+          <p>E-commerce operators<small>Prioritize consumer reach, parcel hubs, fulfillment speed, peak labor, and returns.</small></p>
+          <p>3PL providers<small>Compare client coverage, freight corridors, network flexibility, yard capacity, and carrier access.</small></p>
+          <p>Manufacturers<small>Evaluate suppliers, power, utilities, workforce skills, rail, ports, and expansion land.</small></p>
+          <p>Retailers<small>Balance store replenishment, market coverage, reverse logistics, and same-day delivery.</small></p>
+          <p>Brokers and tenant representatives<small>Translate client requirements into evidence-backed shortlists and comparisons.</small></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap module">
+      <div class="section-intro"><p class="eyebrow">04 — The insight</p><h2>The best property is not the best building. It is the best operational fit.</h2></div>
+      <div class="story-grid">
+        <article class="story-card quote-card"><p>“The listing tells me what the building is. It does not tell me what the location will cost us every day.”</p><span>Representative user tension</span></article>
+        <article class="story-card"><span>What teams need</span><h3>Answers in minutes, not a research project.</h3><p>Users need to understand truck access, service reach, workforce, freight connections, demand, and risk without changing tools for every question.</p></article>
+        <article class="story-card"><span>The design opportunity</span><h3>Turn the map into a decision workspace.</h3><p>Every layer should answer a business question, update the shortlist, and explain the effect on a property’s fit.</p></article>
+      </div>
+    </section>
+
+    <section class="process module">
+      <div class="wrap">
+        <div class="section-intro"><p class="eyebrow">05 — Product approach</p><h2>Move from available inventory to a defensible site decision.</h2></div>
+        <ol class="process-list">
+          <li><span>01</span><div><h3>Start with the operating profile</h3><p>Capture the persona, required building type, locations served, transport mode, labor needs, power requirements, and non-negotiables.</p></div><b>Context</b></li>
+          <li><span>02</span><div><h3>Find the viable market</h3><p>Search a city or market, define a drive-time or delivery-reach area, and overlay customers, stores, suppliers, or client locations.</p></div><b>Reach</b></li>
+          <li><span>03</span><div><h3>Test the operating reality</h3><p>Reveal highways, labor, parcel hubs, ports, rail, congestion, infrastructure, rent, and risk directly around each listing.</p></div><b>Evidence</b></li>
+          <li><span>04</span><div><h3>Compare and explain</h3><p>Rank properties against the same requirements and show the reason for each match, trade-off, and warning.</p></div><b>Decide</b></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="wrap module solution">
+      <p class="eyebrow">06 — Product principle</p>
+      <div class="solution-grid"><h2>From “what is listed?” to <em>“what will perform?”</em></h2><p>The map is not decoration. It is the primary analysis surface: property cards, network layers, filters, reach areas, and comparison tools stay synchronized so users can see the consequence of every choice.</p></div>
+      <div class="principles"><span>See the network</span><span>Test the site</span><span>Explain the fit</span></div>
+    </section>
+
+    <section class="feature-module module" id="features">
+      <div class="wrap feature-head"><p class="eyebrow">07 — F1 · Highway connectivity</p><div><h2>Measure the road that trucks <em>actually travel.</em></h2><p>Highway connectivity replaces vague proximity with a route-aware view of the nearest useful interchange, travel time, freight corridors, and access constraints.</p></div></div>
+      <figure class="feature-photo">
+        <div class="feature-photo-frame"><img src="media/logistics-map/photo-highway-connectivity.webp" loading="lazy" decoding="async" alt="Aerial view of a distribution warehouse beside a major highway interchange with freight trucks in motion."></div>
+        <figcaption><b>Operational context</b><span>The building and the network are evaluated together. Direct highway access influences line-haul time, reliability, fuel use, and the number of daily turns a fleet can complete.</span></figcaption>
+      </figure>
+      <div class="wrap film-shell">
+        <div class="film-top"><span class="record-dot"></span><span>Interactive feature recording</span><span>Route-aware property analysis</span></div>
+        <div class="film"><video controls muted loop playsinline preload="metadata" aria-label="Highway connectivity feature walkthrough"><source src="media/logistics-map/highway-connectivity.mp4" type="video/mp4">Your browser does not support embedded video.</video></div>
+        <div class="feature-detail">
+          <h3>From distance to truck time.</h3>
+          <div><p>The layer highlights major routes and translates the property’s position into an operational measure that can be compared across the shortlist.</p><ul>
+            <li><b>Measures</b><span>Actual truck drive time and route distance to the nearest relevant interchange.</span></li>
+            <li><b>Reveals</b><span>Interstate routes, freight corridors, local access roads, congestion, tolls, and restrictions.</span></li>
+            <li><b>Compares</b><span>Properties by minutes to highway—not misleading straight-line proximity.</span></li>
+            <li><b>Helps</b><span>3PLs, manufacturers, retailers, e-commerce teams, and brokers reduce recurring transport friction.</span></li>
+          </ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-dark module">
+      <div class="wrap feature-head"><p class="eyebrow">08 — F2 · Labor availability</p><div><h2>See whether the operation can <em>hire and retain.</em></h2><p>Labor density turns a location into a realistic workforce catchment by combining supply, commute behavior, competition, and shift accessibility.</p></div></div>
+      <figure class="feature-photo">
+        <div class="feature-photo-frame"><img src="media/logistics-map/photo-warehouse-workforce.webp" loading="lazy" decoding="async" alt="Warehouse employees working across fulfillment stations, pallet aisles, and forklift lanes inside a distribution center."></div>
+        <figcaption><b>Workforce context</b><span>Headcount alone is not enough. The map considers the people an operation needs, the shifts they must reach, and the competing facilities hiring from the same labor pool.</span></figcaption>
+      </figure>
+      <div class="wrap film-shell">
+        <div class="film-top"><span class="record-dot"></span><span>Interactive feature recording</span><span>Workforce catchment analysis</span></div>
+        <div class="film"><video controls muted loop playsinline preload="metadata" aria-label="Labor availability feature walkthrough"><source src="media/logistics-map/labor-density.mp4" type="video/mp4">Your browser does not support embedded video.</video></div>
+        <div class="feature-detail">
+          <h3>From headcount to hiring reality.</h3>
+          <div><p>The layer shows where the addressable workforce lives and how confidently a location can support current and future shifts.</p><ul>
+            <li><b>Maps</b><span>Warehouse-relevant labor density inside realistic commute-time bands.</span></li>
+            <li><b>Evaluates</b><span>Employment competition, wage pressure, shift accessibility, transit, and turnover risk.</span></li>
+            <li><b>Compares</b><span>Properties by labor catchment and expected hiring difficulty.</span></li>
+            <li><b>Helps</b><span>Operators avoid selecting a low-rent property in a market that cannot staff the facility.</span></li>
+          </ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap module">
+      <div class="section-intro"><p class="eyebrow">09 — F3 · Filters and layers</p><h2>Show the most useful signal first—and keep deeper analysis one step away.</h2></div>
+      <figure class="feature-photo">
+        <div class="feature-photo-frame"><img src="media/logistics-map/photo-intermodal-infrastructure.webp" loading="lazy" decoding="async" alt="Intermodal freight hub with container trains, trucks, port cranes, ships, and organized container yards."></div>
+        <figcaption><b>Infrastructure context</b><span>Port, rail, road, and intermodal layers reveal whether a property can connect to the freight modes the operation depends on—not simply whether those assets exist in the wider market.</span></figcaption>
+      </figure>
+      <div class="filter-layout">
+        <figure class="filter-visual"><img src="media/logistics-map/data-layers.webp" alt="Data layers panel with delivery reach, labor availability, parcel hubs, customer demand, intermodal and ports, and asking-rent heatmap options."></figure>
+        <div class="filter-copy">
+          <article><b>01</b><div><h3>Recommended for the persona</h3><p>The first group changes with the selected operating profile. An e-commerce user sees delivery reach and parcel hubs; a manufacturer sees power, suppliers, and freight infrastructure.</p></div></article>
+          <article><b>02</b><div><h3>Property requirements</h3><p>Size, rent, availability, clear height, docks, yard, trailer parking, cold storage, power, zoning, and sustainability narrow the inventory.</p></div></article>
+          <article><b>03</b><div><h3>Network intelligence</h3><p>Highways, labor, customers, stores, suppliers, ports, airports, rail, parcel hubs, congestion, risk, and rent heatmaps can be toggled as map layers.</p></div></article>
+          <article><b>04</b><div><h3>Transparent active state</h3><p>Selected filters remain visible as chips, result counts update immediately, and clearing a layer never removes the user’s underlying property criteria.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap module">
+      <p class="eyebrow">10 — The feature system</p>
+      <div class="reach-demo">
+        <figure><img src="media/logistics-map/delivery-reach.webp" alt="Chicago map with a purple delivery reach area centered on a selected property."></figure>
+        <div class="reach-copy"><span>Live map output</span><div><h3>Turn an address into a service promise.</h3><p>Switch between drive-time and delivery-window views to understand the customers, stores, and markets a property can realistically serve.</p></div></div>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card primary"><span>01</span><h3>Delivery reach</h3><p>Visualize one-hour, two-hour, same-day, and next-day service areas from a property.</p><div class="mini-map"></div></article>
+        <article class="feature-card"><span>02</span><h3>Demand overlays</h3><p>Upload customers, stores, suppliers, and client locations to see coverage and gaps.</p><div class="mini-radius"></div></article>
+        <article class="feature-card"><span>03</span><h3>Freight infrastructure</h3><p>Explore ports, airports, rail terminals, intermodal yards, parcel hubs, and freight corridors.</p><div class="mini-list"><i></i><i></i><i></i></div></article>
+        <article class="feature-card"><span>04</span><h3>Property match</h3><p>Score each property against operational requirements and expose both strengths and shortfalls.</p><div class="mini-score"><span>Operational fit</span><b>87%</b></div></article>
+        <article class="feature-card"><span>05</span><h3>Infrastructure and risk</h3><p>Evaluate power, utilities, broadband, zoning, congestion, flood, climate, and environmental risk.</p><div class="mini-list"><i></i><i></i><i></i></div></article>
+        <article class="feature-card"><span>06</span><h3>Compare and share</h3><p>Compare finalists side by side, save a shortlist, and create an evidence-backed client view.</p><div class="mini-score"><span>Shortlist</span><b>3</b></div></article>
+      </div>
+    </section>
+
+    <section class="wrap module">
+      <p class="eyebrow">11 — Pain points → product response</p>
+      <div class="response-table">
+        <div class="response-row response-head"><span>Before</span><span>Design response</span><span>What changes</span></div>
+        <div class="response-row"><span>“This building looks close to the interstate.”</span><span><b>Highway connectivity</b> measures the actual truck route and interchange time.</span><span>Proximity becomes usable transport evidence.</span></div>
+        <div class="response-row"><span>“The market has people, but can we hire for three shifts?”</span><span><b>Labor availability</b> shows the commute catchment, competition, and wage pressure.</span><span>Population becomes a staffing forecast.</span></div>
+        <div class="response-row"><span>“Our customers are in a spreadsheet.”</span><span><b>Demand overlays</b> place business locations directly on the site-selection map.</span><span>Coverage becomes visible before a shortlist is made.</span></div>
+        <div class="response-row"><span>“Every option has different trade-offs.”</span><span><b>Property match</b> applies the same operational scorecard to every listing.</span><span>Teams compare consistently and explain decisions.</span></div>
+        <div class="response-row"><span>“Research is scattered across five tools.”</span><span><b>Data layers</b> bring network, labor, cost, infrastructure, and risk into one workspace.</span><span>Research becomes a connected workflow.</span></div>
+      </div>
+    </section>
+
+    <section class="flow-section module">
+      <div class="wrap">
+        <div class="section-intro"><p class="eyebrow">12 — The decision flow</p><h2>Seven small steps from profile to confident shortlist.</h2></div>
+        <div class="flow-steps">
+          <div><b>01</b><p>Select the operating persona and site requirement.</p></div>
+          <div><b>02</b><p>Search a market, city, corridor, or property.</p></div>
+          <div><b>03</b><p>Define drive time, delivery reach, or a custom area.</p></div>
+          <div><b>04</b><p>Overlay customers, stores, suppliers, or clients.</p></div>
+          <div><b>05</b><p>Turn on labor, highways, freight, cost, and risk layers.</p></div>
+          <div><b>06</b><p>Open a property to see its match and shortfalls.</p></div>
+          <div><b>07</b><p>Compare, save, and share the evidence-backed shortlist.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap module">
+      <p class="eyebrow">13 — What success looks like</p>
+      <div class="metrics-grid">
+        <div><b>Faster shortlist</b><p>Reduce time spent combining property, transport, labor, and network research.</p></div>
+        <div><b>Better fit</b><p>More shortlisted properties meet the user’s critical operational requirements.</p></div>
+        <div><b>Clearer trade-offs</b><p>Decision makers can explain why a property wins and where risk remains.</p></div>
+        <div><b>Shared confidence</b><p>Operators, brokers, and clients evaluate the same evidence in one place.</p></div>
+      </div>
+    </section>
+
+    <section class="impact module">
+      <div class="wrap impact-grid"><p class="eyebrow">14 — Product value</p><div><h2>Less location guesswork. <em>More operational confidence.</em></h2><p>The product transforms a property search into an operating-network decision—helping teams reduce transport friction, staffing risk, coverage gaps, and costly lease mistakes before they commit.</p><a href="#features">Replay feature walkthroughs ↑</a></div></div>
+    </section>
+
+    <section class="wrap reflection module"><p class="eyebrow">Reflection</p><blockquote>“A logistics map earns trust when every layer answers a business question—and every recommendation explains itself.”</blockquote></section>
+  </main>
+
+  <footer class="wrap"><span>© 2026 Aditya Joseph</span><span>Logistics map feature case study</span></footer>
+
+  <script>
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced && 'IntersectionObserver' in window) {
+      document.querySelectorAll('section > .wrap, .hero > *').forEach((node) => node.classList.add('reveal'));
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); }
+        });
+      }, { threshold: .08 });
+      document.querySelectorAll('.reveal').forEach((node) => observer.observe(node));
+    }
+  </script>
+</body>
+</html>

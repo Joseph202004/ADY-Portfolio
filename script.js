@@ -280,8 +280,8 @@ const WORK = [
     // The written case study, on its own page in the same template as the
     // other two, so the three read as one body of work.
     live: "less-ops-case-study.html",
-    blurb: "A grocery control tower run by five AI agents and one manager — " +
-           "watching the gaps, drafting the fix, and handing over a ranked plan to approve.",
+    blurb: "An operations dashboard where AI agents flag stock and delivery problems " +
+           "across 48 stores, and a manager approves the fixes.",
   },
   {
     title: "Insure-Tech",
@@ -402,6 +402,21 @@ const WORK = [
     // Same 4:3 treatment as the Insure-Tech card: the poster inset on its own
     // ground, so the wordmark and the hands survive the card's scale-in.
     thumb: "media/oykot-money-card.webp?v=2" },
+  {
+    title: "Logistics Map",
+    tags: "Logistics real estate, Map UX, Site selection",
+    tone: "",
+    // Same 1600x1200 plate on the shared card grey as the other three.
+    thumb: "media/logistics-map-card.webp?v=4",
+    // The case study page brought over from project-three, with its media
+    // moved into media/logistics-map/ and the PNGs converted to WebP.
+    // The deployed prototype. The case study opens in the modal; this
+    // is the fallback link, and the page itself carries the button.
+    href: "https://logestic-real-estate-map-experience.vercel.app/",
+    live: "logistics-map-case-study.html?v=3",
+    blurb: "A map-based tool that helps logistics teams judge a warehouse by how " +
+           "it would actually run, not just its rent, size and location.",
+  },
 ];
 
 /* The drawing screen's own shelf: sketchbook pages, lettering, whatever else
